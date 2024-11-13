@@ -63,5 +63,16 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
         echo "Email ou senha incorretos!";
     }
 
+    //Login Admin (Ainda nao esta a funcionar)
+    $stmt = $pdo->prepare("SELECT Nome, Password, is_admin FROM tb_utilizador WHERE Nome = :nome AND Password = :password");
+    $stmt->execute([':nome' => $Nome, ':password' => $Password]);
+    $login = $stmt->fetch(); 
+
+    if ($smt){
+        if($smt[2] == 1){
+            header('location: contaAdm.html');
+        }
+            header ('location: contanormal.html');
+    }
 }
 ?>
