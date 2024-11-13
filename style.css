@@ -88,12 +88,14 @@ input[type="password"]:focus {
     margin-top: 1rem; /* Espaçamento superior */
     font-size: 0.9rem; /* Tamanho da fonte */
     color: #555; /* Cor do texto */
+    text-decoration: none;
 }
 
 /* Estilo para o link de redirecionamento */
 .redirect a {
     color: #007bff; /* Cor do link */
     text-decoration: none; /* Remove o sublinhado */
+    text-decoration: none;
 }
 
 /* Efeito de sublinhado ao passar o mouse no link */
