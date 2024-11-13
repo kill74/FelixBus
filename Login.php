@@ -1,24 +1,35 @@
 <?php
+session_start();
+
 // Conectar ao banco de dados
-$pdo = new PDO("mysql:host=localhost;dbname=login_db", "root", "", [
+$pdo = new PDO("mysql:host=localhost;dbname=trabalho_db", "root", "", [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
 
+// Função para sanitizar entradas
+function sanitize_input($data) {
+    return htmlspecialchars(stripslashes(trim($data)));
+}
+
 // Processar Registro
 if (isset($_POST['action']) && $_POST['action'] === 'register') {
+    $username = sanitize_input($_POST['username']);
+    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+    $password = $_POST['password'];
+
     try {
-        // Verifica se email já existe
-        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-        $stmt->execute([$_POST['email']]);
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?"); 
+        $stmt->execute([$email]);
 
         if ($stmt->fetch()) {
             echo "Este email já está cadastrado!";
         } else {
-            // Registra novo usuário
-            $senha_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $senha_hash = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-            $stmt->execute([$_POST['username'], $_POST['email'], $senha_hash]);
+            $stmt->execute([$username, $email, $senha_hash]);
             echo "Registro realizado com sucesso!";
+            // header("Location: success.html"); // Opcional: redirecionamento
+            exit();
         }
     } catch(PDOException $e) {
         echo "Erro no registro: " . $e->getMessage();
@@ -27,15 +38,19 @@ if (isset($_POST['action']) && $_POST['action'] === 'register') {
 
 // Processar Login
 if (isset($_POST['action']) && $_POST['action'] === 'login') {
+    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+    $password = $_POST['password'];
+
     try {
         $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->execute([$_POST['email']]);
+        $stmt->execute([$email]);
         $usuario = $stmt->fetch();
 
-        if ($usuario && password_verify($_POST['password'], $usuario['password'])) {
-            session_start();
+        if ($usuario && password_verify($password, $usuario['password'])) {
             $_SESSION['user_id'] = $usuario['id'];
             echo "Login realizado com sucesso!";
+            // header("Location: dashboard.php"); // Opcional: redirecionamento
+            exit();
         } else {
             echo "Email ou senha incorretos!";
         }
