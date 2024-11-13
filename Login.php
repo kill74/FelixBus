@@ -25,7 +25,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'register') {
         if ($stmt->fetch()) {
             echo "Este email já está cadastrado!";
         } else {
-            $senha_hash = password_hash($password, PASSWORD_DEFAULT);
+            $senha_hash = password_hash($password, PASSWORD_DEFAULT); // encriptacao da password 
             $stmt = $pdo->prepare("INSERT INTO login (username, email, password) VALUES (?, ?, ?)");
             $stmt->execute([$username, $email, $senha_hash]);
             echo "Registro realizado com sucesso!";
