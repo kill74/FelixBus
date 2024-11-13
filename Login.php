@@ -18,17 +18,20 @@ if (isset($_POST['action']) && $_POST['action'] === 'register') {
     $password = $_POST['password'];
 
     try {
-        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?"); 
+        // Verificar se o email já está cadastrado
+        $stmt = $pdo->prepare("SELECT id FROM login WHERE email = ?"); 
         $stmt->execute([$email]);
 
         if ($stmt->fetch()) {
             echo "Este email já está cadastrado!";
         } else {
             $senha_hash = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO login (username, email, password) VALUES (?, ?, ?)");
             $stmt->execute([$username, $email, $senha_hash]);
             echo "Registro realizado com sucesso!";
-            // header("Location: success.html"); // Opcional: redirecionamento
+
+            // Redirecionamento após o registro (sem echo antes do header)
+            header("Location: Login.html");
             exit();
         }
     } catch(PDOException $e) {
@@ -42,14 +45,13 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
     $password = $_POST['password'];
 
     try {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt = $pdo->prepare("SELECT * FROM login WHERE email = ?");
         $stmt->execute([$email]);
         $usuario = $stmt->fetch();
 
         if ($usuario && password_verify($password, $usuario['password'])) {
             $_SESSION['user_id'] = $usuario['id'];
             echo "Login realizado com sucesso!";
-            // header("Location: dashboard.php"); // Opcional: redirecionamento
             exit();
         } else {
             echo "Email ou senha incorretos!";
