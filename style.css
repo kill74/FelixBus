@@ -16,7 +16,7 @@ body {
 }
 
 /* Contêiner principal */
-.container {
+.container1 {
     width: 100%;
     max-width: 400px; /* Largura máxima do contêiner */
     padding: 2rem;
