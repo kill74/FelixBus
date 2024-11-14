@@ -8,12 +8,11 @@
 
 /* Define o estilo do corpo para centralizar o conteúdo */
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Tela cheia em altura */
-    background-color: #f4f4f4; /* Cor de fundo suave */
+  margin: 0;
+  background-color: #f4f4f4;
+  font-family: Arial, sans-serif;
 }
+
 
 /* Contêiner principal */
 .container1 {
@@ -102,3 +101,99 @@ input[type="password"]:focus {
 .redirect a:hover {
     text-decoration: underline; /* Adiciona sublinhado */
 }
+
+  
+  header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  header h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    text-decoration: none;
+  }
+  
+  nav ul li {
+    display: inline;
+  }
+  
+  nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px;
+  }
+  
+  nav ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  
+  main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  
+  section {
+    margin-bottom: 30px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  h3 {
+    font-size: 20px;
+    margin-top: 15px;
+    color: #555;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  button:hover {
+    background-color: #555;
+  }
+  
+  form label {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  form input,
+  form button {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 15px 0;
+    background-color: #333;
+    color: #fff;
+    font-size: 14px;
+    position: relative;
+  }
+  
