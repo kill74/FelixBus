@@ -268,3 +268,19 @@ input[type="radio"]:checked + .carousel-controls label {
     background-color: #333;
 }
 
+
+.button {
+  background-color: #333; /* Cor de fundo verde */
+  color: white; /* Cor do texto */
+  padding: 15px 32px; /* Tamanho do botão */
+  text-align: center; /* Alinha o texto no centro */
+  text-decoration: none; /* Remove o sublinhado do link */
+  display: inline-block; /* Faz o link se comportar como um botão */
+  font-size: 16px; /* Tamanho da fonte */
+  border-radius: 4px; /* Bordas arredondadas */
+  cursor: pointer; /* Muda o cursor para "pointer" ao passar por cima */
+}
+
+.button:hover {
+  background-color: #333; /* Cor do botão quando o mouse passa em cima */
+}
