@@ -1,12 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FelixBus</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FelixBus</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  
+    <header>
+        <h1>FelixBus</h1>
+        <nav>
+            <ul>
+                <li><a href="#carteira">Carteira</a></li>
+                <li><a href="#perfil">Perfil</a></li>
+                <li><a href="#horarios">Horários</a></li>
+                <li><a href="#historico">Histórico de Viagens</a></li>
+                <li><a href="#notificacoes">Notificações</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <!-- Secção da Carteira -->
+        <section id="carteira">
+            <h2>Carteira</h2>
+            <p>Saldo atual: <strong>€50.00</strong></p>
+            <button>Carregar Carteira</button>
+            <h3>Histórico de Carregamentos</h3>
+            <ul>
+                <li>Carregamento de €20.00 em 01/11/2024</li>
+                <li>Carregamento de €10.00 em 15/10/2024</li>
+                <li>Carregamento de €15.00 em 01/10/2024</li>
+            </ul>
+            <p>Utilize o saldo para comprar bilhetes e recarregue facilmente em nosso sistema de pagamento seguro.</p>
+        </section>
+        <!-- Secção do Perfil -->
+        <section id="perfil">
+            <h2>Perfil</h2>
+            <p><strong>Nome:</strong> Guilherme Sales</p>
+            <p><strong>Email:</strong> gnailpo895@gmail.com</p>
+            <p><strong>Data de Nascimento:</strong> 15/05/2000</p>
+            <p><strong>Telefone:</strong> +351 912 345 678</p>
+            <p><strong>Endereço:</strong> Rua Principal, 123, Castelo Branco</p>
+            <button>Editar Perfil</button>
+            <button>Mudar Senha</button>
+        </section>
+        <!-- Secção dos horarios -->
+        <section id="horarios">
+            <h2>Pesquisar Horários</h2>
+            <form>
+                <label for="origem">Origem:</label>
+                <input type="text" id="origem" name="origem" placeholder="Cidade de origem">
+                <label for="destino">Destino:</label>
+                <input type="text" id="destino" name="destino" placeholder="Cidade de destino">
+                <label for="data">Data:</label>
+                <input type="date" id="data" name="data">
+                <!-- isto tem de ser mandado para a pagina de bilhetes-->
+                <button type="submit">Pesquisar</button>
+            </form>
+            <div class="resultados">
+                <h3>Resultados da Pesquisa</h3>
+                <p>Origem: Lisboa | Destino: Porto | Horário: 10:00 - 14:00</p>
+                <p>Origem: Lisboa | Destino: Porto | Horário: 12:00 - 16:00</p>
+            </div>
+        </section>
+        <!-- Histórico de Viagens -->
+        <section id="historico">
+            <h2>Histórico de Viagens</h2>
+            <ul>
+                <li>Viagem de Lisboa para Porto - 01/11/2024 - <em>€15.00</em></li>
+                <li>Viagem de Porto para Coimbra - 15/10/2024 - <em>€12.00</em></li>
+                <li>Viagem de Coimbra para Lisboa - 01/09/2024 - <em>€10.00</em></li>
+            </ul>
+            <p>Reveja seu histórico de viagens para planejar futuras rotas e verificar gastos.</p>
+        </section>
+        <!-- Cena das Notificações -->
+        <section id="notificacoes">
+            <h2>Notificações</h2>
+            <ul>
+                <li><strong>Aviso:</strong> Saldo baixo na carteira. Carregue para continuar usando o serviço.</li>
+                <li><strong>Promoção:</strong> Desconto de 10% nas viagens de Coimbra para Lisboa até o fim do mês.</li>
+                <li><strong>Informativo:</strong> Novo horário disponível para o destino Porto - Coimbra.</li>
+            </ul>
+        </section>
+        <!-- Sobre Secçãpo -->
+        <section id="sobre">
+            <h2>Sobre Nós</h2>
+            <p>Somos uma empresa dedicada a oferecer transporte seguro e confortável para destinos em todo o país. 
+            Com nossa plataforma de fácil uso, você pode planejar suas viagens, gerenciar seu perfil, 
+            e manter-se atualizado com nossos horários e promoções.</p>
+        </section>
+    </main>
+    <footer>
+        <section id="contacto">
+            <h2>Contato</h2>
+            <p><strong>Endereço:</strong> Rua Principal, 123, Castelo Branco</p>
+            <p><strong>Telefone:</strong> +351 912 345 678</p>
+            <p><strong>Email:</strong> contato@autocarros.com</p>
+            <p>Siga-nos nas redes sociais:</p>
+            <ul>
+                <li><a href="https://facebook.com">Facebook</a></li>
+                <li><a href="https://twitter.com">Twitter</a></li>
+                <li><a href="https://instagram.com">Instagram</a></li>
+            </ul>
+        </section>
+        <p>&copy; FelixBus. Todos os direitos reservados.</p>
+    </footer>
 </body>
 </html>
