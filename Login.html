@@ -1,37 +1,52 @@
 <!DOCTYPE html>
 <html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div class="container1">
-    <h2>Login</h2>
-    <form action="Login.php" method="POST" class="login-form">
-        <input type="hidden" name="action" value="login">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container1">
+      <h2>Login</h2>
+      <form action="Login.php" method="POST" class="login-form">
+        <input type="hidden" name="action" value="login" />
 
         <div class="input-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required placeholder="Digite seu email">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="Digite seu email" />
         </div>
 
-        <br>
+        <br />
 
         <div class="input-group">
-            <label for="password">Senha:</label>
-            <input type="password" id="password" name="password" required placeholder="Digite sua senha">
+          <label for="password">Senha:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="Digite sua senha" />
         </div>
 
-        <br>
+        <br />
 
-        <button type="submit" class="btn btn:hover">Entrar</button>
-    </form>
+        <button type="submit" class="btn btn:hover">
+          Entrar <a href="index.html"></a>
+          <!--Isto ira redirecionar para a pagina Principal-->
+        </button>
+      </form>
 
-        <br>
+      <br />
 
-    <p class="redirect redirect:a">Não tem uma conta? <a href="register.html">Registe-se aqui</a>.</p>
-</div>
-</body>
+      <p class="redirect redirect:a">
+        Não tem uma conta? <a href="Register.html">Registe-se aqui</a>.
+      </p>
+    </div>
+  </body>
 </html>
