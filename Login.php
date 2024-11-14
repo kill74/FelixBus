@@ -55,8 +55,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
         // Inicia a sessão do utilizador, guardando o ID na sessão
         $_SESSION['user_id'] = $usuario['id'];
         // Tenta redireccionar o utilizador para a página inicial (index.html)
-        # header("Location: index.html"); // comentei pois ainda não está a funcionar
-        echo "Login realizado com sucesso!";
+        header("Location: index.html"); // comentei pois ainda não está a funcionar
         exit();
     } else {
         // Mensagem de erro caso o email ou a senha estejam incorretos
