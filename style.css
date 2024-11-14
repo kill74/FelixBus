@@ -8,12 +8,11 @@
 
 /* Define o estilo do corpo para centralizar o conteúdo */
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Tela cheia em altura */
-    background-color: #f4f4f4; /* Cor de fundo suave */
+  margin: 0;
+  background-color: #f4f4f4;
+  font-family: Arial, sans-serif;
 }
+
 
 /* Contêiner principal */
 .container1 {
