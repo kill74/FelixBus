@@ -172,3 +172,34 @@ input[type="radio"] {
 #carousel-3:checked ~ .carousel-controls label[for="carousel-3"] {
   background-color: #555;
 }
+
+
+/* CSS PARA A CENA DOS LINKS*/
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Espaçamento entre os ícones */
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.social-links li {
+  display: flex;
+  align-items: center;
+}
+
+.social-links a {
+  text-decoration: none;
+  color: #fff; /* Cor do texto */
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Espaço entre o ícone e o texto */
+  font-weight: bold;
+}
+
+.social-links img {
+  width: 24px; /* Tamanho da imagem */
+  height: 24px;
+}
+
