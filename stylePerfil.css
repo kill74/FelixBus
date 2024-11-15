@@ -1,0 +1,144 @@
+/* stylePerfil.css */
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  color: #333;
+  background-color: #f4f4f4;
+  line-height: 1.6;
+}
+
+/* Header */
+header {
+  background-color: #2d3e50;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2em;
+}
+
+header nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+header nav ul li {
+  margin: 0 1rem;
+}
+
+header nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+header nav ul li a:hover {
+  color: #ffd700;
+}
+
+/* Perfil Section */
+main {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+#perfil {
+  text-align: center;
+}
+
+#perfil h2 {
+  color: #2d3e50;
+  margin-bottom: 1rem;
+}
+
+#perfil img {
+  border-radius: 50%;
+  border: 2px solid #2d3e50;
+  margin-bottom: 1rem;
+}
+
+#perfil p {
+  font-size: 1.1em;
+  margin-bottom: 0.5rem;
+}
+
+/* Botão de Mudar Senha */
+.button {
+  display: inline-block;
+  padding: 0.7rem 1.5rem;
+  color: #fff;
+  background-color: #2d3e50;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #ffd700;
+}
+
+/* Footer */
+footer {
+  background-color: #2d3e50;
+  color: #fff;
+  padding: 1.5rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+footer h2 {
+  font-size: 1.5em;
+  margin-bottom: 1rem;
+}
+
+footer p, footer ul {
+  font-size: 0.9em;
+}
+
+footer ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+footer ul li a {
+  color: #ffd700;
+  text-decoration: none;
+}
+
+footer ul li a:hover {
+  color: #fff;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  header nav ul {
+      flex-direction: column;
+  }
+
+  main {
+      padding: 1rem;
+  }
+
+  .button {
+      padding: 0.5rem 1rem;
+  }
+}

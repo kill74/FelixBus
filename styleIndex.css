@@ -46,7 +46,6 @@ nav ul li a:hover {
   text-decoration: underline;
 }
 
-
 main {
   max-width: 800px;
   margin: 20px auto;
@@ -102,5 +101,74 @@ footer {
   background-color: #333;
   color: #fff;
   font-size: 14px;
+}
+
+/* Carousel CSS */
+.carousel {
   position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-images {
+  display: flex;
+  transition: transform 0.5s ease;
+  width: 100%;
+}
+
+.carousel-item {
+  min-width: 100%;
+  height: 300px; /* Define a consistent height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: auto;
+  object-fit: cover; /* Adapta a imagem ao espaço do carrossel */
+}
+
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.carousel-controls label {
+  width: 12px;
+  height: 12px;
+  background-color: #333;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+#carousel-1:checked ~ .carousel-images {
+  transform: translateX(0);
+}
+
+#carousel-2:checked ~ .carousel-images {
+  transform: translateX(-100%);
+}
+
+#carousel-3:checked ~ .carousel-images {
+  transform: translateX(-200%);
+}
+
+/* Estilo adicional para controles ativos */
+#carousel-1:checked ~ .carousel-controls label[for="carousel-1"],
+#carousel-2:checked ~ .carousel-controls label[for="carousel-2"],
+#carousel-3:checked ~ .carousel-controls label[for="carousel-3"] {
+  background-color: #555;
 }
