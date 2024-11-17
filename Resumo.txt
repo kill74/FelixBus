@@ -8,3 +8,20 @@ Ainda nao sei se irei fazer aqui tambem a pagina de funcionarios aqui tambem, po
 
 Na página de admin terá de teremos de criar basicamente um site dentro de um site. Pois não estou a ver outra forma de fazermos ele ter acesso ao menu normal que o utilizador tem acesso com o admin. Mas ainda tenho de ver.
 
+File dos Bilhetes:
+
+Teremos de criar uma base de dados do tipo:
+
+CREATE TABLE IF NOT EXISTS bilhetes ( //ira criar a tabela se não existe
+    ID_Pesquisa int,
+    Origem varchar (250),
+    Destino varchar (250),
+    Data DATETIME,
+    Preço DECIMAL (10,2) //melhor opção para guardar dinheiro é o DESIMAL(10,2), imaginemso que metemos 876,000.000 ira ficar guardado como 876
+)
+
+Cada bilhete terá de ter um ID diferente, neste caso poderemos utilizar o rand() para meter numeros random nos diferentes bilhetes.
+
+Fazer um link para os visitantes. Eles podem fazer o que quiserem menos ver o perfil e comprar bilhetes. Por isso temos de ver como vamos fazer quanto a esses dois passos.
+
+
