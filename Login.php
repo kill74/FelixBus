@@ -1,4 +1,4 @@
-<?php
+    <?php
 session_start(); //Isto ira iniciar a sessao (teremos de meter isto em todas as páginas)
 
 // Conectar ao banco de dados

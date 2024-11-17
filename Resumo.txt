@@ -6,3 +6,5 @@ Teremos de criar uma tabela na base de dados para guardar as informações de lo
 
 Ainda nao sei se irei fazer aqui tambem a pagina de funcionarios aqui tambem, pois os funcionarios têm quase a mesma função que os admins. (ainda por ver)
 
+Na página de admin terá de teremos de criar basicamente um site dentro de um site. Pois não estou a ver outra forma de fazermos ele ter acesso ao menu normal que o utilizador tem acesso com o admin. Mas ainda tenho de ver.
+
