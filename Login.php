@@ -29,7 +29,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'register') {
             $stmt = $pdo->prepare("INSERT INTO login (username, email, password) VALUES (?, ?, ?)");
             $stmt->execute([$username, $email, $senha_hash]);
             echo "Registro realizado com sucesso!";
-
             // Redirecionamento após o registro (sem echo antes do header)
             header("Location: Login.html");
             exit();
@@ -67,12 +66,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
     $stmt->execute([':nome' => $Nome, ':password' => $Password]);
     $login = $stmt->fetch(); 
     //Isto deve estar mal mas tenho de ver 
-    if ($smt){
-        if($smt[2] == 1){
-            header('location: contaAdm.html');
+    if ($stmt->rowCount() > 0) {
+        $login = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($login['is_admin'] == 1) {
+            header('Location: contaAdm.html');
+        } else {
+            header('Location: contanormal.html');
         }
-            header ('location: contanormal.html');
-            exit(); //para acabar o procedimento 
-    }
+        exit();
+    }    
 }
 ?>
