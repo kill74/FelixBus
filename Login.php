@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); //Isto ira iniciar a sessao (teremos de meter isto em todas as páginas)
 
 // Conectar ao banco de dados
 $pdo = new PDO("mysql:host=localhost;dbname=trabalho_php", "root", "", [
