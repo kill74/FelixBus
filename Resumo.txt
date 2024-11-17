@@ -24,4 +24,14 @@ Cada bilhete terá de ter um ID diferente, neste caso poderemos utilizar o rand(
 
 Fazer um link para os visitantes. Eles podem fazer o que quiserem menos ver o perfil e comprar bilhetes. Por isso temos de ver como vamos fazer quanto a esses dois passos.
 
+Página da Carteira:
+
+Irá ser como a página de perfil mas teremos 2 botões para "remover saldo" e "adicionar saldo", depois de carregarmos num dos botões irá aparecer uma janela pop up que irá mostrar o valor que temos tal como o que queremos adicionar saldo ou tirar o saldo.
+
+Também poderemos meter a data em que retirou dinheiro ou inseriou dinheiro. Como por exemplo:
+
+  - Carregamento de €20.00 em 01/11/2024
+
+TAMBÉM TEMOS DE METER POP UPS, consuante o tempo que a pessoa está no site irá aparecer algumas promoções, ou quano carregamos no botão de comprar aparecer que entrou agora o bilhete em promoção (exemplo).
+
 
