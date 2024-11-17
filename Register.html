@@ -1,46 +1,156 @@
 <!DOCTYPE html>
 <html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registo</title>
-    <link rel="stylesheet" href="styleLogin.css">
-</head>
-<body>
-<div class="container1">
-    <h2>Registo</h2>
-    <form action="Login.php" method="POST" class="register-form">
-        <input type="hidden" name="action" value="register">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      html,
+      body {
+        height: 100%; /* Garante que o body ocupa 100% da altura */
+      }
+
+      body {
+        margin: 0;
+        background-color: #f4f4f4;
+        display: flex; /* Centraliza o conteúdo */
+        justify-content: center;
+        align-items: center;
+      }
+
+      .container1 {
+        width: 90%; /* Preenche 90% da largura da tela */
+        max-width: 400px; /* Limita a largura máxima */
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      h2 {
+        margin-bottom: 1rem;
+        color: #333;
+      }
+
+      .input-group {
+        margin-bottom: 1.5rem;
+        text-align: left;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: #555;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      input[type="text"]:focus,
+      input[type="email"]:focus,
+      input[type="password"]:focus {
+        border-color: #007bff;
+        outline: none;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: #007bff;
+        border: none;
+        color: #fff;
+        font-size: 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+      }
+
+      .redirect {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #555;
+      }
+
+      .redirect a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .redirect a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container1">
+      <h2>Registo</h2>
+      <form action="Login.php" method="POST" class="register-form">
+        <input type="hidden" name="action" value="register" />
 
         <div class="input-group">
-            <label for="username">Usuário:</label>
-            <input type="text" id="username" name="username" required placeholder="Digite seu nome de usuário">
+          <label for="username">Usuário:</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            placeholder="Digite seu nome de usuário" />
         </div>
 
-        <br>
+        <br />
 
         <div class="input-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required placeholder="Digite seu email">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="Digite seu email" />
         </div>
 
-        <br>
+        <br />
 
         <div class="input-group">
-            <label for="password">Senha:</label>
-            <input type="password" id="password" name="password" required placeholder="Digite sua senha">
+          <label for="password">Senha:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="Digite sua senha" />
         </div>
 
-        <br>
+        <br />
 
         <button type="submit" class="btn btn:hover">Registar</button>
-    </form>
+      </form>
 
-        <br>
+      <br />
 
-    <p class="redirect redirect:a ">Já tem uma conta? <a href="Login.html">Entre aqui</a>.</p>
-</div>
-</body>
+      <p class="redirect redirect:a">
+        Já tem uma conta? <a href="Login.html">Entre aqui</a>.
+      </p>
+    </div>
+  </body>
 </html>
-
-
