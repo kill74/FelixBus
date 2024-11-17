@@ -34,4 +34,8 @@ Também poderemos meter a data em que retirou dinheiro ou inseriou dinheiro. Com
 
 TAMBÉM TEMOS DE METER POP UPS, consuante o tempo que a pessoa está no site irá aparecer algumas promoções, ou quano carregamos no botão de comprar aparecer que entrou agora o bilhete em promoção (exemplo).
 
+PHP:
 
+Na parte de pesquisar os horários podemos fazer uma tabela de dados, para que quando uma pessoa digite a origem e o destino va diretamente para a pagina do bilhete.	
+
+Ou também pode aparecer por baixo como temos na pagina principal.
