@@ -6,13 +6,7 @@ $pdo = new PDO ("mysql:host=localhost;dbname= trabalho_php",
    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
 
+
   
-
-
-
-
-
-
-
 
 ?>
