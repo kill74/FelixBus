@@ -7,12 +7,12 @@
 
 body {
   background-color: #f4f4f4;
-  color: #333;
+  color: #2d3e50;
   line-height: 1.6;
 }
 
 header {
-  background-color: #333;
+  background-color: #2d3e50;
   color: #fff;
   padding: 20px;
   text-align: center;
@@ -58,19 +58,19 @@ section {
 
 h2 {
   font-size: 24px;
-  color: #333;
+  color: #2d3e50;
   margin-bottom: 10px;
 }
 
 h3 {
   font-size: 20px;
   margin-top: 15px;
-  color: #555;
+  color: #2d3e50;
 }
 
 button {
   padding: 10px 20px;
-  background-color: #333;
+  background-color: #2d3e50;
   color: #fff;
   border: none;
   border-radius: 3px;
@@ -79,7 +79,7 @@ button {
 }
 
 button:hover {
-  background-color: #555;
+  background-color: #2d3e50;
 }
 
 form label {
@@ -98,7 +98,7 @@ form button {
 footer {
   text-align: center;
   padding: 15px 0;
-  background-color: #333;
+  background-color: #2d3e50;
   color: #fff;
   font-size: 14px;
 }
@@ -144,7 +144,7 @@ footer {
 .carousel-controls label {
   width: 12px;
   height: 12px;
-  background-color: #333;
+  background-color: #2d3e50;
   border-radius: 50%;
   margin: 0 5px;
   cursor: pointer;
@@ -170,7 +170,7 @@ input[type="radio"] {
 #carousel-1:checked ~ .carousel-controls label[for="carousel-1"],
 #carousel-2:checked ~ .carousel-controls label[for="carousel-2"],
 #carousel-3:checked ~ .carousel-controls label[for="carousel-3"] {
-  background-color: #555;
+  background-color: #2d3e50;
 }
 
 
@@ -192,7 +192,7 @@ input[type="radio"] {
 .social-links a {
   text-decoration: none;
   color: #fff; /* Cor do texto */
-  display: flex;
+  display: flex;  
   align-items: center;
   gap: 5px; /* Espaço entre o ícone e o texto */
   font-weight: bold;
