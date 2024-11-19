@@ -32,6 +32,8 @@ Também poderemos meter a data em que retirou dinheiro ou inseriou dinheiro. Com
 
   - Carregamento de €20.00 em 01/11/2024
 
+Pop Ups:
+
 TAMBÉM TEMOS DE METER POP UPS, consuante o tempo que a pessoa está no site irá aparecer algumas promoções, ou quano carregamos no botão de comprar aparecer que entrou agora o bilhete em promoção (exemplo).
 
 PHP:
