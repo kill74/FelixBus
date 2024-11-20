@@ -14,20 +14,20 @@
 
       html,
       body {
-        height: 100%; /* Garante que o body ocupa 100% da altura */
+        height: 100%;
       }
 
       body {
         margin: 0;
         background-color: #f4f4f4;
-        display: flex; /* Centraliza o conteúdo */
+        display: flex;
         justify-content: center;
         align-items: center;
       }
 
       .container1 {
-        width: 90%; /* Preenche 90% da largura da tela */
-        max-width: 400px; /* Limita a largura máxima */
+        width: 90%;
+        max-width: 400px;
         padding: 2rem;
         background-color: #fff;
         border-radius: 8px;
@@ -134,5 +134,15 @@
         Não tem uma conta? <a href="Register.html">Registe-se aqui</a>.
       </p>
     </div>
+
+    <!-- JavaScript para mostrar o pop-up em caso de erro -->
+    <script>
+      window.onload = function() {
+        <?php if (isset($_SESSION['error'])): ?>
+          alert("<?php echo $_SESSION['error']; ?>");
+          <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+      };
+    </script>
   </body>
 </html>

@@ -41,26 +41,24 @@ if (isset($_POST['action']) && $_POST['action'] === 'register') {
 // Processar Login
 // Verifica se o formulário foi submetido com o campo 'action' e se o valor dele é 'login'
 if (isset($_POST['action']) && $_POST['action'] === 'login') {
-     // Obtém o valor do campo 'email' do formulário, validando-o como um endereço de email
     $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
-    // Obtém o valor do campo 'password' do formulário,com filtragem
     $password = filter_var($_POST['password']);
-    $stmt = $pdo->prepare("SELECT * FROM login WHERE email = ?"); 
+    $stmt = $pdo->prepare("SELECT * FROM login WHERE email = ?");
     $stmt->execute([$email]);
     $usuario = $stmt->fetch();
-    
+
     // Verifica se o usuário foi encontrado e se a senha está correta
     if ($usuario && password_verify($password, $usuario['password'])) {
-        // Inicia a sessão do utilizador, guardando o ID na sessão
         $_SESSION['user_id'] = $usuario['id'];
-        // Tenta redireccionar o utilizador para a página inicial (index.html)
-        header("Location: index.html"); // comentei pois ainda não está a funcionar
+        header("Location: index.html");
         exit();
     } else {
-        // Mensagem de erro caso o email ou a senha estejam incorretos
-        echo "Email ou senha incorretos!";
+        // Armazena mensagem de erro na sessão
+        $_SESSION['error'] = "Email ou senha incorretos!";
+        header("Location: login.html"); // Redireciona para a página de login
+        exit();
     }
-
+}
     //Login Admin (Ainda nao esta a funcionar)
     $stmt = $pdo->prepare("SELECT Nome, Password, is_admin FROM tb_utilizador WHERE Nome = :nome AND Password = :password");
     $stmt->execute([':nome' => $Nome, ':password' => $Password]);
@@ -69,11 +67,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
     if ($stmt->rowCount() > 0) {
         $login = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($login['is_admin'] == 1) {
-            header('Location: contaAdm.html');
+            header('Location: PerfilAdm.html');
         } else {
-            header('Location: contanormal.html');
+            header('Location: Perfil.html');
         }
         exit();
     }    
-}
 ?>
