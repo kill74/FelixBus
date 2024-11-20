@@ -248,3 +248,38 @@ footer {
   font-weight: bold;
   color: #009879;
 }
+
+.search {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+  max-width: fit-content;
+  margin-inline: auto;
+}
+
+.search input[type="text"] {
+  padding: 6px;
+  margin-right: 10px;
+  border: none;
+  font-size: 17px;
+  border-radius: 4px;
+}
+
+.search button {
+  padding: 10px 10px;
+  background: white;
+  color: green;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.search button i {
+  font-size: 18px;
+}
+
+.search button:hover {
+  background: darkgreen;
+  color: white;
+}
+
