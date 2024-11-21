@@ -103,93 +103,85 @@ footer {
   font-size: 14px;
 }
 
-* {box-sizing:border-box}
-
 /* Slideshow container */
 .slideshow-container {
-  max-width: 1000px;
-  position: relative;
+  width: 400px;
   margin: auto;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Hide the images by default */
-.mySlides {
+/* Hide the radio buttons */
+input[type="radio"] {
   display: none;
 }
 
-/* Next & previous buttons */
-.prev, .next {
-  cursor: pointer;
-  position: absolute;
-  top: 50%;
-  width: auto;
-  margin-top: -22px;
-  padding: 16px;
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-  transition: 0.6s ease;
-  border-radius: 0 3px 3px 0;
-  user-select: none;
+/* Slides container */
+.slides {
+  display: flex;
+  transition: transform 0.6s ease;
+  width: 300%; /* Adjust for the number of slides */
 }
 
-/* Position the "next button" to the right */
-.next {
-  right: 0;
-  border-radius: 3px 0 0 3px;
-}
-
-/* On hover, add a black background color with a little bit see-through */
-.prev:hover, .next:hover {
-  background-color: rgba(0,0,0,0.8);
-}
-
-/* Caption text */
-.text {
-  color: #f2f2f2;
-  font-size: 15px;
-  padding: 8px 12px;
-  position: absolute;
-  bottom: 8px;
+/* Each slide */
+.slide {
   width: 100%;
-  text-align: center;
+  flex-shrink: 0;
 }
 
-/* Number text (1/3 etc) */
-.numbertext {
-  color: #f2f2f2;
-  font-size: 12px;
-  padding: 8px 12px;
+/* Slide images */
+/* Ajustar as imagens */
+.slide img {
+  max-width: 400px; /* Ajusta a largura ao tamanho do contêiner */
+  max-height: 700px; /* Ajusta a altura ao tamanho do contêiner */
+ /* Mantém a proporção da imagem */
+  object-fit: contain; /* Evita cortar a imagem */
+}
+
+
+/* Positioning for slides when corresponding radio is checked */
+#slide1:checked ~ .slides {
+  transform: translateX(0);
+}
+
+#slide2:checked ~ .slides {
+  transform: translateX(-100%);
+}
+
+#slide3:checked ~ .slides {
+  transform: translateX(-200%);
+}
+
+/* Navigation buttons */
+.navigation {
   position: absolute;
-  top: 0;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
 }
 
-/* The dots/bullets/indicators */
-.dot {
-  cursor: pointer;
-  height: 15px;
+.nav-button {
   width: 15px;
-  margin: 0 2px;
+  height: 15px;
   background-color: #bbb;
   border-radius: 50%;
-  display: inline-block;
-  transition: background-color 0.6s ease;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.active, .dot:hover {
+.nav-button:hover {
   background-color: #717171;
 }
 
-/* Fading animation */
-.fade {
-  animation-name: fade;
-  animation-duration: 1.5s;
+/* Active state for navigation buttons */
+#slide1:checked ~ .navigation label:nth-of-type(1),
+#slide2:checked ~ .navigation label:nth-of-type(2),
+#slide3:checked ~ .navigation label:nth-of-type(3) {
+  background-color: #717171;
 }
 
-@keyframes fade {
-  from {opacity: .4}
-  to {opacity: 1}
-}
 
 
 /* CSS PARA A CENA DOS LINKS*/
