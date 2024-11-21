@@ -63,6 +63,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
         // Guardar a mensagem de erro
         $_SESSION['erro'] = "Email ou palavra-passe estão errados!";
         header("Location: login.html");
+        echo ("Palavra pass está errada");
         exit();
     }
 }
