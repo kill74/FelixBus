@@ -22,9 +22,6 @@ popupOverlay.addEventListener("click", (event) => {
     popupOverlay.style.display = "none";
   }
 });
-// Quantidade dos bilhetes preços
-Quantidade.addEventListener("click", (event) => {
-  
-})
+
 
 
