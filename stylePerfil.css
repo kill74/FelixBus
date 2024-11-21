@@ -105,12 +105,7 @@ footer {
   text-align: center;
   margin-top: 2rem;
   display: block;
-<<<<<<< HEAD
-  position: fixed;
-=======
-  position: fixed   ;
->>>>>>> ba551b121b928a0d80e4b06c82c7c9b4d03140b9
-  bottom: 0;
+  position: relative;
   width: 100%;
 }
 
@@ -285,5 +280,74 @@ footer {
 .search button:hover {
   background: darkgreen;
   color: white;
+}
+
+
+/* Botao para comprar */
+
+.Butao-Comprar{
+  background-color: #2d3e50;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* POP UP  */
+
+/* Fundo escurecido */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Pop-up */
+.popup {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+/* Botão de Fechar */
+.close-popup {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.close-popup:hover {
+  background-color: #d32f2f;
+}
+
+/* Botão principal */
+.Butao-Comprar {
+  background-color: #2d3e50;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.Butao-Comprar:hover {
+  background-color: #ffd700;
+  color: #000;
 }
 
