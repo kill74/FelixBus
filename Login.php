@@ -8,7 +8,7 @@ $pdo = new PDO("mysql:host=localhost;dbname=trabalho_php", "root", "", [
 function limpar_input($dados) {
     return htmlspecialchars(stripslashes(trim($dados)));
 }
-// --- REGISTO ---
+//Register
 if (isset($_POST['action']) && $_POST['action'] === 'register') {
     $username = limpar_input($_POST['username']);
     $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
@@ -41,7 +41,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'register') {
         echo "Erro ao registar: " . $erro->getMessage();
     }
 }
-// --- LOGIN ---
+//Login
 if (isset($_POST['action']) && $_POST['action'] === 'login') {
     $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
     $password = limpar_input($_POST['password']); // Senha introduzida pelo utilizador
