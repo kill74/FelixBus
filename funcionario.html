@@ -71,6 +71,15 @@
         border-radius: 8px;
         }
 
+        .titulo{
+            text-align: center;
+            color: #2d3e50;
+        }
+
+        .img{
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
@@ -79,75 +88,21 @@
         <br>
         <nav>
             <ul>
-                <li><a href="index.html">Página Principal</a></li>
-                <li><a href="perfil.html">Perfil</a></li>
-                <li><a href="carteira.html">Carteira</a></li>
-                <li><a href="horarios.html">Horários</a></li>
-                <li><a href="#historico">Histórico de Viagens</a></li>
-                <li><a href="#notificacoes">Notificações</a></li>
+                <li><a href="GestaoCarteira.html">Gestao da Carteira</a></li>
+                <li><a href="GestaoHorario.html">Gestao dos bilhetes</a></li>
+                <li><a href="GestaoPerfil.html">Editar Dados Pessoais</a></li>
             </ul>
         </nav>
     </header>
     <br><br>
     <div>
 
-        <div class="slideshow-container">
-        <!-- Radio buttons for controlling the slides -->
-            <input type="radio" name="slider" id="slide1" checked>
-            <input type="radio" name="slider" id="slide2">
-            <input type="radio" name="slider" id="slide3">
-      
-        <!-- Slides -->
-        <div class="slides">
-          <div class="slide">
-            <img src="img/img8 (2).jpg" alt="Image 1">
-          </div>
-          <div class="slide">
-            <img src="img/img10 (1).jpeg" alt="Image 2">
-          </div>
-          <div class="slide">
-            <img src="img/img3.jpg" alt="Image 3">
-          </div>
-        </div>
-      
-        <!-- Navigation buttons -->
-        <div class="navigation">
-          <label for="slide1" class="nav-button"></label>
-          <label for="slide2" class="nav-button"></label>
-          <label for="slide3" class="nav-button"></label>
-        </div>
-      </div>
-      
+        <h1 class="titulo"> Página de Funcionário </h1><br><br><br>
+
+    <div class="img">
+        <img src="img/logofelixbus.png" alt="Imagem 1">
     </div>
 
-    <main>
-        <!-- Secção dos horarios -->
-        <section id="horarios">
-            <h2>Pesquisar Horários</h2>
-            <form>
-                <label for="origem">Origem:</label>
-                <input type="text" id="origem" name="origem" placeholder="Cidade de origem">
-                <label for="destino">Destino:</label>
-                <input type="text" id="destino" name="destino" placeholder="Cidade de destino">
-                <label for="data">Data:</label>
-                <input type="date" id="data" name="data">
-                <!-- isto tem de ser mandado para a pagina de bilhetes-->
-                <button type="submit">Pesquisar</button>
-            </form>
-            <div class="resultados">
-                <h3>Resultados da Pesquisa</h3>
-                <p>Origem: Lisboa | Destino: Porto | Horário: 10:00 - 14:00</p>
-                <p>Origem: Lisboa | Destino: Porto | Horário: 12:00 - 16:00</p>
-            </div>
-        </section>
-        <!-- Sobre Secçãpo -->
-        <section id="sobre">
-            <h2>Sobre Nós</h2>
-            <p>Somos uma empresa dedicada a oferecer transporte seguro e confortável para destinos em todo o país. 
-            Com nossa plataforma de fácil uso, você pode planejar suas viagens, gerenciar seu perfil, 
-            e manter-se atualizado com nossos horários e promoções.</p>
-        </section>
-    </main>
     <footer>
         <section id="contacto">
             <h2>Contato</h2>

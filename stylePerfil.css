@@ -105,11 +105,8 @@ footer {
   text-align: center;
   margin-top: 2rem;
   display: block;
-<<<<<<< HEAD
   position: fixed;
-=======
-  position: fixed   ;
->>>>>>> ba551b121b928a0d80e4b06c82c7c9b4d03140b9
+  position: fixed;
   bottom: 0;
   width: 100%;
 }
