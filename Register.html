@@ -25,7 +25,7 @@
         align-items: center;
       }
 
-      .container1 {
+      .container {
         width: 90%; /* Preenche 90% da largura da tela */
         max-width: 400px; /* Limita a largura máxima */
         padding: 2rem;
@@ -102,23 +102,24 @@
     </style>
   </head>
   <body>
-    <div class="container1">
-      <h2>Registo</h2>
+    <div class="container">
+      <h2>Registo de Utilizador</h2>
       <form action="Login.php" method="POST" class="register-form">
         <input type="hidden" name="action" value="register" />
 
+        <!-- Nome de Utilizador -->
         <div class="input-group">
-          <label for="username">Usuário:</label>
+          <label for="username">Nome de Utilizador:</label>
           <input
             type="text"
             id="username"
             name="username"
             required
-            placeholder="Digite seu nome de usuário" />
+            placeholder="Digite o seu nome de utilizador"
+          />
         </div>
 
-        <br />
-
+        <!-- Email -->
         <div class="input-group">
           <label for="email">Email:</label>
           <input
@@ -126,11 +127,11 @@
             id="email"
             name="email"
             required
-            placeholder="Digite seu email" />
+            placeholder="Digite o seu email"
+          />
         </div>
 
-        <br />
-
+        <!-- Senha -->
         <div class="input-group">
           <label for="password">Senha:</label>
           <input
@@ -138,18 +139,17 @@
             id="password"
             name="password"
             required
-            placeholder="Digite sua senha" />
+            placeholder="Digite a sua senha"
+          />
         </div>
 
-        <br />
-
-        <button type="submit" class="btn btn:hover">Registar</button>
+        <!-- Botão de Registo -->
+        <button type="submit" class="btn">Registar</button>
       </form>
 
-      <br />
-
-      <p class="redirect redirect:a">
-        Já tem uma conta? <a href="Login.html">Entre aqui</a>.
+      <!-- Link para Login -->
+      <p class="redirect">
+        Já tem uma conta? <a href="login.html">Entrar</a>.
       </p>
     </div>
   </body>
