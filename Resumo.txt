@@ -41,3 +41,6 @@ PHP:
 Na parte de pesquisar os horários podemos fazer uma tabela de dados, para que quando uma pessoa digite a origem e o destino va diretamente para a pagina do bilhete.	
 
 Ou também pode aparecer por baixo como temos na pagina principal.
+
+pass admin: 246810
+pass funcionario: 1020304050  
