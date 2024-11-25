@@ -2,6 +2,13 @@
 // Inicia a sessão para guardar dados entre páginas
 session_start(); 
 
+// para nao conseguir entrar pelo url
+if (!isset($_SESSION ['user_id'])){
+    //Se o user nao tiver feito o login ira ser redirecionado para a pagina de login
+    header("Location: index.html");
+    exit();
+}
+
 // Estabelece a ligação à base de dados
 // Utiliza PDO para maior segurança e melhor gestão de erros
 $pdo = new PDO("mysql:host=localhost;dbname=trabalho_php", "root", "", [
