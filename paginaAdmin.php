@@ -12,7 +12,7 @@ if (!isset($_SESSION ['user_id'])){
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
-    $password_hash = password_hash($password, PASSWORD_DEFAULT); //tenohg de ver isto (nao esta completo)
+   // $password_hash = password_hash($password, PASSWORD_DEFAULT); nao e preciso utilizar isto 
 
     $sql = "SELECT * FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);

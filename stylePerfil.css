@@ -81,8 +81,7 @@ main {
   margin-bottom: 0.5rem;
 }
 
-/* Botão de Mudar Senha */
-.button {
+button {
   display: inline-block;
   padding: 0.7rem 1.5rem;
   color: #fff;
@@ -93,7 +92,7 @@ main {
   transition: background-color 0.3s;
 }
 
-.button:hover {
+button:hover {
   background-color: #ffd700;
 }
 
@@ -190,12 +189,12 @@ footer {
   height: 24px;
 }
 
-.tamanho-imagem{
+.tamanho-imagem {
   width: 150px;
   height: 110px;
 }
 
-.Sou-uma-Caixa{
+.Sou-uma-Caixa {
   border: solid; /* isto vai meter a caixa com as bordas redondas*/
   background-color: #f2f2f2;
   border-radius: 10px;
@@ -210,7 +209,7 @@ footer {
   margin-top: 100px;
 }
 
-.Tabela{
+.Tabela {
   border-collapse: collapse;
   margin: 25px 0;
   font-size: 0.9em;
@@ -230,15 +229,15 @@ footer {
 }
 
 .Tabela th,
-.Tabela td{
+.Tabela td {
   padding: 12px 15px;
 }
 
-.Tabela tbody tr{
+.Tabela tbody tr {
   border-bottom: 1px solid #dddddd;
 }
 
-.Tabela tbody tr:nth-last-of-type(even){
+.Tabela tbody tr:nth-last-of-type(even) {
   background-color: #f3f3f3;
 }
 
@@ -246,7 +245,7 @@ footer {
   border-bottom: 2px solid #009879;
 }
 
-.Tabla tbody tr.Skibidi{
+.Tabla tbody tr.Skibidi {
   font-weight: bold;
   color: #009879;
 }
@@ -285,10 +284,9 @@ footer {
   color: white;
 }
 
-
 /* Botao para comprar */
 
-.Butao-Comprar{
+.Butao-Comprar {
   background-color: #2d3e50;
   color: #fff;
   padding: 10px 20px;
@@ -353,4 +351,3 @@ footer {
   background-color: #ffd700;
   color: #000;
 }
-

@@ -27,13 +27,13 @@ if (!isset($_SESSION ['user_id'])){
                 <li><a href="perfil.php">Perfil</a></li>
                 <li><a href="carteira.php">Carteira</a></li>
                 <li><a href="horarios.php">Horários</a></li>
-                <li><a href="#historico">Histórico de Viagens</a></li>
             </ul>
         </nav>
     </header>
     <main>
         <!-- Secção do Perfil -->
         <section id="perfil">
+            <br>
             <br>
             <br>
             <h2>Perfil</h2>
@@ -45,7 +45,11 @@ if (!isset($_SESSION ['user_id'])){
             <p><strong>Telefone: </strong> +351 912 345 678</p>
             <p><strong>Endereço: </strong> Rua Principal, 123, Castelo Branco</p><br>
             <br>
-            <br>
+            <center>
+            <a href="horarios.php" target="_blank">
+                    <button>Pesquisar</button>
+                </a>
+            </center>
     </main>
     <footer>
         <img src="" alt=""> <!--Adicionar aqui uma imagem para ficar mais bonito-->

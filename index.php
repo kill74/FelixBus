@@ -137,14 +137,17 @@ if (!isset($_SESSION ['user_id'])){
                 <label for="data">Data:</label>
                 <input type="date" id="data" name="data">
                 <!-- isto tem de ser mandado para a pagina de bilhetes-->
-                <button type="submit">Pesquisar</button>
+                <!--<a href="horarios.php">
+                    <button>Pesquisar</button>
+                </a> --> <!-- temos de ver se isto da para fazer -->
             </form>
-            <div class="resultados">
-                <h3>Resultados da Pesquisa</h3>
-                <p>Origem: Lisboa | Destino: Porto | Horário: 10:00 - 14:00</p>
-                <p>Origem: Lisboa | Destino: Porto | Horário: 12:00 - 16:00</p>
-            </div>
-        </section>
+            <br>
+            <center>
+            <a href="horarios.php" target="_blank">
+                    <button>Pesquisar</button>
+                </a>
+            </center>
+            <br>
         <!-- Sobre Secçãpo -->
         <section id="sobre">
             <h2>Sobre Nós</h2>
