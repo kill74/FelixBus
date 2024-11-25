@@ -1,3 +1,14 @@
+<?php
+session_start(); 
+
+// para nao conseguir entrar pelo url
+if (!isset($_SESSION ['user_id'])){
+    //Se o user nao tiver feito o login ira ser redirecionado para a pagina de login
+    header("Location: index.html");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -78,29 +89,24 @@
         <br>
         <nav>
             <ul>
-                <li><a href="index.html">Página Principal</a></li>
-                <li><a href="perfil.html">Perfil</a></li>
-                <li><a href="carteira.html">Carteira</a></li>
-                <li><a href="horarios.html">Horários</a></li>
-                <li><a href="#historico">Histórico de Viagens</a></li>
+                <li><a href="GestaoCarteira.php">Gestao da Carteira</a></li>
+                <li><a href="GestaoHorario.php">Gestao dos bilhetes</a></li>
+                <li><a href="GestaoPerfil.php">Editar Dados Pessoais</a></li>
             </ul>
         </nav>
     </header>
     <br><br>
         <div>
+            <br>
             <img src="img/logofelixbus.png" alt="Imagem 1">
             <br>
             <label for="valor">Valor:</label><br>
                 <input class="texto" type="number" id="valor" name="valor"><br><br><br>
             
-                <a href="perfil.html" class="button">Adicionar Saldo</a>
-                <a href="perfil.html" class="button">Levantar Saldo</a>
+                <a href="perfil.html" class="button">Editar Saldo</a>
         </div>
         <br><br>
         <div class="caixa-carregamento">
-            <p> - Carregamento de €20.00 em 01/11/2024</p> <br>
-            <p> - Carregamento de €20.00 em 01/11/2024</p> <br>
-            <p> - Carregamento de €20.00 em 01/11/2024</p> <br>
             <p> - Carregamento de €20.00 em 01/11/2024</p> <br>
         </div>
         <br><br>

@@ -218,7 +218,7 @@
           <div class="nav-item">Clientes</div>
           <div class="nav-item">Visitantes</div>
           <div class="nav-item">Agendamentos</div>
-          <div class="nav-item">Relatórios</div>
+          <div class="index.php">Relatórios</div>
         </nav>
       </div>
 

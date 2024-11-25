@@ -1,3 +1,13 @@
+<?php
+session_start(); 
+
+// para nao conseguir entrar pelo url
+if (!isset($_SESSION ['user_id'])){
+    //Se o user nao tiver feito o login ira ser redirecionado para a pagina de login
+    header("Location: index.html");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -78,11 +88,10 @@
         <br>
         <nav>
             <ul>
-                <li><a href="index.html">Página Principal</a></li>
-                <li><a href="perfil.html">Perfil</a></li>
-                <li><a href="carteira.html">Carteira</a></li>
-                <li><a href="horarios.html">Horários</a></li>
-                <li><a href="#historico">Histórico de Viagens</a></li>
+                <li><a href="index.php">Página Principal</a></li>
+                <li><a href="perfil.php">Perfil</a></li>
+                <li><a href="carteira.php">Carteira</a></li>
+                <li><a href="horarios.php">Horários</a></li>
             </ul>
         </nav>
     </header>

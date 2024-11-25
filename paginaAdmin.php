@@ -1,3 +1,14 @@
+<?php
+session_start(); 
+
+// para nao conseguir entrar pelo url
+if (!isset($_SESSION ['user_id'])){
+    //Se o user nao tiver feito o login ira ser redirecionado para a pagina de login
+    header("Location: index.html");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
@@ -157,9 +168,9 @@
         <nav>
           <div class="nav-item">Dashboard</div>
           <div class="nav-item">Usuários</div>
-          <div class="nav-item">Produtos</div>
           <div class="nav-item">Pedidos</div>
           <div class="nav-item">Configurações</div>
+          <div class="nav-item"><button> Pagina Principal </button></div>
         </nav>
       </div>
 

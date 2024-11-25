@@ -1,3 +1,13 @@
+<?php
+session_start(); 
+
+// para nao conseguir entrar pelo url
+if (!isset($_SESSION ['user_id'])){
+    //Se o user nao tiver feito o login ira ser redirecionado para a pagina de login
+    header("Location: index.html");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -78,21 +88,22 @@
         <br>
         <nav>
             <ul>
-                <li><a href="GestaoCarteira.html">Gestao da Carteira</a></li>
-                <li><a href="GestaoHorario.html">Gestao dos bilhetes</a></li>
-                <li><a href="GestaoPerfil.html">Editar Dados Pessoais</a></li>
+                <li><a href="index.php">Página Principal</a></li>
+                <li><a href="perfil.php">Perfil</a></li>
+                <li><a href="carteira.php">Carteira</a></li>
+                <li><a href="horarios.php">Horários</a></li>
             </ul>
         </nav>
     </header>
     <br><br>
         <div>
-            <br>
             <img src="img/logofelixbus.png" alt="Imagem 1">
             <br>
             <label for="valor">Valor:</label><br>
                 <input class="texto" type="number" id="valor" name="valor"><br><br><br>
             
-                <a href="perfil.html" class="button">Editar Saldo</a>
+                <a href="perfil.html" class="button">Adicionar Saldo</a>
+                <a href="perfil.html" class="button">Levantar Saldo</a>
         </div>
         <br><br>
         <div class="caixa-carregamento">

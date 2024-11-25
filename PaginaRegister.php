@@ -1,3 +1,14 @@
+<?php
+session_start(); 
+
+// para nao conseguir entrar pelo url
+if (!isset($_SESSION ['user_id'])){
+    //Se o user nao tiver feito o login ira ser redirecionado para a pagina de login
+    header("Location: index.html");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -74,7 +85,7 @@
             <button type="submit">Registrar</button>
         </form>
         <div class="login-link">
-            <a href="login.html">Já tem uma conta? Entre aqui</a>
+            <a href="login.php">Já tem uma conta? Entre aqui</a>
         </div>
     </div>
 </body>
