@@ -1,171 +1,78 @@
 <!DOCTYPE html>
 <html lang="pt">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
-      /* Estilo global para remover margens e melhorar a consistência */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: Arial, sans-serif;
-      }
-
-      /* Garantir que a altura preenche o ecrã */
-      html,
-      body {
-        height: 100%;
-      }
-
-      /* Estilo do corpo da página */
-      body {
-        margin: 0;
-        background-color: #f4f4f4; /* Cor de fundo cinzenta clara */
-        display: flex; /* Usado para centralizar o conteúdo */
-        justify-content: center;
-        align-items: center;
-      }
-
-      /* Estilo do contêiner principal */
-      .container1 {
-        width: 90%; /* Responsivo: ocupa 90% da largura da página */
-        max-width: 400px; /* Limite máximo de 400px */
-        padding: 2rem;
-        background-color: #fff; /* Fundo branco */
-        border-radius: 8px; /* Bordas arredondadas */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra leve */
-        text-align: center;
-      }
-
-      /* Título */
-      h2 {
-        margin-bottom: 1rem;
-        color: #333; /* Cor cinzenta escura */
-      }
-
-      /* Grupo de inputs */
-      .input-group {
-        margin-bottom: 1.5rem;
-        text-align: left; /* Texto alinhado à esquerda */
-      }
-
-      /* Estilo dos rótulos */
-      label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-        color: #555; /* Cinzento médio */
-      }
-
-      /* Estilo dos inputs */
-      input[type="text"],
-      input[type="email"],
-      input[type="password"] {
-        width: 100%; /* Preenche toda a largura disponível */
-        padding: 0.75rem;
-        border: 1px solid #ddd; /* Borda cinzenta clara */
-        border-radius: 4px;
-        font-size: 1rem;
-      }
-
-      /* Estilo para inputs quando focados */
-      input[type="text"]:focus,
-      input[type="email"]:focus,
-      input[type="password"]:focus {
-        border-color: #007bff; /* Borda azul */
-        outline: none;
-      }
-
-      /* Estilo do botão */
-      .btn {
-        width: 100%;
-        padding: 0.75rem;
-        background-color: #007bff; /* Azul */
-        border: none;
-        color: #fff; /* Texto branco */
-        font-size: 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-
-      /* Efeito ao passar o cursor sobre o botão */
-      .btn:hover {
-        background-color: #0056b3; /* Azul mais escuro */
-      }
-
-      /* Estilo do link de redirecionamento */
-      .redirect {
-        margin-top: 1rem;
-        font-size: 0.9rem;
-        color: #555;
-      }
-
-      .redirect a {
-        color: #007bff;
-        text-decoration: none;
-      }
-
-      /* Efeito ao passar o cursor sobre o link */
-      .redirect a:hover {
-        text-decoration: underline;
-      }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #166fe5;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        a {
+            color: #1877f2;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
-  </head>
-  <body>
-    <!-- Contêiner principal do formulário de login -->
-    <div class="container1">
-      <h2>Login</h2>
-      <!-- O formulário é enviado para o ficheiro Login.php -->
-      <form action="Login.php" method="POST" class="login-form">
-        <!-- Input oculto para indicar que a ação é de login -->
-        <input type="hidden" name="action" value="login" />
-
-        <!-- Campo para o email -->
-        <div class="input-group">
-          <label for="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            placeholder="Introduza o seu email" />
+</head>
+<body>
+    <div class="login-container">
+        <h2 style="text-align: center;">Login</h2>
+        <form method="POST" action="login.php">
+            <div class="form-group">
+                <input type="email" name="email" required placeholder="Email">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" required placeholder="Senha">
+            </div>
+            <input type="hidden" name="action" value="login">
+            <button type="submit">Entrar</button>
+        </form>
+        <div class="register-link">
+            <a href="register.html">Criar nova conta</a>
         </div>
-
-        <!-- Campo para a senha -->
-        <div class="input-group">
-          <label for="password">Senha:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            required
-            placeholder="Introduza a sua senha" />
-        </div>
-
-        <!-- Botão de submissão -->
-        <button type="submit" class="btn">Entrar</button>
-      </form>
-
-      <!-- Link para redirecionar ao registo -->
-      <p class="redirect">
-        Não tem uma conta? <a href="Register.html">Registe-se aqui</a>.
-      </p>
     </div>
-
-    <!-- Script JavaScript para mostrar mensagens de erro -->
-    <script>
-      window.onload = function () {
-        // Verifica se existe uma mensagem de erro na sessão PHP
-        <?php if (isset($_SESSION['error'])): ?>
-          // Mostra a mensagem de erro numa janela de alerta
-          alert("<?php echo $_SESSION['error']; ?>");
-          // Remove a mensagem da sessão após ser mostrada
-          <?php unset($_SESSION['error']); ?>
-        <?php endif; ?>
-      };
-    </script>
-  </body>
+</body>
 </html>
