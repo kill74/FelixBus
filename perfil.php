@@ -46,8 +46,8 @@ if (!isset($_SESSION ['user_id'])){
             <p><strong>Endereço: </strong> Rua Principal, 123, Castelo Branco</p><br>
             <br>
             <center>
-            <a href="horarios.php" target="_blank">
-                    <button>Pesquisar</button>
+            <a href="EditarPefil.php" target="_blank">
+                    <button>Editar Perfil</button>
                 </a>
             </center>
     </main>

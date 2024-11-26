@@ -14,7 +14,7 @@ if (!isset($_SESSION ['user_id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FelixBus</title>
-    <link rel="stylesheet" href="stylePerfil.css">
+    <link rel="stylesheet" href="styleIndex.css">
     
     <style>
         div {
@@ -100,10 +100,16 @@ if (!isset($_SESSION ['user_id'])){
             <img src="img/logofelixbus.png" alt="Imagem 1">
             <br>
             <label for="valor">Valor:</label><br>
+            <br>
                 <input class="texto" type="number" id="valor" name="valor"><br><br><br>
             
-                <a href="perfil.html" class="button">Adicionar Saldo</a>
-                <a href="perfil.html" class="button">Levantar Saldo</a>
+                <a href="#" target="_blank">
+                    <button>Depositar Saldo</button>
+                </a>
+                <br> 
+                <a href="#" target="_blank">
+                    <button>Levantar Saldo</button>
+                </a>
         </div>
         <br><br>
         <div class="caixa-carregamento">
