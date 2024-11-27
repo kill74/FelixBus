@@ -3,9 +3,9 @@ session_start();
 
 // para nao conseguir entrar pelo url
 if (!isset($_SESSION ['user_id'])){
-    //Se o user nao tiver feito o login ira ser redirecionado para a pagina de login
-    header("Location: index.html");
-    exit();
+  //Se o user nao tiver feito o login ira ser redirecionado para a pagina de login
+  header("Location: PaginaLogin.php");
+  exit();
 }
 
 // Login process

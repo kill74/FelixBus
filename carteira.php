@@ -4,7 +4,7 @@ session_start();
 // para nao conseguir entrar pelo url
 if (!isset($_SESSION ['user_id'])){
     //Se o user nao tiver feito o login ira ser redirecionado para a pagina de login
-    header("Location: index.html");
+    header("Location: PaginaLogin.php");
     exit();
 }
 ?>
@@ -14,7 +14,7 @@ if (!isset($_SESSION ['user_id'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FelixBus</title>
-    <link rel="stylesheet" href="styleIndex.css">
+    <link rel="stylesheet" href="style/styleIndex.css">
     
     <style>
         div {
