@@ -1,180 +1,85 @@
 <?php
-// Inicia a sessão para guardar dados entre páginas
-session_start(); 
+session_start();
 
-// Estabelece a ligação à base de dados
-// Utiliza PDO para maior segurança e melhor gestão de erros
+// Conexão com a base de dados
 $pdo = new PDO("mysql:host=localhost;dbname=trabalho_php", "root", "", [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
 
-// Função para limpar e sanitizar os dados introduzidos pelo utilizador
-// Previne ataques XSS e injections
+// Função para limpar os dados
 function limpar_input($dados) {
-    return htmlspecialchars(stripslashes(trim($dados)));
+    return htmlspecialchars(trim($dados));
 }
 
-// Sistema de Registo
+// **Registro de utilizadores**
 if (isset($_POST['action']) && $_POST['action'] === 'register') {
-    // Recolhe e limpa os dados do formulário
-    $username = limpar_input($_POST['username']);
-    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
-    $password = limpar_input($_POST['password']); 
-
-    try {
-        // Verifica se já existe um utilizador com este email
-        $stmt = $pdo->prepare("SELECT id FROM login WHERE email = ?");
-        $stmt->execute([$email]);
-        
-        if ($stmt->fetch()) {
-            // Se o email já existir, mostra mensagem de erro e redireciona após 3 segundos
-            echo "
-            <script>
-                alert('Este email já está registado!');
-                setTimeout(function() {
-                    window.location.href = 'PaginaRegister.php';
-                }, 3000);
-            </script>";
-        } else {
-            // Define o tipo de utilizador com base na palavra-passe
-            if ($password === "admin") {
-                $role = "admin";
-            } elseif ($password === "10203040") {
-                $role = "funcionario";
-            } else {
-                $role = "cliente";
-            }
-            // Encripta a palavra-passe antes de guardar na base de dados
-            $password_hash = password_hash($password, PASSWORD_DEFAULT);
-            // Insere o novo utilizador na base de dados
-            $stmt = $pdo->prepare("INSERT INTO login (username, email, password, role) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$username, $email, $password_hash, $role]);
-            // Mostra mensagem de sucesso e redireciona após 3 segundos
-            echo "
-            <script>
-                alert('Registo concluído com sucesso!');
-                setTimeout(function() {
-                    window.location.href = 'PaginaLogin.php';
-                }, 3000);
-            </script>";
-        }
-    } catch (PDOException $erro) {
-        // Em caso de erro na base de dados, mostra mensagem de erro
-        echo "
-        <script>
-            alert('Erro ao registar: " . $erro->getMessage() . "');
-            setTimeout(function() {
-                window.location.href = 'PaginaRegister.php';
-            }, 3000);
-        </script>"; 
-    }
-}
-// Sistema de Login
-if (isset($_POST['action']) && $_POST['action'] === 'login') {
-    // Recolhe e valida os dados do formulário
+    $nome = limpar_input($_POST['nome']);
     $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
     $password = limpar_input($_POST['password']);
-    // Verifica se o email é válido
-    if (!$email) {
-        echo "
-        <script>
-            alert('Email inválido!');
-            setTimeout(function() {
-                window.location.href = 'paginaLogin.php';
-            }, 3000);
-        </script>";
+    
+    if (!$email || empty($password) || empty($nome)) {
+        echo "<script>alert('Por favor, preencha todos os campos!'); window.location.href = 'PaginaRegister.php';</script>";
         exit();
     }
-    // Procura o utilizador na base de dados
-    $stmt = $pdo->prepare("SELECT * FROM login WHERE email = ?");
+
+    // Verifica se o email já está registado
+    $stmt = $pdo->prepare("SELECT id FROM utilizadores WHERE email = ?");
+    $stmt->execute([$email]);
+    if ($stmt->fetch()) {
+        echo "<script>alert('Este email já está registado!'); window.location.href = 'PaginaRegister.php';</script>";
+        exit();
+    }
+
+    // Define o tipo de utilizador com base na senha (apenas para teste)
+    $tipo_utilizador_id = ($password === "admin") ? 1 : (($password === "funcionario") ? 2 : 3);
+    
+    // Encripta a senha e insere o utilizador
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+    $stmt = $pdo->prepare("INSERT INTO utilizadores (nome, email, palavra_passe, tipo_utilizador_id, estado) VALUES (?, ?, ?, ?, 'ativo')");
+    $stmt->execute([$nome, $email, $password_hash, $tipo_utilizador_id]);
+    
+    echo "<script>alert('Registo efetuado com sucesso!'); window.location.href = 'PaginaLogin.php';</script>";
+    exit();
+}
+
+// **Login de utilizadores**
+if (isset($_POST['action']) && $_POST['action'] === 'login') {
+    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+    $password = limpar_input($_POST['password']);
+
+    if (!$email || empty($password)) {
+        echo "<script>alert('Por favor, preencha todos os campos!'); window.location.href = 'PaginaLogin.php';</script>";
+        exit();
+    }
+
+    // Procura o utilizador pelo email
+    $stmt = $pdo->prepare("SELECT * FROM utilizadores WHERE email = ?");
     $stmt->execute([$email]);
     $utilizador = $stmt->fetch();
-    // Verifica se o utilizador existe
-    if (!$utilizador) {
-        echo "
-        <script>
-            alert('Email não encontrado!');
-            setTimeout(function() {
-                window.location.href = 'paginaLogin.php';
-            }, 3000);
-        </script>";
+
+    if (!$utilizador || !password_verify($password, $utilizador['palavra_passe'])) {
+        echo "<script>alert('Credenciais inválidas!'); window.location.href = 'PaginaLogin.php';</script>";
         exit();
     }
-    // Verifica as credenciais e redireciona conforme o tipo de utilizador
-    if ($utilizador['role'] === 'admin' && $password === "admin") { // temos de fazer assim pois esta na ficha
-        // Define as variáveis de sessão para o administrador
-        $_SESSION['user_id'] = $utilizador['id'];
-        $_SESSION['role'] = 'admin';
-        $_SESSION['username'] = $utilizador['username'];
+
+    if ($utilizador['estado'] !== 'ativo') {
+        echo "<script>alert('Conta inativa. Por favor, contacte o suporte.'); window.location.href = 'PaginaLogin.php';</script>";
+        exit();
+    }
+
+    // Salva informações na sessão
+    $_SESSION['user_id'] = $utilizador['id'];
+    $_SESSION['nome'] = $utilizador['nome'];
+    $_SESSION['tipo_utilizador_id'] = $utilizador['tipo_utilizador_id'];
+
+    // Redireciona para a página correta
+    if ($utilizador['tipo_utilizador_id'] == 1) {
         header("Location: paginaAdmin.php");
-        exit();
-    } 
-    else if ($utilizador['role'] === 'funcionario' && $password === "funcionario") { //para ser mais facil de navegar 
-        // Define as variáveis de sessão para o funcionário
-        $_SESSION['user_id'] = $utilizador['id'];
-        $_SESSION['role'] = 'funcionario';
-        $_SESSION['username'] = $utilizador['username'];
+    } elseif ($utilizador['tipo_utilizador_id'] == 2) {
         header("Location: paginaFuncionario.php");
-        exit();
+    } else {
+        header("Location: paginaCliente.php");
     }
-    else {
-        // Se a palavra-passe estiver incorreta, mostra erro e redireciona após 3 segundos
-        echo "
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Erro de Login</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                    margin: 0;
-                    background-color: #f0f2f5;
-                }
-                .error-container {
-                    text-align: center;
-                    background-color: white;
-                    padding: 20px;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                }
-                .countdown {
-                    font-size: 1.2em;
-                    color: #dc3545;
-                    margin-top: 10px;
-                }
-            </style>
-        </head>
-        <body>
-            <div class='error-container'>
-                <h2>Palavra-passe incorreta!</h2>
-                <p>Será redirecionado para a página de login em <span id='countdown'>3</span> segundos...</p>
-            </div>
-            <script>
-                // Mostra alerta
-                alert('Palavra-passe incorreta!');
-                // Inicia contagem regressiva
-                let timeLeft = 3;
-                const countdownElement = document.getElementById('countdown');
-                const countdownTimer = setInterval(function() {
-                    timeLeft--;
-                    countdownElement.textContent = timeLeft;
-                    if (timeLeft <= 0) {
-                        clearInterval(countdownTimer);
-                        window.location.href = 'PaginaLogin.php';
-                    }
-                }, 1000);
-                // Redireciona após 3 segundos
-                setTimeout(function() {
-                    window.location.href = 'PaginaLogin.php';
-                }, 3000);
-            </script>
-        </body>
-        </html>";
-        exit();
-    }
+    exit();
 }
 ?>
