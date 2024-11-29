@@ -18,7 +18,7 @@ if (!isset($_SESSION ['user_id'])){
 <link rel="stylesheet" href="stylePerfil.css">
 </head>
 <body>
-    <?php require 'PHP/navbar/navbar.php'  ?>
+    <?php require 'PHP/navbar.php'  ?>
     <main>
         <!-- Secção do Perfil -->
         <section id="perfil">
@@ -40,6 +40,6 @@ if (!isset($_SESSION ['user_id'])){
                 </a>
             </center>
     </main>
-    <?php require 'PHP/navbar/footer/footer.php' ?>
+    <?php require 'PHP/footer.php' ?>
 </body>
 </html>

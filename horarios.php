@@ -18,7 +18,7 @@ if (!isset($_SESSION ['user_id'])){
       <link rel="stylesheet" href="style/stylePerfil.css" />
     </head>
     <body>
-      <?php require 'PHP/navbar/navbar.php' ?>
+      <?php require 'PHP/navbar.php' ?>
       <br><br><br>
       <table class="Tabela">
         <thead>
@@ -102,6 +102,6 @@ if (!isset($_SESSION ['user_id'])){
       </div>
       <script src="script.js"></script>
     <br><br><br>
-    <?php require 'PHP/navbar/footer/footer.php' ?>
+    <?php require 'PHP/footer.php' ?>
     </body>
   </html>

@@ -62,7 +62,7 @@ if (!isset($_SESSION ['user_id'])){
 </style>
 </head>
 <body>
-    <?php require 'PHP/navbar/navbar.php' ?>
+    <?php require 'PHP/navbar.php' ?>
     <main>
         <br><br><br>
         <div class="add">
@@ -84,6 +84,6 @@ if (!isset($_SESSION ['user_id'])){
             <a href="GestaoPerfil.html" class="button">Alterar Perfil</a>
         </div>
     </main>
-    <?php require 'PHP/navbar/footer/footer.php' ?>
+    <?php require 'PHP/footer.php' ?>
 </body>
 </html>

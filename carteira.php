@@ -83,7 +83,7 @@ if (!isset($_SESSION ['user_id'])){
 
 </head>
 <body>
-    <?php require 'PHP/navbar/navbar.php' ?>
+    <?php require 'PHP/navbar.php' ?>
     <br><br>
         <div>
             <img src="img/logofelixbus.png" alt="Imagem 1">
@@ -105,6 +105,6 @@ if (!isset($_SESSION ['user_id'])){
             <p> - Carregamento de €20.00 em 01/11/2024</p> <br>
         </div>
         <br><br>
-        <?php require 'PHP/navbar/footer/footer.php' ?>
+        <?php require 'PHP/footer.php' ?>
 </body>
 </html>

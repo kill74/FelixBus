@@ -84,7 +84,7 @@ if (!isset($_SESSION ['user_id'])){
 
 </head>
 <body>
-    <?php require 'PHP/navbar/navbar.php' ?>
+    <?php require 'PHP/navbar.php' ?>
     <br><br>
         <div>
             <br>
@@ -100,35 +100,6 @@ if (!isset($_SESSION ['user_id'])){
             <p> - Carregamento de €20.00 em 01/11/2024</p> <br>
         </div>
         <br><br>
-    <footer>
-        <img src="" alt=""> <!--Adicionar aqui uma imagem para ficar mais bonito-->
-        <section id="contacto">
-            <h2>Contato</h2>
-            <p><strong>Endereço:</strong> Rua Principal, 123, Castelo Branco</p>
-            <p><strong>Telefone:</strong> +351 912 345 678</p>
-            <p><strong>Email:</strong> contato@autocarros.com</p>
-            <p>Siga-nos nas redes sociais:</p>
-            
-            <!--Cena para os links-->
-            <ul class="social-links">
-                <li>
-                    <a href="https://facebook.com" target="_blank">
-                        <img src="img/FacebookLogo.png" alt="Imagem Facebook"> Facebook
-                    </a>
-                </li>
-                <li>
-                    <a href="https://instagram.com" target="_blank">
-                        <img src="img/InstagramLogo.png" alt="Imagem Instagram"> Instagram
-                    </a>
-                </li>
-                <li>
-                    <a href="https://twitter.com" target="_blank">
-                        <img src="img/TwitterLogo.png" alt="Imagem Twitter"> Twitter
-                    </a>
-                </li>
-            </ul>            
-        </section>
-        <p>&copy; FelixBus. Todos os direitos reservados.</p>
-    </footer>
+        <?php require 'PHP/footer.php' ?>
 </body>
 </html>

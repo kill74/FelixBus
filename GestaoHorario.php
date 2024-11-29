@@ -23,7 +23,7 @@ if (!isset($_SESSION ['user_id'])){
     </style>
   </head>
   <body>
-        <?php require 'PHP/navbar/navbar.php' ?>
+        <?php require 'PHP/navbar.php' ?>
     <br><br><br>
 <table class="Tabela">
   <thead> <!--TITULOS DA TABELA-->
@@ -93,6 +93,6 @@ if (!isset($_SESSION ['user_id'])){
     </div>
 
    <br><br><br>
-  <?php require 'PHP/navbar/footer/footer.php' ?>
+  <?php require 'PHP/footer.php' ?>
   </body>
 </html>

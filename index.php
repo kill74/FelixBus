@@ -84,7 +84,7 @@ if (!isset($_SESSION ['user_id'])){
     </style>
 </head>
 <body>
-    <?php require 'PHP/navbar/navbar.php' ?>
+    <?php require 'PHP/navbar.php' ?>
     <main>
     <br><br>
     <div>
@@ -146,6 +146,6 @@ if (!isset($_SESSION ['user_id'])){
             e manter-se atualizado com nossos horários e promoções.</p>
         </section>
     </main>
-    <?php require 'PHP/navbar/footer/footer.php' ?>
+    <?php require 'PHP/footer.php' ?>
 </body>
 </html>
