@@ -32,12 +32,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'register') {
             <script>
                 alert('Este email já está registado!');
                 setTimeout(function() {
-                    window.location.href = 'register.html';
+                    window.location.href = 'PaginaRegister.php';
                 }, 3000);
             </script>";
         } else {
             // Define o tipo de utilizador com base na palavra-passe
-            if ($password === "246810") {
+            if ($password === "admin") {
                 $role = "admin";
             } elseif ($password === "10203040") {
                 $role = "funcionario";
@@ -54,7 +54,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'register') {
             <script>
                 alert('Registo concluído com sucesso!');
                 setTimeout(function() {
-                    window.location.href = 'login.html';
+                    window.location.href = 'PaginaLogin.php';
                 }, 3000);
             </script>";
         }
@@ -64,7 +64,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'register') {
         <script>
             alert('Erro ao registar: " . $erro->getMessage() . "');
             setTimeout(function() {
-                window.location.href = 'register.html';
+                window.location.href = 'PaginaRegister.php';
             }, 3000);
         </script>"; 
     }
@@ -80,7 +80,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
         <script>
             alert('Email inválido!');
             setTimeout(function() {
-                window.location.href = 'login.html';
+                window.location.href = 'paginaLogin.php';
             }, 3000);
         </script>";
         exit();
@@ -95,18 +95,18 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
         <script>
             alert('Email não encontrado!');
             setTimeout(function() {
-                window.location.href = 'login.html';
+                window.location.href = 'paginaLogin.php';
             }, 3000);
         </script>";
         exit();
     }
     // Verifica as credenciais e redireciona conforme o tipo de utilizador
-    if ($utilizador['role'] === 'admin' && $password === "246810") {
+    if ($utilizador['role'] === 'admin' && $password === "admin") { // temos de fazer assim pois esta na ficha
         // Define as variáveis de sessão para o administrador
         $_SESSION['user_id'] = $utilizador['id'];
         $_SESSION['role'] = 'admin';
         $_SESSION['username'] = $utilizador['username'];
-        header("Location: paginaAdmin.html");
+        header("Location: paginaAdmin.php");
         exit();
     } 
     else if ($utilizador['role'] === 'funcionario' && $password === "10203040") {
@@ -114,7 +114,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
         $_SESSION['user_id'] = $utilizador['id'];
         $_SESSION['role'] = 'funcionario';
         $_SESSION['username'] = $utilizador['username'];
-        header("Location: paginaFuncionario.html");
+        header("Location: paginaFuncionario.php");
         exit();
     }
     else {
@@ -164,12 +164,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
                     countdownElement.textContent = timeLeft;
                     if (timeLeft <= 0) {
                         clearInterval(countdownTimer);
-                        window.location.href = 'login.html';
+                        window.location.href = 'PaginaLogin.php';
                     }
                 }, 1000);
                 // Redireciona após 3 segundos
                 setTimeout(function() {
-                    window.location.href = 'login.html';
+                    window.location.href = 'PaginaLogin.php';
                 }, 3000);
             </script>
         </body>
