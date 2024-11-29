@@ -18,29 +18,7 @@ if (!isset($_SESSION ['user_id'])){
       <link rel="stylesheet" href="style/stylePerfil.css" />
     </head>
     <body>
-      <header>
-        <h1>FelixBus</h1>
-        <br />
-        <nav>
-          <ul>
-            <li><a href="index.php">Página Principal</a></li>
-            <li><a href="perfil.php">Perfil</a></li>
-            <li><a href="carteira.php">Carteira</a></li>
-            <li><a href="horarios.php">Horários</a></li>
-          </ul>
-        </nav>
-        <br>
-        <div class="search">
-          <form action="#">
-              <input type="text" placeholder="Procurar Destino"
-                    name="search">
-              <button>
-                  <i class="fa fa-search"></i>
-              </button>
-          </form>
-      </div>
-  </div>
-      </header>
+      <?php require 'PHP/navbar/navbar.php' ?>
       <br><br><br>
       <table class="Tabela">
         <thead>
@@ -124,36 +102,6 @@ if (!isset($_SESSION ['user_id'])){
       </div>
       <script src="script.js"></script>
     <br><br><br>
-      <footer>
-        <img src="" alt="" />
-        <!--Adicionar aqui uma imagem para ficar mais bonito-->
-        <section id="contacto">
-          <h2>Contato</h2>
-          <p><strong>Endereço:</strong> Rua Principal, 123, Castelo Branco</p>
-          <p><strong>Telefone:</strong> +351 912 345 678</p>
-          <p><strong>Email:</strong> contato@autocarros.com</p>
-          <p>Siga-nos nas redes sociais:</p>
-          <!--Cena para os links-->
-          <ul class="social-links">
-            <li>
-              <a href="https://facebook.com" target="_blank">
-                <img src="img/FacebookLogo.png" alt="Imagem Facebook" /> Facebook
-              </a>
-            </li>
-            <li>
-              <a href="https://instagram.com" target="_blank">
-                <img src="img/InstagramLogo.png" alt="Imagem Instagram" />
-                Instagram
-              </a>
-            </li>
-            <li>
-              <a href="https://twitter.com" target="_blank">
-                <img src="img/TwitterLogo.png" alt="Imagem Twitter" /> Twitter
-              </a>
-            </li>
-          </ul>
-        </section>
-        <p>&copy; FelixBus. Todos os direitos reservados.</p>
-      </footer>
+    <?php require 'PHP/navbar/footer/footer.php' ?>
     </body>
   </html>

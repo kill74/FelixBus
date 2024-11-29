@@ -1,24 +1,19 @@
--- Tabela de Tipos de Utilizador
 CREATE TABLE tipos_utilizador (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) UNIQUE NOT NULL
 );
 
--- Tabela de Utilizadores
 CREATE TABLE utilizadores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(150) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     palavra_passe VARCHAR(255) NOT NULL,
     tipo_utilizador_id INT NOT NULL,
-    contacto VARCHAR(20),
-    data_registo TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    ultimo_login TIMESTAMP NULL,
     estado ENUM('ativo', 'inativo') DEFAULT 'ativo',
     FOREIGN KEY (tipo_utilizador_id) REFERENCES tipos_utilizador(id)
 );
 
-CREATE TABLE carteiras (
+CREATE TABLE carteira (
     id INT AUTO_INCREMENT PRIMARY KEY,
     utilizador_id INT NOT NULL,
     saldo DECIMAL(10,2) DEFAULT 0.00,
@@ -28,15 +23,17 @@ CREATE TABLE carteiras (
 CREATE TABLE rotas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     origem VARCHAR(100) NOT NULL,
-    destino VARCHAR(100) NOT NULL,
-    preco DECIMAL(10,2) NOT NULL
+    destino VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE viagens (
     id INT AUTO_INCREMENT PRIMARY KEY,
     rota_id INT NOT NULL,
+    capacidade INT NOT NULL,
     data_viagem DATE NOT NULL,
     hora_partida TIME NOT NULL,
+    hora_chegada TIME NOT NULL,
+    preco DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (rota_id) REFERENCES rotas(id)
 );
 

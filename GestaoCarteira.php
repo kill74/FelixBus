@@ -84,17 +84,7 @@ if (!isset($_SESSION ['user_id'])){
 
 </head>
 <body>
-    <header>
-        <h1>FelixBus</h1>
-        <br>
-        <nav>
-            <ul>
-                <li><a href="GestaoCarteira.php">Gestao da Carteira</a></li>
-                <li><a href="GestaoHorario.php">Gestao dos bilhetes</a></li>
-                <li><a href="GestaoPerfil.php">Editar Dados Pessoais</a></li>
-            </ul>
-        </nav>
-    </header>
+    <?php require 'PHP/navbar/navbar.php' ?>
     <br><br>
         <div>
             <br>
