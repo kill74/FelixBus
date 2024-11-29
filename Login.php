@@ -109,7 +109,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
         header("Location: paginaAdmin.php");
         exit();
     } 
-    else if ($utilizador['role'] === 'funcionario' && $password === "10203040") {
+    else if ($utilizador['role'] === 'funcionario' && $password === "funcionario") { //para ser mais facil de navegar 
         // Define as variáveis de sessão para o funcionário
         $_SESSION['user_id'] = $utilizador['id'];
         $_SESSION['role'] = 'funcionario';
