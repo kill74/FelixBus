@@ -1,110 +1,88 @@
 <?php
-session_start(); 
 
-// para nao conseguir entrar pelo url
-if (!isset($_SESSION ['user_id'])){
-    //Se o user nao tiver feito o login ira ser redirecionado para a pagina de login
+//Este código é responsável por gerir o saldo da carteira de utilizadores no sistema. Ele implementa duas operações principais: adicionar saldo e retirar saldo. Além disso, todas as operações realizadas na carteira são registadas na tabela transacoes para efeitos de auditoria.
+
+session_start();
+
+// Garante que o utilizador fez login
+if (!isset($_SESSION['user_id'])) {
     header("Location: PaginaLogin.php");
     exit();
 }
+
+require 'PHP/db_connection.php';
+
+$mensagem = ""; //variavel para utilizar ao longo do codigo
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $valor = (float) $_POST['valor'];
+    $tipo_operacao = $_POST['tipo_operacao'];
+    $user_id = $_SESSION['user_id'];
+
+    if ($valor > 0) {
+        // Obtém o saldo atual da carteira do utilizador
+        $query_saldo = "SELECT saldo FROM carteira WHERE utilizador_id = $user_id";
+        $resultado = $conn->query($query_saldo);
+
+        if ($resultado->num_rows > 0) {
+            $saldo_atual = $resultado->fetch_assoc()['saldo'];
+
+            // Processa a operação
+            if ($tipo_operacao == "carregamento") {
+                $novo_saldo = $saldo_atual + $valor;
+            } elseif ($tipo_operacao == "levantamento" && $valor <= $saldo_atual) {
+                $novo_saldo = $saldo_atual - $valor;
+            } else {
+                $mensagem = "Erro: Saldo insuficiente.";
+            }
+
+            // Atualiza o saldo e regista a transação
+            if (isset($novo_saldo)) {
+                $conn->query("UPDATE carteira SET saldo = $novo_saldo WHERE utilizador_id = $user_id");
+                $conn->query("INSERT INTO transacoes (utilizador_id, valor, tipo, data_transacao) 
+                               VALUES ($user_id, $valor, '$tipo_operacao', NOW())");
+                $mensagem = "Operação de $tipo_operacao realizada com sucesso!";
+            }
+        } else {
+            $mensagem = "Erro: Carteira não encontrada.";
+        }
+    } else {
+        $mensagem = "Erro: Valor inválido.";
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FelixBus</title>
-    <link rel="stylesheet" href="style/styleIndex.css">
-    
-    <style>
-        div {
-          text-align: center;
-        }
-
-        label{
-            color: black;
-            font-size: 30px;
-            font-weight: bolder;
-            min-width: 1000px;
-            min-height: 1000px;
-        }
-
-        .texto{
-            height: 40px;
-            width: 200px;
-            font-size: 20px;
-        }
-
-        .caixa-carregamento{
-            margin: auto;
-            width: 50%;
-            width: 400px;
-            border: 3px;
-            content: 50px;
-            padding: 10px;
-        }
-
-        footer {
-        text-align: center;
-        padding: 15px 0;
-        background-color: 2d3e50;
-        color: #fff;
-        font-size: 14px;
-        }
-
-        .social-links {
-        display: flex;
-        justify-content: center;
-        gap: 20px; /* Espaçamento entre os ícones */
-        list-style: none;
-        padding: 0;
-        margin: 20px 0;
-        }
-
-        .social-links li {
-        display: flex;
-        align-items: center;
-        }
-
-        .social-links a {
-        text-decoration: none;
-        color: #fff; /* Cor do texto */
-        display: flex;
-        align-items: center;
-        gap: 5px; /* Espaço entre o ícone e o texto */
-        font-weight: bold;
-        }
-
-        .social-links img {
-        width: 24px; /* Tamanho da imagem */
-        height: 24px;
-        }
-</style>
-
+    <title>Carteira - FelixBus</title>
 </head>
 <body>
-    <?php require 'PHP/navbar.php' ?>
-    <br><br>
-        <div>
-            <img src="img/logofelixbus.png" alt="Imagem 1">
-            <br>
-            <label for="valor">Valor:</label><br>
-            <br>
-                <input class="texto" type="number" id="valor" name="valor"><br><br><br>
-            
-                <a href="#" target="_blank">
-                    <button>Depositar Saldo</button>
-                </a>
-                <br> 
-                <a href="#" target="_blank">
-                    <button>Levantar Saldo</button>
-                </a>
-        </div>
-        <br><br>
-        <div class="caixa-carregamento">
-            <p> - Carregamento de €20.00 em 01/11/2024</p> <br>
-        </div>
-        <br><br>
-        <?php require 'PHP/footer.php' ?>
+    <?php require 'PHP/navbar.php'; ?>
+    <h2>Gerir Carteira</h2>
+    <form method="POST" action="carteira.php">
+        <label>Valor:</label>
+        <input type="number" step="0.01" name="valor" required>
+        <button type="submit" name="tipo_operacao" value="carregamento">Carregar Saldo</button>
+        <button type="submit" name="tipo_operacao" value="levantamento">Levantar Saldo</button>
+    </form>
+    <p><?= $mensagem ?></p>
+
+    <h3>Histórico de Transações</h3>
+    <ul>
+        <?php
+        // Apresenta o histórico de transações do user
+        $query_historico = "SELECT valor, tipo, data_transacao 
+                            FROM transacoes WHERE utilizador_id = $user_id 
+                            ORDER BY data_transacao DESC";
+        $historico = $conn->query($query_historico);
+
+        while ($linha = $historico->fetch_assoc()) {
+            echo "<li>{$linha['tipo']} de €{$linha['valor']} em {$linha['data_transacao']}</li>";
+        }
+        ?>
+    </ul>
+    <?php require 'PHP/footer.php'; ?>
 </body>
 </html>
