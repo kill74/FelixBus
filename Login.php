@@ -7,6 +7,8 @@ if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
 }
 
+$message = ""; // Variável para armazenar a mensagem de erro
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"];
     $senha = $_POST["senha"];
@@ -19,12 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if (password_verify($senha, $user["palavra_passe"])) {
-            echo "Login bem-sucedido! Bem-vindo, utilizador ID: " . $user["id"];
+            echo "<script>alert('Login bem-sucedido! Bem-vindo, utilizador ID: " . $user["id"] . "');</script>";
         } else {
-            echo "Senha incorreta.";
+            $message = "Senha incorreta.";
         }
     } else {
-        echo "Email não encontrado.";
+        $message = "Email não encontrado.";
     }
     $stmt->close();
 }
@@ -48,5 +50,12 @@ $conn->close();
             <button type="submit">Entrar</button>
         </form>
     </div>
+
+    <!-- Exibe pop-up caso exista mensagem de erro -->
+    <?php if (!empty($message)): ?>
+        <script>
+            alert("<?php echo $message; ?>");
+        </script>
+    <?php endif; ?>
 </body>
 </html>
