@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Incluir a ligação à base de dados
+// LIgacao a base de dados usando o que o professor mostrou na aula
 require_once 'db_connection.php'; // fazer ligação a base de dados 
 
 // Verificar o método do pedido
@@ -118,6 +118,7 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
                 </thead>
                 <tbody>
                     <?php
+                    //listar rotas que foram inseridas
                     $rotas = listarRotas($conn);
                     foreach ($rotas as $rota) {
                         echo "<tr>
