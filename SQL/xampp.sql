@@ -67,4 +67,5 @@ CREATE TABLE alertas (
 INSERT INTO tipos_utilizador (nome) VALUES 
 ('cliente'), 
 ('funcionario'), 
-('administrador');
+('administrador'),
+('visitante');

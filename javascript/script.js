@@ -1,3 +1,5 @@
+//Pop up para comprar bilhete:
+
 // Seleciona os elementos do pop-up
 const popupOverlay = document.getElementById("popupOverlay");
 const popup = document.getElementById("popup");

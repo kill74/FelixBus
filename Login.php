@@ -16,7 +16,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $user = $result->fetch_assoc();
         if (password_verify($senha, $user["palavra_passe"])) {
             echo "<script>alert('Login bem-sucedido! Bem-vindo, utilizador ID: " . $user["id"] . "');</script>";
-            header ("Location: index.php");
         } else {
             $message = "Senha incorreta.";
         }
@@ -107,7 +106,7 @@ $conn->close();
  <!-- New button to visit page without login -->
  <div class="visitor-section">
      <p>Ou</p>
-     <a href="pagina-visitante.php" class="visitor-button">Continuar como Visitante</a>
+     <a href="index.php" class="visitor-button">Continuar como Visitante</a>
  </div>
  </div>
  
