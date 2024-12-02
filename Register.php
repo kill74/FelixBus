@@ -1,11 +1,6 @@
 <?php
-// Conexão com o banco de dados
-$conn = new mysqli("127.0.0.1", "root", "", "trabalho_php");
 
-// Verifica conexão
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
-}
+require 'PHP/db_connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nome = $_POST["nome"];

@@ -4,12 +4,12 @@ session_start();
 // Verificar se o utilizador está autenticado
 if (!isset($_SESSION['user_id'])) {
     // Redirecionar para a página de login se o utilizador não estiver autenticado
-    header("Location: PaginaLogin.php");
+    header("Location: Login.php");
     exit();
 }
 
 // LIgacao a base de dados usando o que o professor mostrou na aula
-require_once 'db_connection.php'; // fazer ligação a base de dados 
+require_once '<PHP>db_connection.php'; // fazer ligação a base de dados 
 
 // Verificar o método do pedido
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
