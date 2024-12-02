@@ -1,22 +1,22 @@
 <?php
+// Inicia uma sessão para gerir autenticação
 session_start(); 
 
-// Verificar se o utilizador está autenticado
+// Verifica se o utilizador está autenticado; caso contrário, redireciona-o para a página de login
 if (!isset($_SESSION['user_id'])) {
-    // Redirecionar para a página de login se o utilizador não estiver autenticado
     header("Location: Login.php");
     exit();
 }
 
-// LIgacao a base de dados usando o que o professor mostrou na aula
-require_once '<PHP>db_connection.php'; // fazer ligação a base de dados 
+// Estabelece ligação com a base de dados
+require_once '<PHP>db_connection.php'; 
 
-// Verificar o método do pedido
+// Processa o formulário de login enviado pelo utilizador
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    // Consultar o utilizador na base de dados
+    // Pesquisa o utilizador na base de dados
     $sql = "SELECT * FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -24,49 +24,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
 
+    // Verifica se as credenciais são do administrador
     if ($user && $user["email"] === "admin@email.com" && $user["password"] === "admin" && $user["role"] === "admin") {
-        // Guardar os dados do administrador na sessão
         $_SESSION["user_id"] = $user["id"];
         $_SESSION["role"] = "admin";
         header("Location: paginaAdmin.php");
         exit();
     } else {
-        // Caso as credenciais sejam inválidas
         $error = "Email ou palavra-passe inválida.";
     }
 }
 
-// Verificar se o utilizador é administrador
+// Garante que apenas administradores acedem a esta página
 if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "admin") {
-    // Redirecionar para o dashboard do utilizador normal
     header("Location: perfil.php");
     exit();
 }
 
-// Funções de gestão
+// Funções para gestão de dados na base de dados
 function listarRotas($conn) {
-    // Listar todas as rotas na base de dados
+    // Retorna todas as rotas registadas
     $sql = "SELECT * FROM rotas";
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 function listarUtilizadores($conn) {
-    // Listar todos os utilizadores
+    // Retorna todos os utilizadores registados
     $sql = "SELECT * FROM users";
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 function listarAlertas($conn) {
-    // Listar todos os alertas/informações/promoções
+    // Retorna todos os alertas registados
     $sql = "SELECT * FROM alertas";
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 function atualizarDadosPessoais($conn, $userId, $dados) {
-    // Atualizar dados pessoais do utilizador
+    // Atualiza os dados pessoais do utilizador
     $sql = "UPDATE users SET nome = ?, email = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssi", $dados['nome'], $dados['email'], $userId);
@@ -84,7 +82,7 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
 </head>
 <body>
 <div class="container">
-    <!-- Sidebar -->
+    <!-- Menu lateral com opções do painel -->
     <div class="sidebar">
         <div class="logo">AdminPanel</div>
         <nav>
@@ -97,7 +95,7 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
         </nav>
     </div>
 
-    <!-- Main Content -->
+    <!-- Conteúdo principal -->
     <div class="main-content">
         <header class="header">
             <h1>Bem-vindo, Administrador</h1>
@@ -105,6 +103,7 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
 
         <main class="dashboard">
             <h2>Gestão de Rotas</h2>
+            <!-- Tabela com as rotas registadas -->
             <table>
                 <thead>
                     <tr>
@@ -118,7 +117,7 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
                 </thead>
                 <tbody>
                     <?php
-                    //listar rotas que foram inseridas
+                    // Listar rotas da base de dados
                     $rotas = listarRotas($conn);
                     foreach ($rotas as $rota) {
                         echo "<tr>
