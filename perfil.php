@@ -11,7 +11,7 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FelixBus</title>
-<link rel="stylesheet" href="stylePerfil.css">
+    <link rel="stylesheet" href="style/stylePerfil.css">
 </head>
 <body>
     <?php require 'PHP/navbar.php'  ?>

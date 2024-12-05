@@ -100,11 +100,11 @@ session_start();
         <h2>Registrar</h2>
         <form action="register.php" method="POST">
             <input type="text" name="UserName" placeholder="User Name" required>
-            <input type="password" name="senha" placeholder="Senha" required>
+            <input type="password" name="senha" placeholder="Password" required>
             <button type="submit">Registrar</button>
         </form>
         <div class="redirect-login">
-            <p>Já possui uma conta? <a href="login.php">Faça login aqui</a></p>
+            <p>Já possui uma conta? <a href="Login.php">Faça login aqui</a></p>
         </div>
     </div>
 </body>

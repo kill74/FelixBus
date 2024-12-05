@@ -225,7 +225,8 @@ session_start();
           <div class="nav-item">Clientes</div>
           <div class="nav-item">Visitantes</div>
           <div class="nav-item">Agendamentos</div>
-          <div class="index.php">Relatórios</div>
+          <div class="nav-item">Editar Perfil</div>
+          <div class="nav-item">Página Principal</div>
         </nav>
       </div>
 

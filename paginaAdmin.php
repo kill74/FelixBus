@@ -80,13 +80,12 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo</title>
-    <link rel="stylesheet" href="admin_styles.css"> <!-- Liga o CSS para estilos -->
 </head>
 <body>
 <div class="container">
     <!-- Menu lateral com as opções do painel -->
     <div class="sidebar">
-        <div class="logo">AdminPanel</div> <!-- Logotipo do painel -->
+        <div class="logo">AdminPanel</div>
         <nav>
             <!-- Links para diferentes secções do painel administrativo -->
             <div class="nav-item"><a href="admin_dashboard.php">Dashboard</a></div>
