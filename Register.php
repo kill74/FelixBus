@@ -3,13 +3,12 @@ require 'PHP/db_connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nome = $_POST["nome"];
-    $email = $_POST["email"];
     $senha = password_hash($_POST["senha"], PASSWORD_DEFAULT);
     $tipo = 2; 
     $estado = 'ativo';
 
-    $stmt = $conn->prepare("INSERT INTO utilizadores (nome, email, palavra_passe, tipo_utilizador_id, estado) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssds", $nome, $email, $senha, $tipo, $estado);
+    $stmt = $conn->prepare("INSERT INTO utilizadores (nome, palavra_passe, tipo_utilizador_id, estado) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssds", $nome, $senha, $tipo, $estado);
 
     if ($stmt->execute()) {
         echo "<script>alert('Cadastro realizado com sucesso!');</script>";
@@ -100,8 +99,7 @@ session_start();
     <div class="form-container">
         <h2>Registrar</h2>
         <form action="register.php" method="POST">
-            <input type="text" name="nome" placeholder="Nome" required>
-            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="UserName" placeholder="User Name" required>
             <input type="password" name="senha" placeholder="Senha" required>
             <button type="submit">Registrar</button>
         </form>

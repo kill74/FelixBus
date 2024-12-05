@@ -1,74 +1,76 @@
 <?php
-// Inicia uma sessão para gerir autenticação
-session_start(); 
+// Inicia uma sessão para gerir a autenticação do utilizador
+session_start();
 
 // Verifica se o utilizador está autenticado; caso contrário, redireciona-o para a página de login
 if (!isset($_SESSION['user_id'])) {
-    header("Location: Login.php");
+    header("Location: Login.php"); // Redireciona para a página de login
+    exit();
+}
+
+// Verifica se o utilizador tem a role de administrador
+if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "admin") {
+    header("Location: Login.php"); // Redireciona para a página de login caso não seja administrador
     exit();
 }
 
 // Estabelece ligação com a base de dados
-require_once '<PHP>db_connection.php'; 
+require_once '<PHP>db_connection.php'; // Inclui o ficheiro para a conexão com a base de dados
 
 // Processa o formulário de login enviado pelo utilizador
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST["email"];
+    // Obtém os dados do formulário: nome e palavra-passe
+    $nome = $_POST["nome"];
     $password = $_POST["password"];
 
-    // Pesquisa o utilizador na base de dados
-    $sql = "SELECT * FROM users WHERE email = ?";
+    // Pesquisa o utilizador na base de dados pelo nome
+    $sql = "SELECT * FROM users WHERE nome = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $email);
+    $stmt->bind_param("s", $nome); // Substitui o marcador pela variável $nome
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
 
-    // Verifica se as credenciais são do administrador
-    if ($user && $user["email"] === "admin@email.com" && $user["password"] === "admin" && $user["role"] === "admin") {
+    // Verifica se as credenciais são válidas e se o utilizador é administrador
+    if ($user && password_verify($password, $user["password"]) && $user["role"] === "admin") {
+        // Define as variáveis de sessão para o utilizador autenticado
         $_SESSION["user_id"] = $user["id"];
         $_SESSION["role"] = "admin";
-        header("Location: paginaAdmin.php");
+        header("Location: paginaAdmin.php"); // Redireciona para o painel do administrador
         exit();
     } else {
-        $error = "Email ou palavra-passe inválida.";
+        // Define uma mensagem de erro caso as credenciais sejam inválidas
+        $error = "Nome ou palavra-passe inválida.";
     }
 }
 
-// Garante que apenas administradores acedem a esta página
-if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "admin") {
-    header("Location: perfil.php");
-    exit();
-}
-
-// Funções para gestão de dados na base de dados
+// Função para listar todas as rotas disponíveis na base de dados
 function listarRotas($conn) {
-    // Retorna todas as rotas registadas
-    $sql = "SELECT * FROM rotas";
-    $result = $conn->query($sql);
-    return $result->fetch_all(MYSQLI_ASSOC);
+    $sql = "SELECT * FROM rotas"; // Consulta todas as rotas
+    $result = $conn->query($sql); // Executa a consulta
+    return $result->fetch_all(MYSQLI_ASSOC); // Retorna as rotas como um array associativo
 }
 
+// Função para listar todos os utilizadores registados
 function listarUtilizadores($conn) {
-    // Retorna todos os utilizadores registados
-    $sql = "SELECT * FROM users";
-    $result = $conn->query($sql);
-    return $result->fetch_all(MYSQLI_ASSOC);
+    $sql = "SELECT * FROM users"; // Consulta todos os utilizadores
+    $result = $conn->query($sql); // Executa a consulta
+    return $result->fetch_all(MYSQLI_ASSOC); // Retorna os utilizadores como um array associativo
 }
 
+// Função para listar todos os alertas registados
 function listarAlertas($conn) {
-    // Retorna todos os alertas registados
-    $sql = "SELECT * FROM alertas";
-    $result = $conn->query($sql);
-    return $result->fetch_all(MYSQLI_ASSOC);
+    $sql = "SELECT * FROM alertas"; // Consulta todos os alertas
+    $result = $conn->query($sql); // Executa a consulta
+    return $result->fetch_all(MYSQLI_ASSOC); // Retorna os alertas como um array associativo
 }
 
+// Função para atualizar os dados pessoais do utilizador
 function atualizarDadosPessoais($conn, $userId, $dados) {
-    // Atualiza os dados pessoais do utilizador
-    $sql = "UPDATE users SET nome = ?, email = ? WHERE id = ?";
+    $sql = "UPDATE users SET nome = ?, email = ? WHERE id = ?"; // Query de atualização
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssi", $dados['nome'], $dados['email'], $userId);
-    $stmt->execute();
+    $stmt->bind_param("ssi", $dados['nome'], $dados['email'], $userId); // Liga os parâmetros à query
+    $stmt->execute(); // Executa a atualização
 }
 ?>
 
@@ -78,14 +80,15 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo</title>
-    <link rel="stylesheet" href="admin_styles.css">
+    <link rel="stylesheet" href="admin_styles.css"> <!-- Liga o CSS para estilos -->
 </head>
 <body>
 <div class="container">
-    <!-- Menu lateral com opções do painel -->
+    <!-- Menu lateral com as opções do painel -->
     <div class="sidebar">
-        <div class="logo">AdminPanel</div>
+        <div class="logo">AdminPanel</div> <!-- Logotipo do painel -->
         <nav>
+            <!-- Links para diferentes secções do painel administrativo -->
             <div class="nav-item"><a href="admin_dashboard.php">Dashboard</a></div>
             <div class="nav-item"><a href="gestao_rotas.php">Gestão de Rotas</a></div>
             <div class="nav-item"><a href="gestao_utilizadores.php">Gestão de Utilizadores</a></div>
@@ -98,12 +101,12 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
     <!-- Conteúdo principal -->
     <div class="main-content">
         <header class="header">
-            <h1>Bem-vindo, Administrador</h1>
+            <h1>Bem-vindo, Administrador</h1> <!-- Mensagem de boas-vindas -->
         </header>
 
         <main class="dashboard">
             <h2>Gestão de Rotas</h2>
-            <!-- Tabela com as rotas registadas -->
+            <!-- Tabela para listar as rotas registadas -->
             <table>
                 <thead>
                     <tr>
@@ -117,9 +120,10 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
                 </thead>
                 <tbody>
                     <?php
-                    // Listar rotas da base de dados
+                    // Obtém as rotas da base de dados
                     $rotas = listarRotas($conn);
                     foreach ($rotas as $rota) {
+                        // Exibe cada rota numa linha da tabela
                         echo "<tr>
                                 <td>{$rota['id']}</td>
                                 <td>{$rota['origem']}</td>

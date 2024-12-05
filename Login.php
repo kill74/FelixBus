@@ -98,7 +98,7 @@ $conn->close();
  <div class="form-container">
  <h2>Login</h2>
  <form action="login.php" method="POST">
- <input type="email" name="email" placeholder="Email" required>
+ <input type="text" name="UserName" placeholder="User Name" required>
  <input type="password" name="senha" placeholder="Senha" required>
  <button type="submit">Entrar</button>
  </form>
