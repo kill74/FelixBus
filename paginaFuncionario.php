@@ -102,6 +102,7 @@ $conn->close(); // Fecha a conexão com a base de dados
                             </tr>
                         </thead>
                         <tbody>
+                            <!--Sistema para ir buscar o nome do cliente/saldo do cliente-->
                             <?php while ($row = $result_clientes->fetch_assoc()): ?>
                                 <tr>
                                     <td><?= htmlspecialchars($row['nome']); ?></td> <!-- Nome do cliente -->
