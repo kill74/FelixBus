@@ -1,4 +1,5 @@
 <?php
+//meter isto em .h (obrigatorio)
 //iremos fazer deste genero para nao estar sempre a fazer a mesma coisa em todas as paginas (porque temos perguica);
 // ira ligar a base de dados;
 $host = "127.0.0.1";

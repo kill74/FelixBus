@@ -102,10 +102,12 @@ $conn->close();
  <input type="password" name="senha" placeholder="Senha" required>
  <button type="submit">Entrar</button>
  </form>
- 
- <!-- New button to visit page without login -->
+<br>
+<div class="visitor-section">
+    <a href = "Register.php" class = "visitor-button"> Registar se não tiver conta </a>
+    </div>
+    <br>
  <div class="visitor-section">
-     <p>Ou</p>
      <a href="index.php" class="visitor-button">Continuar como Visitante</a>
  </div>
  </div>

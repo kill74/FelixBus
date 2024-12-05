@@ -4,12 +4,6 @@
 
 session_start();
 
-// Garante que o utilizador fez login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: PaginaLogin.php");
-    exit();
-}
-
 require 'PHP/db_connection.php';
 
 $mensagem = ""; //variavel para utilizar ao longo do codigo
