@@ -54,7 +54,14 @@ function listarRotas($conn) {
 // Função para listar todos os utilizadores registados
 function listarUtilizadores($conn) {
     $sql = "SELECT * FROM users"; // Consulta todos os utilizadores
-    $result = $conn->query($sql); // Executa a consulta
+    $result = $conn->query($sql); // Execugit repository
+    fatal: Could not read from remote repository.
+    
+    Please make sure you have the correct access rights
+    and the repository exists.
+    
+    [03:10 PM]-[guilherme@guilhermepc]-[.../htdocs/FelixBus]- |master ✓|
+    $ git pull FelixBusta a consulta
     return $result->fetch_all(MYSQLI_ASSOC); // Retorna os utilizadores como um array associativo
 }
 
