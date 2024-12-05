@@ -61,7 +61,16 @@ $conn->close();
             border-radius: 5px;
         }
         button {
-            width: 100%;
+            width: 100%;<?php
+session_start(); 
+
+// para nao conseguir entrar pelo url
+if (!isset($_SESSION ['user_id'])){
+    //Se o user nao tiver feito o login ira ser redirecionado para a pagina de login
+    header("Location: PaginaLogin.php");
+    exit();
+}
+?>
             padding: 10px;
             margin: 10px 0;
             border: none;
