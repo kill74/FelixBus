@@ -6,7 +6,6 @@ CREATE TABLE tipos_utilizador (
 CREATE TABLE utilizadores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(150) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
     palavra_passe VARCHAR(255) NOT NULL,
     tipo_utilizador_id INT NOT NULL,
     estado ENUM('ativo', 'inativo') DEFAULT 'ativo',
