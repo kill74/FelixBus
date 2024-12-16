@@ -25,7 +25,7 @@ Este projeto é uma aplicação web simples desenvolvida com o objetivo de apren
 - `index.html`: Página inicial.
 - `img/`: Diretório contendo imagens usadas no projeto.
 
-## Como Rodar o Projeto
+## Como fazer download o Projeto
 
 1. Clone este repositório:
    ```bash
