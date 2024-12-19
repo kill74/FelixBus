@@ -4,7 +4,7 @@
 
 session_start();
 
-require 'PHP/db_connection.php';
+require_once 'PHP/db_connection.php';
 
 $mensagem = ""; //variavel para utilizar ao longo do codigo
 
@@ -12,6 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $valor = (float) $_POST['valor'];
     $tipo_operacao = $_POST['tipo_operacao'];
     $user_id = $_SESSION['user_id'];
+echo "$valor $tipo_operacao $user_id<br>";
 
     if ($valor > 0) {
         // Obtém o saldo atual da carteira do utilizador

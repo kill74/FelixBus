@@ -1,6 +1,7 @@
 <?php
 session_start();
-require 'PHP/db_connection.php'; // Inclui o ficheiro de conexão à base de dados
+require_once 'PHP/db_connection.php'; // Inclui o ficheiro de conexão à base de dados
+
 
 // Verifica se o utilizador está autenticado e se tem permissões de funcionário ou administrador
 if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] != 'funcionario' && $_SESSION['user_role'] != 'administrador')) {
@@ -58,7 +59,7 @@ $conn->close(); // Fecha a conexão com a base de dados
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -102,7 +103,7 @@ $conn->close(); // Fecha a conexão com a base de dados
                             </tr>
                         </thead>
                         <tbody>
-                            <!--Sistema para ir buscar o nome do cliente/saldo do cliente-->
+                                <!--Sistema para ir buscar o nome do cliente/saldo do cliente-->
                             <?php while ($row = $result_clientes->fetch_assoc()): ?>
                                 <tr>
                                     <td><?= htmlspecialchars($row['nome']); ?></td> <!-- Nome do cliente -->

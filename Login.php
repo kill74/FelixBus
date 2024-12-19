@@ -1,6 +1,6 @@
 <?php
-require 'PHP/db_connection.php';    
-
+session_start()
+require_once 'PHP/db_connection.php';    
 $message = ""; // Variável para armazenar a mensagem de erro
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -17,11 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (password_verify($senha, $user["palavra_passe"])) {
             echo "<script>alert('Login bem-sucedido! Bem-vindo, utilizador ID: " . $user["id"] . "');</script>";
         } else {
-            $message = "Senha incorreta.";
+            $message = "Login errado.";
         }
-    } else {
-        $message = "Email não encontrado.";
-    }
     $stmt->close();
 }
 $conn->close();
@@ -97,7 +94,7 @@ $conn->close();
 <body>
  <div class="form-container">
  <h2>Login</h2>
- <form action="login.php" method="POST">
+ <form action="index.php" method="POST">
  <input type="text" name="UserName" placeholder="User Name" required>
  <input type="password" name="senha" placeholder="Senha" required>
  <button type="submit">Entrar</button>

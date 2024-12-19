@@ -2,10 +2,11 @@
 session_start(); 
 
 // Redireciona para a página de login se o usuário não estiver logado
-if (!isset($_SESSION['user_id'])) {
-    header("Location: Login.php");
-    exit();
-}
+#if (!isset($_SESSION['user_id'])) {
+#    header("Location: Login.php");
+#    exit();
+#}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt">

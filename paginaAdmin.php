@@ -15,7 +15,7 @@ if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "admin") {
 }
 
 // Estabelece ligação com a base de dados
-require_once '<PHP>db_connection.php'; // Inclui o ficheiro para a conexão com a base de dados
+require_once 'PHP/db_connection.php';
 
 // Processa o formulário de login enviado pelo utilizador
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -82,7 +82,7 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

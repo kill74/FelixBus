@@ -1,5 +1,5 @@
 <?php
-require 'PHP/db_connection.php';
+require_once 'PHP/db_connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nome = $_POST["UserName"];
@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($stmt->execute()) {
         echo "<script>alert('Cadastro realizado com sucesso!');</script>";
-        echo "<script>window.location.href='login.php';</script>";
+        echo "<script>window.location.href='Login.php';</script>";
     } else {
         echo "<script>alert('Erro ao cadastrar: " . $conn->error . "');</script>";
     }
@@ -33,7 +33,7 @@ $conn->close();
 <body>
     <div class="form-container">
         <h2>Registrar</h2>
-        <form action="register.php" method="POST">
+        <form action="Register.php" method="POST">
             <input type="text" name="UserName" placeholder="User Name" required>
             <input type="password" name="senha" placeholder="Password" required>
             <button type="submit">Registrar</button>

@@ -1,12 +1,12 @@
 <?php
 session_start(); 
-
+require_once 'PHP/db_connectio.php'
 //faltam coisas aqui
 
 ?>
   
   <!DOCTYPE html>
-  <html lang="en">
+  <html lang="pt">
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
