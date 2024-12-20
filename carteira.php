@@ -42,7 +42,9 @@ echo "$valor $tipo_operacao $user_id<br>";
             $mensagem = "Erro: Carteira não encontrada.";
         }
     } else {
-        $mensagem = "Erro: Valor inválido.";
+        $mensagem = "Erro: Valor inválido.";The error message "Erro: Saldo insuficiente." should be translated to English for consistency with the rest of the code comments.
+
+        
     }
 }
 ?>

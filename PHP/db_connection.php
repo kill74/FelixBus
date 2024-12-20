@@ -1,15 +1,14 @@
 <?php
-//meter isto em .h (obrigatorio)
-//iremos fazer deste genero para nao estar sempre a fazer a mesma coisa em todas as paginas (porque temos perguica);
-// ira ligar a base de dados;
-$host = "127.0.0.1";
-$user = "root";
-$password = "";
-$dbname = "trabalho_php";
+// Configurações do banco de dados (em um arquivo centralizado para reutilização)
+define('DB_HOST', '127.0.0.1');
+define('DB_USER', 'root');
+define('DB_PASSWORD', '');
+define('DB_NAME', 'trabalho_php');
 
-$conn = new mysqli($host, $user, $password, $dbname);
+// Criação da conexão
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
-//Verifica a conexao com a base de dados
+// Verifica a conexão
 if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
 }

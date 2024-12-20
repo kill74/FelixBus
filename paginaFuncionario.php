@@ -7,7 +7,7 @@ require_once 'PHP/db_connection.php'; // Inclui o ficheiro de conexão à base d
 if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] != 'funcionario' && $_SESSION['user_role'] != 'administrador')) {
     // Caso o utilizador não tenha permissão, é redirecionado para a página de login com uma mensagem
     echo "<script>alert('Acesso negado. Faça login como funcionário ou administrador.');</script>";
-    echo "<script>window.location.href='login.php';</script>";
+    echo "<script>window.location.href='Login.php';</script>";
     exit; // Termina o processamento do script
 }
 

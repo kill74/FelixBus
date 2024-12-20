@@ -2,20 +2,16 @@
 // Inicia uma sessão para gerir a autenticação do utilizador
 session_start();
 
-// Verifica se o utilizador está autenticado; caso contrário, redireciona-o para a página de login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: Login.php"); // Redireciona para a página de login
-    exit();
-}
-
-// Verifica se o utilizador tem a role de administrador
-if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "admin") {
-    header("Location: Login.php"); // Redireciona para a página de login caso não seja administrador
-    exit();
-}
-
 // Estabelece ligação com a base de dados
 require_once 'PHP/db_connection.php';
+
+// Verifica se o utilizador está autenticado e se tem permissões de administrador
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'administrador')) {
+    // Caso o utilizador não tenha permissão, é redirecionado para a página de login com uma mensagem
+    echo "<script>alert('Acesso negado. Faça login como administrador.');</script>";
+    echo "<script>window.location.href='Login.php';</script>";
+    exit; // Termina o processamento do script
+}
 
 // Processa o formulário de login enviado pelo utilizador
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -55,13 +51,6 @@ function listarRotas($conn) {
 function listarUtilizadores($conn) {
     $sql = "SELECT * FROM users"; // Consulta todos os utilizadores
     $result = $conn->query($sql); // Execugit repository
-    fatal: Could not read from remote repository.
-    
-    Please make sure you have the correct access rights
-    and the repository exists.
-    
-    [03:10 PM]-[guilherme@guilhermepc]-[.../htdocs/FelixBus]- |master ✓|
-    $ git pull FelixBusta a consulta
     return $result->fetch_all(MYSQLI_ASSOC); // Retorna os utilizadores como um array associativo
 }
 

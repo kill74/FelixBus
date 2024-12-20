@@ -3,21 +3,26 @@ require_once 'PHP/db_connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nome = $_POST["UserName"];
+    $email = $_POST["email"];
     $senha = password_hash($_POST["senha"], PASSWORD_DEFAULT);
     $tipo = 2; 
     $estado = 'ativo';
 
-    // Ajuste do SQL e tipos
-    $stmt = $conn->prepare("INSERT INTO utilizadores (nome, palavra_passe, tipo_utilizador_id, estado) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssis", $nome, $senha, $tipo, $estado);
+    // Prepara a consulta
+    $stmt = $conn->prepare("INSERT INTO utilizadores (nome, email, palavra_passe, tipo_utilizador_id, estado) VALUES (?, ?, ?, ?, ?)");
+    if ($stmt) {
+        $stmt->bind_param("sssis", $nome, $email, $senha, $tipo, $estado);
 
-    if ($stmt->execute()) {
-        echo "<script>alert('Cadastro realizado com sucesso!');</script>";
-        echo "<script>window.location.href='Login.php';</script>";
+        if ($stmt->execute()) {
+            echo "<script>alert('Cadastro realizado com sucesso!');</script>";
+            echo "<script>window.location.href='Login.php';</script>";
+        } else {
+            echo "<script>alert('Erro ao cadastrar: " . $conn->error . "');</script>";
+        }
+        $stmt->close();
     } else {
-        echo "<script>alert('Erro ao cadastrar: " . $conn->error . "');</script>";
+        echo "<script>alert('Erro na preparação da consulta: " . $conn->error . "');</script>";
     }
-    $stmt->close();
 }
 $conn->close();
 ?>
@@ -34,8 +39,9 @@ $conn->close();
     <div class="form-container">
         <h2>Registrar</h2>
         <form action="Register.php" method="POST">
-            <input type="text" name="UserName" placeholder="User Name" required>
-            <input type="password" name="senha" placeholder="Password" required>
+            <input type="text" name="UserName" placeholder="Nome de Usuário" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="senha" placeholder="Senha" required>
             <button type="submit">Registrar</button>
         </form>
         <div class="redirect-login">
