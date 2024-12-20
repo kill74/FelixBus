@@ -1,8 +1,13 @@
 <?php
-session_start(); 
+session_start();
+require_once 'PHP/db_connection.php';
 
-//falta aqui coisas
-
+// Verifica se o utilizador está autenticado e se é funcionário ou admin
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['funcionario', 'admin'])) {
+    // Redireciona para a página de login se não estiver logado ou não tiver permissão
+    header("Location: Login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +63,7 @@ session_start();
 </style>
 </head>
 <body>
-    <?php require 'PHP/navbar.php' ?>
+    <?php require 'PHP/navbar.php'; ?>
     <main>
         <br><br><br>
         <div class="add">
@@ -80,6 +85,6 @@ session_start();
             <a href="GestaoPerfil.html" class="button">Alterar Perfil</a>
         </div>
     </main>
-    <?php require 'PHP/footer.php' ?>
+    <?php require 'PHP/footer.php'; ?>
 </body>
 </html>
