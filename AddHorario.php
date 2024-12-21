@@ -1,11 +1,7 @@
 <?php
 session_start(); 
+require_once 'PHP/db_connection.php';
 
-// Redireciona para a página de login se o usuário não estiver logado
-#if (!isset($_SESSION['user_id'])) {
-#    header("Location: Login.php");
-#    exit();
-#}
 
 ?>
 <!DOCTYPE html>
@@ -14,6 +10,7 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FelixBus</title>
+    <link rel="stylesheet" href="style/styleIndex.css">
     <style>
         body {
             font-family: Arial, sans-serif;

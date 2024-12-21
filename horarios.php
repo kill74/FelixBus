@@ -1,7 +1,7 @@
 <?php
 session_start(); 
 require_once 'PHP/db_connection.php'
-//faltam coisas aqui
+require 'logged.php';
 
 ?>
   
@@ -78,9 +78,11 @@ require_once 'PHP/db_connection.php'
           </tr>
         </tbody>
       </table>
+      <?php if ($isLoggedIn && userRole === 'funcionario' && 'admin'): ?>
       <center>
-      <button class="Butao-Comprar">Editar Horários</button>
+      <button class="Butao-Comprar" onclick="window.location.href='AddHorario.php'">Editar Horários</button>
       </center>
+      <?php endif; ?>
       <!-- Pop-up -->
       <div class="popup-overlay" id="popupOverlay">
         <div class="popup" id="popup">
