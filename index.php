@@ -120,8 +120,6 @@ require_once 'PHP/db_connection.php';
                 <input type="text" id="origem" name="origem" placeholder="Cidade de origem">
                 <label for="destino">Destino:</label>
                 <input type="text" id="destino" name="destino" placeholder="Cidade de destino">
-                <label for="data">Data:</label>
-                <input type="date" id="data" name="data">
                 <!-- isto tem de ser mandado para a pagina de bilhetes-->
                 <!--<a href="horarios.php">
                     <button>Pesquisar</button>
