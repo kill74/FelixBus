@@ -1,8 +1,7 @@
 <?php
 session_start(); 
 require_once 'PHP/db_connection.php';
-//faltam coisas aqui
-
+require 'logged.php';
 ?>
 
 <!DOCTYPE html>
@@ -30,11 +29,14 @@ require_once 'PHP/db_connection.php';
             <p><strong>Telefone: </strong> +351 912 345 678</p>
             <p><strong>Endereço: </strong> Rua Principal, 123, Castelo Branco</p><br>
             <br>
+            <!-- Apenas users com login como funcionário ou admin verão isso -->
+            <?php if($isLoggedIn && $userRole === 'admin' && 'funcionario'): ?>
             <center>
             <a href="EditarPefil.php" target="_blank">
                     <button>Editar Perfil</button>
                 </a>
             </center>
+            <?php endif; ?>
     </main>
     <?php require 'PHP/footer.php' ?>
 </body>

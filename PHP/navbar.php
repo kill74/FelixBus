@@ -1,7 +1,5 @@
 <?php
-//Verifica se o usuário está logado
-$isLogged = isset($_SESSION['user_id']);
-$userRole = $_SESSION['user_role'] : null;
+require 'logged.php';
 ?>
 
 <header>
@@ -14,18 +12,15 @@ $userRole = $_SESSION['user_role'] : null;
             <li><a href="carteira.php">Carteira</a></li>
             <li><a href="horarios.php">Horários</a></li>
 
-<!--so quem tiver login como funcionario ou admin ira conseguir ver este dois-->
+            <!-- Apenas usuários com login como funcionário ou admin verão isso -->
             <?php if ($isLoggedIn && $userRole === 'funcionario'): ?>
                 <li><a href="paginaFuncionario.php">Página Funcionário</a></li>
             <?php endif; ?>
-            
+
             <?php if ($isLoggedIn && $userRole === 'admin'): ?>
                 <li><a href="paginaFuncionario.php">Página Funcionário</a></li>
                 <li><a href="paginaAdmin.php">Página Admin</a></li>
             <?php endif; ?>
-
-
-
         </ul>
     </nav>
 </header>

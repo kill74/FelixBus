@@ -1,6 +1,6 @@
 <?php
 session_start(); 
-require_once 'PHP/db_connectio.php'
+require_once 'PHP/db_connection.php'
 //faltam coisas aqui
 
 ?>
@@ -78,6 +78,9 @@ require_once 'PHP/db_connectio.php'
           </tr>
         </tbody>
       </table>
+      <center>
+      <button class="Butao-Comprar">Editar Horários</button>
+      </center>
       <!-- Pop-up -->
       <div class="popup-overlay" id="popupOverlay">
         <div class="popup" id="popup">
