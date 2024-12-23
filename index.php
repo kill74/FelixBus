@@ -1,8 +1,6 @@
 <?php
 session_start(); 
 require_once 'PHP/db_connection.php';
-//faltam coias aqui
-
 ?>
 
 <!DOCTYPE html>
