@@ -3,7 +3,7 @@
 session_start();
 
 // Estabelece ligação com a base de dados
-require_once 'PHP/db_connection.php';
+require_once 'db_connection.php';
 
 // Verifica se o utilizador está autenticado e se tem permissões de administrador
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'administrador') {

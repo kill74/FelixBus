@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'PHP/db_connection.php'; // Inclui o ficheiro de conexão à base de dados
+require_once 'db_connection.php'; // Inclui o ficheiro de conexão à base de dados
 
 
 // Verifica se o utilizador está autenticado e se tem permissões de funcionário ou administrador

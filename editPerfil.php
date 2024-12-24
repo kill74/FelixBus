@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'PHP/db_connection.php';
+require_once 'db_connection.php';
 
 // Verifica se o utilizador está autenticado e se é funcionário ou admin
 if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['funcionario', 'admin'])) {

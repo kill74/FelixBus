@@ -1,8 +1,9 @@
 <?php
-// Ativar exibição de erros para debug
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+session_start();
+// erros
+#ini_set('display_errors', 1);
+#ini_set('display_startup_errors', 1);
+#error_reporting(E_ALL);
 
 
 require_once 'db_connection.php';

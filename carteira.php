@@ -4,7 +4,7 @@
 
 session_start();
 
-require_once 'PHP/db_connection.php';
+require_once 'db_connection.php';
 
 $mensagem = ""; //variavel para utilizar ao longo do codigo
 
