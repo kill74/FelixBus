@@ -1,16 +1,44 @@
 <?php
-session_start(); 
-require_once 'db_connection.php';
+session_start();
 
+// Credenciais permitidas
+$users = [
+    'admin' => 'admin',
+    'funcionario' => 'funcionario',
+];
 
+// Processa o formulário de login
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    // Verifica as credenciais
+    if (isset($users[$username]) && $users[$username] === $password) {
+        // Define a sessão
+        $_SESSION['user'] = $username;
+        $_SESSION['role'] = $username === 'admin' ? 'admin' : 'funcionario';
+    } else {
+        $error = "Credenciais inválidas.";
+    }
+}
+
+// Verifica se o usuário está autenticado
+$isAuthenticated = isset($_SESSION['user']) && in_array($_SESSION['role'], ['admin', 'funcionario']);
+
+// Encerra a sessão (logout)
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: {$_SERVER['PHP_SELF']}");
+    exit;
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FelixBus</title>
-    <link rel="stylesheet" href="style/styleIndex.css">
+    <title>FelixBus - Gestão de Horários</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,28 +89,54 @@ require_once 'db_connection.php';
         .button:hover {
             background-color: #ffd700;
         }
+        .error {
+            color: red;
+            margin: 1rem 0;
+        }
     </style>
 </head>
 <body>
- <?php require 'PHP/navbar.php' ?>
+    <header>
+        <h1>FelixBus - Gestão de Horários</h1>
+    </header>
+
     <div class="container">
-        <label for="partida">Partida:</label>
-        <input type="text" id="partida" placeholder="Adicione local de Partida">
+        <?php if ($isAuthenticated): ?>
+            <!-- Página restrita -->
+            <h2>Bem-vindo, <?= htmlspecialchars($_SESSION['user']); ?>!</h2>
 
-        <label for="saida">Hora de Saída:</label>
-        <input type="time" id="saida">
+            <label for="partida">Partida:</label>
+            <input type="text" id="partida" placeholder="Adicione local de Partida">
 
-        <label for="destino">Destino:</label>
-        <input type="text" id="destino" placeholder="Adicione local de Destino">
+            <label for="saida">Hora de Saída:</label>
+            <input type="time" id="saida">
 
-        <label for="chegada">Hora de Chegada:</label>
-        <input type="time" id="chegada">
+            <label for="destino">Destino:</label>
+            <input type="text" id="destino" placeholder="Adicione local de Destino">
 
-        <label for="tipo">Tipo de Viagem:</label>
-        <input type="text" id="tipo" placeholder="Adicione o tipo de Viagem">
+            <label for="chegada">Hora de Chegada:</label>
+            <input type="time" id="chegada">
 
-        <a href="GestaoHorario.html" class="button">Adicionar Horário</a>
+            <label for="tipo">Tipo de Viagem:</label>
+            <input type="text" id="tipo" placeholder="Adicione o tipo de Viagem">
+
+            <a href="?logout=1" class="button">Sair</a>
+        <?php else: ?>
+            <!-- Formulário de login -->
+            <h2>Login</h2>
+            <?php if (!empty($error)): ?>
+                <p class="error"><?= htmlspecialchars($error); ?></p>
+            <?php endif; ?>
+            <form method="POST">
+                <label for="username">Usuário:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit" class="button">Entrar</button>
+            </form>
+        <?php endif; ?>
     </div>
-    <?php require 'PHP/footer.php' ?>
 </body>
 </html>
