@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
     exit;
 }
 
-// Obtém o ID e nome do administrador autenticado
+// Obtém o ID e nome do administrador autenticado (debugging)
 $admin_id = $_SESSION['user_id'];
 $sql_admin = "SELECT nome FROM utilizadores WHERE id = ?";
 $stmt = $conn->prepare($sql_admin);

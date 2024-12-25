@@ -29,10 +29,10 @@ require 'logged.php';
             <p><strong>Telefone: </strong> +351 912 345 678</p>
             <p><strong>Endereço: </strong> Rua Principal, 123, Castelo Branco</p><br>
             <br>
-            <!-- Apenas users com login como funcionário ou admin verão isso -->
-            <?php if($isLoggedIn && $userRole === 'admin' && 'funcionario'): ?>
+            <!-- Iram conseguir editar o perfil -->
+            <?php if($isLoggedIn && ($userRole === 'admin' || $userRole === 'funcionario' || $userRole === 'cliente')): ?>
             <center>
-            <a href="EditarPefil.php" target="_blank">
+            <a href="editPerfil.php">
                     <button>Editar Perfil</button>
                 </a>
             </center>

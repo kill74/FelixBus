@@ -1,14 +1,26 @@
 <?php
+// Inicia a sessão para verificar se o utilizador está autenticado
 session_start();
+
+// Inclui o ficheiro de conexão à base de dados
 require_once 'db_connection.php';
 
-// Verifica se o utilizador está autenticado e se é funcionário ou admin
-if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['funcionario', 'admin'])) {
-    // Redireciona para a página de login se não estiver logado ou não tiver permissão
+// Verifica se o utilizador está autenticado
+if (!isset($_SESSION['user_id'])) {
+    // Se o utilizador não estiver autenticado, redireciona para a página de login
     header("Location: Login.php");
     exit();
 }
+
+// Verifica se o utilizador tem um dos papéis permitidos
+// Apenas 'funcionario', 'admin' ou 'cliente' podem aceder
+if (!in_array($_SESSION['user_role'], ['funcionario', 'admin', 'cliente'])) {
+    // Caso não tenha um papel permitido, redireciona também para a página de login
+    header("Location: editPerfil.php");
+    exit();
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt">
