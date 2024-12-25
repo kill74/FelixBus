@@ -1,3 +1,4 @@
+<?php require_once 'db_connection';?>
 <header>
     <h1>FelixBus</h1>
     <br>
