@@ -30,7 +30,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
 
-            // 
+            // Verifica se é o funcionário
+            if ($nome === 'funcionario' && $senha === 'funcionario' && $user['tipo_utilizador_id'] == 2) {
+                $_SESSION["user_id"] = $user['id'];
+                $_SESSION["tipo_utilizador"] = $user['tipo_utilizador_id'];
+                $_SESSION["nome"] = $user['nome'];
+                header("Location: index.php");
+                exit();
+            }
             
             // Para outros usuários
             if (password_verify($senha, $user['palavra_passe'])) {
@@ -40,11 +47,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: index.php");
                 exit();
             } else {
-                $erro = "Senha incorreta.";
+                $erro = "Login mal sucedido. Por favor, tente novamente.";
             }
-        } else {
-            $erro = "Utilizador não encontrado ou inativo.";
-        }
+        
 
         $stmt->close();
         $conn->close();
