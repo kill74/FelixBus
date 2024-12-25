@@ -1,18 +1,28 @@
 <?php
+// Ativar a exibição de erros
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-//Este código é responsável por gerir o saldo da carteira de utilizadores no sistema. Ele implementa duas operações principais: adicionar saldo e retirar saldo. Além disso, todas as operações realizadas na carteira são registadas na tabela transacoes para efeitos de auditoria.
+// Este código é responsável por gerir o saldo da carteira de utilizadores no sistema. 
+// Ele implementa duas operações principais: adicionar saldo e retirar saldo. 
+// Além disso, todas as operações realizadas na carteira são registadas na tabela transacoes para efeitos de auditoria.
 
 session_start();
-
 require_once 'db_connection.php';
 
-$mensagem = ""; //variavel para utilizar ao longo do codigo
+$mensagem = ""; // Variável para utilizar ao longo do código
+
+if (!isset($_SESSION['user_id'])) {
+    die("Erro: Usuário não autenticado.");
+}
+
+$user_id = $_SESSION['user_id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $valor = (float) $_POST['valor'];
     $tipo_operacao = $_POST['tipo_operacao'];
-    $user_id = $_SESSION['user_id'];
-echo "$valor $tipo_operacao $user_id<br>";
+    echo "$valor $tipo_operacao $user_id<br>";
 
     if ($valor > 0) {
         // Obtém o saldo atual da carteira do utilizador
@@ -28,7 +38,7 @@ echo "$valor $tipo_operacao $user_id<br>";
             } elseif ($tipo_operacao == "levantamento" && $valor <= $saldo_atual) {
                 $novo_saldo = $saldo_atual - $valor;
             } else {
-                $mensagem = "Erro: Saldo insuficiente.";
+                $mensagem = "Error: Insufficient balance.";
             }
 
             // Atualiza o saldo e regista a transação
@@ -42,9 +52,7 @@ echo "$valor $tipo_operacao $user_id<br>";
             $mensagem = "Erro: Carteira não encontrada.";
         }
     } else {
-        $mensagem = "Erro: Valor inválido.";The error message "Erro: Saldo insuficiente." should be translated to English for consistency with the rest of the code comments.
-
-        
+        $mensagem = "Erro: Valor inválido.";
     }
 }
 ?>
@@ -75,8 +83,12 @@ echo "$valor $tipo_operacao $user_id<br>";
                             ORDER BY data_transacao DESC";
         $historico = $conn->query($query_historico);
 
-        while ($linha = $historico->fetch_assoc()) {
-            echo "<li>{$linha['tipo']} de €{$linha['valor']} em {$linha['data_transacao']}</li>";
+        if ($historico) {
+            while ($linha = $historico->fetch_assoc()) {
+                echo "<li>{$linha['tipo']} de €{$linha['valor']} em {$linha['data_transacao']}</li>";
+            }
+        } else {
+            echo "<li>Erro ao obter histórico de transações.</li>";
         }
         ?>
     </ul>

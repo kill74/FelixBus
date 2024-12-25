@@ -90,6 +90,7 @@ if (!isset($_COOKIE['user_role']) || !in_array($_COOKIE['user_role'], ['funciona
             <input class="texto" type="text" placeholder="Adicione o Endereço"/>  
           <br><br>
             <a href="GestaoPerfil.html" class="button">Alterar Perfil</a>
+            <br>
         </div>
     </main>
     <?php require 'PHP/footer.php'; ?>

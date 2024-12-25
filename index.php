@@ -10,6 +10,7 @@ echo "Tipo Utilizador: " . ($_SESSION['tipo_utilizador'] ?? 'não definido') . "
 echo "Nome: " . ($_SESSION['nome'] ?? 'não definido') . "<br>";
 echo "User Role: " . ($userRole ?? 'não definido') . "<br>";
 */
+
 ?>
 <!DOCTYPE html>
 <html lang="pt">

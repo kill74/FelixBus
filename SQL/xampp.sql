@@ -79,7 +79,6 @@ CREATE TABLE `utilizadores` (
 
 -- Inserir dados na tabela `utilizadores`
 INSERT INTO `utilizadores` (`id`, `nome`, `palavra_passe`, `tipo_utilizador_id`, `estado`) VALUES
-(2, 'Guilherme', '$2y$10$D63EHOm8tzjnkibB1tUKF.aGOgdyBvEThc3BiwgWFf8hKEXHh3FBq', 2, 'ativo'),
 (7, 'cliente', '$2y$10$7QJ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', 1, 'ativo'),
 (8, 'funcionario', '$2y$10$7QJ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', 2, 'ativo'),
 (9, 'admin', '$2y$10$7QJ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', 3, 'ativo');
