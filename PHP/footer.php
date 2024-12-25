@@ -1,3 +1,6 @@
+<head>
+    <link rel="stylesheet" href="style/styleIndex.css">
+</head>
 <footer>
     <section id="contacto">
         <h2>Contato</h2>
@@ -23,5 +26,4 @@
             </li>
         </ul>            
     </section>
-    <p>&copy; FelixBus. Todos os direitos reservados.</p>
 </footer>

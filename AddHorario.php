@@ -1,13 +1,5 @@
 <?php
 session_start();
-require_once 'db_connection.php';
-
-// Verifica se o utilizador está autenticado e se é funcionário ou admin
-if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['funcionario', 'admin'])) {
-    // Redireciona para a página de login se não estiver logado ou não tiver permissão
-    header("Location: Login.php");
-    exit();
-}
 
 // Credenciais permitidas
 $users = [
@@ -30,6 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Verifica se o usuário está autenticado
+$isAuthenticated = isset($_SESSION['user']) && in_array($_SESSION['role'], ['admin', 'funcionario']);
+
 // Encerra a sessão (logout)
 if (isset($_GET['logout'])) {
     session_destroy();
@@ -44,6 +39,7 @@ if (isset($_GET['logout'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FelixBus - Gestão de Horários</title>
+    <link rel="stylesheet" href="stylePerfil.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -104,7 +100,7 @@ if (isset($_GET['logout'])) {
     <header>
         <h1>FelixBus - Gestão de Horários</h1>
     </header>
-
+    <?php require 'PHP/navbar.php'; ?>
     <div class="container">
         <?php if ($isAuthenticated): ?>
             <!-- Página restrita -->
@@ -144,4 +140,5 @@ if (isset($_GET['logout'])) {
         <?php endif; ?>
     </div>
 </body>
+<?php require 'PHP/footer.php';   ?>
 </html>

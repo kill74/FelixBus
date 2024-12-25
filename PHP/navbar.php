@@ -21,7 +21,9 @@ if ($isLoggedIn) {
     }
 }
 ?>
-
+<head>
+<link rel="stylesheet" href="style/styleIndex.css">
+</head>
 <header>
     <h1>FelixBus</h1>
     <br>

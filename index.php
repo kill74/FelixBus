@@ -17,7 +17,6 @@ echo "User Role: " . ($userRole ?? 'não definido') . "<br>";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FelixBus</title>
-    <link rel="stylesheet" href="style/styleIndex.css">
     <style>
         footer {
             text-align: center;
