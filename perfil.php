@@ -33,9 +33,9 @@ require 'logged.php';
             <?php if($isLoggedIn && ($userRole === 'admin' || $userRole === 'funcionario' || $userRole === 'cliente')): ?>
             <center>
             <a href="editPerfil.php">
-                    <button>Editar Perfil</button>
-                </a>
-            </center>
+                <button>Editar Perfil</button>
+            </a>
+        </center>
             <?php endif; ?>
     </main>
     <?php require 'PHP/footer.php' ?>

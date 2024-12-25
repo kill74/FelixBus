@@ -20,5 +20,12 @@ if ($isLoggedIn) {
             $userRole = 'admin';
             break;
     }
+
+    // Define cookies para o papel do utilizador sem tempo de expiração (cookie de sessão)
+    setcookie("user_role", $userRole, 0, "/"); // 0 = cookie de sessão
+} else {
+    // Redireciona para a página de login se não estiver logado
+    header("Location: Login.php");
+    exit();
 }
 ?>
