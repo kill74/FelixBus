@@ -13,7 +13,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             die("Falha na conexão: " . $conn->connect_error);
         }
 
-        // Alterado para incluir todos os campos necessários
         $stmt = $conn->prepare("SELECT id, nome, palavra_passe, tipo_utilizador_id FROM utilizadores WHERE nome = ? AND estado = 'ativo'");
         $stmt->bind_param("s", $nome);
         $stmt->execute();
@@ -22,16 +21,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
             
-            // Verifica a senha do admin
-            if ($nome === 'admin' && $senha === 'admin') {
+            // Verifica se é o admin
+            if ($nome === 'admin' && $senha === 'admin' && $user['tipo_utilizador_id'] == 3) {
                 $_SESSION["user_id"] = $user['id'];
                 $_SESSION["tipo_utilizador"] = $user['tipo_utilizador_id'];
                 $_SESSION["nome"] = $user['nome'];
                 header("Location: index.php");
                 exit();
             }
+
+            // 
             
-            // Para outros usuários, verifica a senha normalmente
+            // Para outros usuários
             if (password_verify($senha, $user['palavra_passe'])) {
                 $_SESSION["user_id"] = $user['id'];
                 $_SESSION["tipo_utilizador"] = $user['tipo_utilizador_id'];
