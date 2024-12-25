@@ -2,7 +2,7 @@
 session_start();
 require_once 'db_connection.php';
 
-// Debug 
+// Debug - remova depois de testar
 /*
 echo "DEBUG:<br>";
 echo "User ID: " . ($_SESSION['user_id'] ?? 'não definido') . "<br>";
@@ -76,30 +76,59 @@ echo "User Role: " . ($userRole ?? 'não definido') . "<br>";
 <body>
     <?php require 'PHP/navbar.php' ?>
     <main>
-        <!-- Secção dos horarios -->
-        <section id="horarios">
-            <h2>Pesquisar Horários</h2>
-            <form>
-                <label for="origem">Origem:</label>
-                <input type="text" id="origem" name="origem" placeholder="Cidade de origem">
-                <label for="destino">Destino:</label>
-                <input type="text" id="destino" name="destino" placeholder="Cidade de destino">
-            </form>
-            <br>
-            <center>
-                <a href="horarios.php" target="_blank">
-                    <button>Pesquisar</button>
-                </a>
-            </center>
-            <br>
-            <!-- Sobre Secção -->
-            <section id="sobre">
-                <h2>Sobre Nós</h2>
-                <p>Somos uma empresa dedicada a oferecer transporte seguro e confortável para destinos em todo o país.
-                Com nossa plataforma de fácil uso, você pode planejar suas viagens, gerenciar seu perfil,
-                e manter-se atualizado com nossos horários e promoções.</p>
+        <br><br>
+        <div>
+            <div class="slideshow-container">
+                <!-- Radio buttons for controlling the slides -->
+                <input type="radio" name="slider" id="slide1" checked>
+                <input type="radio" name="slider" id="slide2">
+                <input type="radio" name="slider" id="slide3">
+                <!-- Slides -->
+                <div class="slides">
+                    <div class="slide">
+                        <img src="img/img8 (2).jpg" alt="Image 1">
+                    </div>
+                    <div class="slide">
+                        <img src="img/img10 (1).jpeg" alt="Image 2">
+                    </div>
+                    <div class="slide">
+                        <img src="img/img3.jpg" alt="Image 3">
+                    </div>
+                </div>
+                <!-- Navigation buttons -->
+                <div class="navigation">
+                    <label for="slide1" class="nav-button"></label>
+                    <label for="slide2" class="nav-button"></label>
+                    <label for="slide3" class="nav-button"></label>
+                </div>
+            </div>
+        </div>
+        <main>
+            <!-- Secção dos horarios -->
+            <section id="horarios">
+                <h2>Pesquisar Horários</h2>
+                <form>
+                    <label for="origem">Origem:</label>
+                    <input type="text" id="origem" name="origem" placeholder="Cidade de origem">
+                    <label for="destino">Destino:</label>
+                    <input type="text" id="destino" name="destino" placeholder="Cidade de destino">
+                </form>
+                <br>
+                <center>
+                    <a href="horarios.php" target="_blank">
+                        <button>Pesquisar</button>
+                    </a>
+                </center>
+                <br>
+                <!-- Sobre Secção -->
+                <section id="sobre">
+                    <h2>Sobre Nós</h2>
+                    <p>Somos uma empresa dedicada a oferecer transporte seguro e confortável para destinos em todo o país.
+                    Com nossa plataforma de fácil uso, você pode planejar suas viagens, gerenciar seu perfil,
+                    e manter-se atualizado com nossos horários e promoções.</p>
+                </section>
             </section>
-        </section>
+        </main>
     </main>
     <?php require 'PHP/footer.php' ?>
 </body>
