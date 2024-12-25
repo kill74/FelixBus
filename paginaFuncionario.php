@@ -4,7 +4,7 @@ require_once 'db_connection.php'; // Inclui o ficheiro de conexão à base de da
 
 
 // Verifica se o utilizador está autenticado e se tem permissões de funcionário ou administrador
-if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] != 'funcionario' && $_SESSION['user_role'] != 'administrador')) {
+if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] != 'funcionario' && $_SESSION['user_role'] != 'admin')) {
     // Caso o utilizador não tenha permissão, é redirecionado para a página de login com uma mensagem
     echo "<script>alert('Acesso negado. Faça login como funcionário ou administrador.');</script>";
     echo "<script>window.location.href='Login.php';</script>";
@@ -21,6 +21,19 @@ $stmt->execute();
 $user_result = $stmt->get_result();
 $user_data = $user_result->fetch_assoc(); // Armazena os dados do utilizador autenticado
 $stmt->close(); // Fecha o statement
+
+// Verifica se o utilizador autenticado é um funcionário ou administrador
+if ($user && password_verify($password, $user["password"]) && $user["role"] === "funcionario") {
+    // Define as variáveis de sessão para o utilizador autenticado
+    $_SESSION["user_id"] = $user['id'];
+    $_SESSION["tipo_utilizador"] = $user['tipo_utilizador_id'];
+    $_SESSION["nome"] = $user['nome'];
+    header("Location: paginaFuncionario.php");
+    exit();
+} else {
+    // Define uma mensagem de erro caso as credenciais sejam inválidas
+    $error = "Nome ou palavra-passe inválida.";
+}
 
 // Recupera a lista de clientes e os saldos das suas carteiras
 $sql_clientes = "SELECT u.id, u.nome, c.saldo FROM utilizadores u 

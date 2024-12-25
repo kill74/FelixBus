@@ -1,5 +1,13 @@
 <?php
 session_start();
+require_once 'db_connection.php';
+
+// Verifica se o utilizador está autenticado e se é funcionário ou admin
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['funcionario', 'admin'])) {
+    // Redireciona para a página de login se não estiver logado ou não tiver permissão
+    header("Location: Login.php");
+    exit();
+}
 
 // Credenciais permitidas
 $users = [
@@ -21,9 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Credenciais inválidas.";
     }
 }
-
-// Verifica se o usuário está autenticado
-$isAuthenticated = isset($_SESSION['user']) && in_array($_SESSION['role'], ['admin', 'funcionario']);
 
 // Encerra a sessão (logout)
 if (isset($_GET['logout'])) {

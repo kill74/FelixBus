@@ -2,6 +2,10 @@
 session_start(); 
 require_once 'db_connection.php';
 require 'logged.php';
+
+// Verificar se o usuário está logado e seu papel
+$isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
+$userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : ''; 
 ?>
 
 <!DOCTYPE html>
@@ -9,7 +13,7 @@ require 'logged.php';
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Horarios dos Autocarros</title>
+  <title>Horários dos Autocarros</title>
   <link rel="stylesheet" href="style/stylePerfil.css" />
 </head>
 <body>
@@ -19,7 +23,7 @@ require 'logged.php';
     <thead>
       <tr>
         <th>Dia</th>
-        <th>Hora Saida</th>
+        <th>Hora Saída</th>
         <th>Destino</th>
         <th>Hora Chegada</th>
         <th>Tipo Viagem</th>
@@ -46,7 +50,7 @@ require 'logged.php';
       <tr class="Skibidi">
         <td>Porto</td>
         <td>10:32</td>
-        <td>Covilha</td>
+        <td>Covilhã</td>
         <td>14:54</td>
         <td>Regional</td>
         <td><button class="Butao-Comprar">Comprar</button></td>
@@ -77,11 +81,14 @@ require 'logged.php';
       </tr>
     </tbody>
   </table>
-  <?php if ($isLoggedIn && (userRole === 'funcionario' || userRole === 'admin')): ?>
+  
+  <!-- Mostrar botão Editar Horários apenas para funcionários e admins -->
+  <?php if ($isLoggedIn && ($userRole === 'funcionario' || $userRole === 'admin')): ?>
   <center>
     <button class="Butao-Comprar" onclick="window.location.href='AddHorario.php'">Editar Horários</button>
   </center>
   <?php endif; ?>
+  
   <!-- Pop-up -->
   <div class="popup-overlay" id="popupOverlay">
     <div class="popup" id="popup">
@@ -100,6 +107,7 @@ require 'logged.php';
       <button class="close-popup" id="closePopup">Fechar</button>
     </div>
   </div>
+  
   <script src="script.js"></script>
   <br><br><br>
   <?php require 'PHP/footer.php'; ?>

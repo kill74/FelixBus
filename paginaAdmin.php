@@ -6,7 +6,7 @@ session_start();
 require_once 'db_connection.php';
 
 // Verifica se o utilizador está autenticado e se tem permissões de administrador
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'administrador') {
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
     // Caso o utilizador não tenha permissão, é redirecionado para a página de login com uma mensagem
     echo "<script>alert('Acesso negado. Faça login como administrador.');</script>";
     echo "<script>window.location.href='Login.php';</script>";
@@ -30,9 +30,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verifica se as credenciais são válidas e se o utilizador é administrador
     if ($user && password_verify($password, $user["password"]) && $user["role"] === "admin") {
         // Define as variáveis de sessão para o utilizador autenticado
-        $_SESSION["user_id"] = $user["id"];
-        $_SESSION["user_role"] = "administrador";
-        header("Location: paginaAdmin.php"); // Redireciona para o painel do administrador
+        $_SESSION["user_id"] = $user['id'];
+        $_SESSION["tipo_utilizador"] = $user['tipo_utilizador_id'];
+        $_SESSION["nome"] = $user['nome'];
+        header("Location: paginaAdmin.php");
         exit();
     } else {
         // Define uma mensagem de erro caso as credenciais sejam inválidas
