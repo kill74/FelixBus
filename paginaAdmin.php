@@ -1,88 +1,75 @@
 <?php
-// Inicia uma sessão para gerir a autenticação do utilizador
+// Inicia a sessão para autenticação
 session_start();
+require_once 'db_connection.php'; // Inclui o ficheiro de conexão à base de dados
 
-// Estabelece ligação com a base de dados
-require_once 'db_connection.php';
-
-// Verifica se o utilizador está autenticado e se tem permissões de administrador
+// Verifica se o utilizador está autenticado como administrador
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
-    // Caso o utilizador não tenha permissão, é redirecionado para a página de login com uma mensagem
     echo "<script>alert('Acesso negado. Faça login como administrador.');</script>";
     echo "<script>window.location.href='Login.php';</script>";
-    exit; // Termina o processamento do script
+    exit;
 }
 
-// Processa o formulário de login enviado pelo utilizador
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtém os dados do formulário: nome e palavra-passe
-    $nome = trim($_POST["nome"]);
-    $password = trim($_POST["password"]);
+// Obtém o ID e nome do administrador autenticado
+$admin_id = $_SESSION['user_id'];
+$sql_admin = "SELECT nome FROM utilizadores WHERE id = ?";
+$stmt = $conn->prepare($sql_admin);
+$stmt->bind_param("i", $admin_id);
+$stmt->execute();
+$admin_result = $stmt->get_result();
+$admin_data = $admin_result->fetch_assoc();
+$stmt->close();
 
-    // Pesquisa o utilizador na base de dados pelo nome
-    $sql = "SELECT * FROM users WHERE nome = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $nome); // Substitui o marcador pela variável $nome
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
+// Função para listar todos os usuários
+$sql_users = "SELECT id, nome, email, tipo_utilizador_id FROM utilizadores";
+$result_users = $conn->query($sql_users);
 
-    // Verifica se as credenciais são válidas e se o utilizador é administrador
-    if ($user && password_verify($password, $user["password"]) && $user["role"] === "admin") {
-        // Define as variáveis de sessão para o utilizador autenticado
-        $_SESSION["user_id"] = $user['id'];
-        $_SESSION["tipo_utilizador"] = $user['tipo_utilizador_id'];
-        $_SESSION["nome"] = $user['nome'];
-        header("Location: paginaAdmin.php");
-        exit();
+// Função para listar todas as viagens
+$sql_viagens = "SELECT id, origem, destino, data_viagem, hora_partida, preco FROM viagens";
+$result_viagens = $conn->query($sql_viagens);
+
+// Função para listar transações
+$sql_transacoes = "SELECT t.id, u.nome AS cliente, t.valor, t.data_transacao 
+                   FROM transacoes t 
+                   JOIN utilizadores u ON t.utilizador_id = u.id";
+$result_transacoes = $conn->query($sql_transacoes);
+
+// Adicionar nova viagem
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_viagem'])) {
+    $origem = $_POST['origem'];
+    $destino = $_POST['destino'];
+    $data_viagem = $_POST['data_viagem'];
+    $hora_partida = $_POST['hora_partida'];
+    $preco = $_POST['preco'];
+
+    $sql_add_viagem = "INSERT INTO viagens (origem, destino, data_viagem, hora_partida, preco) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql_add_viagem);
+    $stmt->bind_param("ssssd", $origem, $destino, $data_viagem, $hora_partida, $preco);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Viagem adicionada com sucesso!');</script>";
+        echo "<script>window.location.href='paginaAdmin.php';</script>";
     } else {
-        // Define uma mensagem de erro caso as credenciais sejam inválidas
-        $error = "Nome ou palavra-passe inválida.";
+        echo "<script>alert('Erro ao adicionar viagem: " . $conn->error . "');</script>";
     }
+    $stmt->close();
 }
 
-// Função para listar todas as rotas disponíveis na base de dados
-function listarRotas($conn) {
-    $sql = "SELECT * FROM rotas"; // Consulta todas as rotas
-    $result = $conn->query($sql); // Executa a consulta
-    return $result->fetch_all(MYSQLI_ASSOC); // Retorna as rotas como um array associativo
-}
-
-// Função para listar todos os utilizadores registados
-function listarUtilizadores($conn) {
-    $sql = "SELECT * FROM users"; // Consulta todos os utilizadores
-    $result = $conn->query($sql); // Executa a consulta
-    return $result->fetch_all(MYSQLI_ASSOC); // Retorna os utilizadores como um array associativo
-}
-
-// Função para listar todos os alertas registados
-function listarAlertas($conn) {
-    $sql = "SELECT * FROM alertas"; // Consulta todos os alertas
-    $result = $conn->query($sql); // Executa a consulta
-    return $result->fetch_all(MYSQLI_ASSOC); // Retorna os alertas como um array associativo
-}
-
-// Função para atualizar os dados pessoais do utilizador
-function atualizarDadosPessoais($conn, $userId, $dados) {
-    $sql = "UPDATE users SET nome = ?, email = ? WHERE id = ?"; // Query de atualização
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssi", $dados['nome'], $dados['email'], $userId); // Liga os parâmetros à query
-    $stmt->execute(); // Executa a atualização
-}
+// Fecha a conexão com a base de dados
+$conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo</title>
+    <title>Painel do Administrador</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
+            background-color: #f4f4f9;
             display: flex;
         }
         .container {
@@ -103,14 +90,10 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
             text-align: center;
             margin-bottom: 20px;
         }
-        .sidebar nav {
-            display: flex;
-            flex-direction: column;
-        }
-        .nav-item {
+        .sidebar .nav-item {
             margin: 10px 0;
         }
-        .nav-item a {
+        .sidebar .nav-item a {
             color: white;
             text-decoration: none;
             padding: 10px;
@@ -118,7 +101,7 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
             border-radius: 5px;
             transition: background-color 0.3s;
         }
-        .nav-item a:hover {
+        .sidebar .nav-item a:hover {
             background-color: #34495e;
         }
         .main-content {
@@ -131,6 +114,7 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
             color: white;
             padding: 10px;
             border-radius: 5px;
+            margin-bottom: 20px;
         }
         table {
             width: 100%;
@@ -150,70 +134,117 @@ function atualizarDadosPessoais($conn, $userId, $dados) {
     </style>
 </head>
 <body>
-<div class="container">
-    <!-- Menu lateral com as opções do painel -->
-    <div class="sidebar">
-        <div class="logo">AdminPanel</div>
-        <nav>
-            <!-- Links para diferentes secções do painel administrativo -->
-            <div class="nav-item"><a href="admin_dashboard.php">Dashboard</a></div>
-            <div class="nav-item"><a href="gestao_rotas.php">Gestão de Rotas</a></div>
-            <div class="nav-item"><a href="gestao_utilizadores.php">Gestão de Utilizadores</a></div>
-            <div class="nav-item"><a href="gestao_alertas.php">Gestão de Alertas</a></div>
-            <div class="nav-item"><a href="perfil.php">Os Meus Dados</a></div>
-            <div class="nav-item"><a href="logout.php">Terminar Sessão</a></div>
-        </nav>
+    <div class="container">
+        <!-- Barra lateral -->
+        <div class="sidebar">
+            <div class="logo">Painel Admin</div>
+            <nav>
+                <div class="nav-item"><a href="#">Usuários</a></div>
+                <div class="nav-item"><a href="#">Viagens</a></div>
+                <div class="nav-item"><a href="#">Transações</a></div>
+                <div class="nav-item"><a href="index.php">Página Principal</a></div>
+                <div class="nav-item"><a href="Login.php">Sair</a></div>
+            </nav>
+        </div>
+
+        <!-- Conteúdo principal -->
+        <div class="main-content">
+            <header class="header">
+                <h1>Bem-vindo, <?= htmlspecialchars($admin_data['nome']); ?></h1>
+            </header>
+
+            <!-- Gestão de Usuários -->
+            <div class="table-section">
+                <h2>Gestão de Usuários</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result_users->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row['id']); ?></td>
+                                <td><?= htmlspecialchars($row['nome']); ?></td>
+                                <td><?= htmlspecialchars($row['email']); ?></td>
+                                <td><?= $row['tipo_utilizador_id'] == 1 ? 'Cliente' : 'Funcionário'; ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Gestão de Viagens -->
+            <div class="table-section">
+                <h2>Gestão de Viagens</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Origem</th>
+                            <th>Destino</th>
+                            <th>Data</th>
+                            <th>Hora</th>
+                            <th>Preço</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result_viagens->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row['id']); ?></td>
+                                <td><?= htmlspecialchars($row['origem']); ?></td>
+                                <td><?= htmlspecialchars($row['destino']); ?></td>
+                                <td><?= htmlspecialchars($row['data_viagem']); ?></td>
+                                <td><?= htmlspecialchars($row['hora_partida']); ?></td>
+                                <td>€<?= number_format($row['preco'], 2, ',', '.'); ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Gestão de Transações -->
+            <div class="table-section">
+                <h2>Gestão de Transações</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Valor</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result_transacoes->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row['id']); ?></td>
+                                <td><?= htmlspecialchars($row['cliente']); ?></td>
+                                <td>€<?= number_format($row['valor'], 2, ',', '.'); ?></td>
+                                <td><?= htmlspecialchars($row['data_transacao']); ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Adicionar Viagem -->
+            <div class="add-viagem">
+                <h2>Adicionar Nova Viagem</h2>
+                <form action="paginaAdmin.php" method="POST">
+                    <input type="text" name="origem" placeholder="Origem" required>
+                    <input type="text" name="destino" placeholder="Destino" required>
+                    <input type="date" name="data_viagem" required>
+                    <input type="time" name="hora_partida" required>
+                    <input type="number" step="0.01" name="preco" placeholder="Preço" required>
+                    <button type="submit" name="add_viagem">Adicionar</button>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <!-- Conteúdo principal -->
-    <div class="main-content">
-        <header class="header">
-            <h1>Bem-vindo, Administrador</h1> <!-- Mensagem de boas-vindas -->
-        </header>
-
-        <main class="dashboard">
-            <h2>Gestão de Rotas</h2>
-            <!-- Tabela para listar as rotas registadas -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Origem</th>
-                        <th>Destino</th>
-                        <th>Horário</th>
-                        <th>Capacidade</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-<?php
-                    // Obtém as rotas da base de dados
-                    $rotas = listarRotas($conn);
-
-                    // Verifica se existem rotas para exibir
-                    if (!empty($rotas)) {
-                        // Itera sobre cada rota e cria uma linha na tabela
-                        foreach ($rotas as $rota) {
-                            echo "<tr>";
-                            echo "<td>" . htmlspecialchars($rota['id']) . "</td>";
-                            echo "<td>" . htmlspecialchars($rota['origem']) . "</td>";
-                            echo "<td>" . htmlspecialchars($rota['destino']) . "</td>";
-                            echo "<td>" . htmlspecialchars($rota['horario']) . "</td>";
-                            echo "<td>" . htmlspecialchars($rota['capacidade']) . "</td>";
-                            echo "<td>";
-                            echo "<a href='editar_rota.php?id=" . urlencode($rota['id']) . "'>Editar</a> | ";
-                            echo "<a href='apagar_rota.php?id=" . urlencode($rota['id']) . "' onclick='return confirm(\"Tem a certeza que deseja apagar esta rota?\");'>Apagar</a>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='6'>Nenhuma rota encontrada.</td></tr>";
-                    }
-?>
-                </tbody>
-            </table>
-        </main>
-    </div>
-</div>
 </body>
 </html>
