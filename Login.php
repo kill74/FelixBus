@@ -47,9 +47,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: index.php");
                 exit();
             } else {
-                $erro = "Login mal sucedido. Por favor, tente novamente.";
+                $erro = "Login inválido.";
             }
-        
+        } 
 
         $stmt->close();
         $conn->close();
