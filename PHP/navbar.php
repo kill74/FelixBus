@@ -40,7 +40,7 @@ if ($isLoggedIn) {
                 <li><a href="paginaAdmin.php">Página Admin</a></li>
             <?php endif; ?>
             <?php if ($isLoggedIn): ?>
-                <li><a href="logout.php">Sair</a></li>
+                <li><a href="Login.php">Sair</a></li>
             <?php else: ?>
                 <li><a href="Login.php">Login</a></li>
             <?php endif; ?>
