@@ -75,3 +75,8 @@ CREATE TABLE viagens (
   preco DECIMAL(10,2) NOT NULL,
   FOREIGN KEY (rota_id) REFERENCES rotas(id)
 );
+
+insert into carteira (utilizador_id, saldo) 
+			VALUES	(1, 200),
+            	(2, 50),
+              (3, 100);
