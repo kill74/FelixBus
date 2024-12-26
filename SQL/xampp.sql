@@ -1,7 +1,6 @@
 CREATE DATABASE trabalho_php;
 USE trabalho_php;
 
--- Tabela: bilhetes
 CREATE TABLE bilhetes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   utilizador_id INT NOT NULL,
@@ -12,22 +11,19 @@ CREATE TABLE bilhetes (
   FOREIGN KEY (viagem_id) REFERENCES viagens(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- Tabela: carteira
 CREATE TABLE carteira (
   id INT AUTO_INCREMENT PRIMARY KEY,
   utilizador_id INT NOT NULL,
-  saldo DECIMAL(10,2) DEFAULT 0.00,
+  saldo DECIMAL(10,2) DEFAULT 0.00, 
   FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- Tabela: rotas
 CREATE TABLE rotas (
   id INT AUTO_INCREMENT PRIMARY KEY,
   origem VARCHAR(100) NOT NULL,
   destino VARCHAR(100) NOT NULL
 );
 
--- Tabela: tipos_utilizador
 CREATE TABLE tipos_utilizador (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
@@ -39,7 +35,6 @@ INSERT INTO tipos_utilizador (id, nome) VALUES
   (3, 'administrador'),
   (4, 'visitante');
 
--- Tabela: transacoes
 CREATE TABLE transacoes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   utilizador_id INT NOT NULL,
@@ -49,7 +44,6 @@ CREATE TABLE transacoes (
   FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- Tabela: utilizadores
 CREATE TABLE utilizadores (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(150) NOT NULL,
@@ -64,7 +58,6 @@ INSERT INTO utilizadores (id, nome, palavra_passe, tipo_utilizador_id, estado) V
   (8, 'funcionario', '$2y$10$.XqeSXjPoKTyD0/XAkZz7edTx42MkHGiY4RzmkfYQ3kr2ZiP7WF4G', 2, 'ativo'),
   (9, 'admin', '$2y$10$ex7LzCmjOZdL.3x8UOBo.O2IyAflxxR8dHgXMqPZE/9Mxgdx8hFTq', 3, 'ativo');
 
--- Tabela: viagens
 CREATE TABLE viagens (
   id INT AUTO_INCREMENT PRIMARY KEY,
   rota_id INT NOT NULL,
