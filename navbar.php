@@ -36,10 +36,10 @@ if ($isLoggedIn) {
             <?php endif; ?>
             <li><a href="horarios.php">Horários</a></li>
             <?php if ($isLoggedIn && ($userRole === 'funcionario' || $userRole === 'admin')): ?>
-                <li><a href="paginaFuncionario.php">Página Funcionário</a></li>
+                <li><a href="AreaGestao.php">Página Funcionário</a></li>
             <?php endif; ?>
             <?php if ($isLoggedIn && $userRole === 'admin'): ?>
-                <li><a href="paginaAdmin.php">Página Admin</a></li>
+                <li><a href="AreaAdmin.php">Página Admin</a></li>
             <?php endif; ?>
             <?php if ($isLoggedIn): ?>
                 <li><a href="Login.php">Sair</a></li>
