@@ -1,63 +1,3 @@
-<?php
-// Inicia a sessão para autenticação
-session_start();
-require_once 'db_connection.php'; // Inclui o ficheiro de conexão à base de dados
-
-// Verifica se o utilizador está autenticado como administrador
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
-    echo "<script>alert('Acesso negado. Faça login como administrador.');</script>";
-    echo "<script>window.location.href='Login.php';</script>";
-    exit;
-}
-
-// Obtém o ID e nome do administrador autenticado (debugging)
-$admin_id = $_SESSION['user_id'];
-$sql_admin = "SELECT nome FROM utilizadores WHERE id = ?";
-$stmt = $conn->prepare($sql_admin);
-$stmt->bind_param("i", $admin_id);
-$stmt->execute();
-$admin_result = $stmt->get_result();
-$admin_data = $admin_result->fetch_assoc();
-$stmt->close();
-
-// Função para listar todos os usuários
-$sql_users = "SELECT id, nome, email, tipo_utilizador_id FROM utilizadores";
-$result_users = $conn->query($sql_users);
-
-// Função para listar todas as viagens
-$sql_viagens = "SELECT id, origem, destino, data_viagem, hora_partida, preco FROM viagens";
-$result_viagens = $conn->query($sql_viagens);
-
-// Função para listar transações
-$sql_transacoes = "SELECT t.id, u.nome AS cliente, t.valor, t.data_transacao 
-                   FROM transacoes t 
-                   JOIN utilizadores u ON t.utilizador_id = u.id";
-$result_transacoes = $conn->query($sql_transacoes);
-
-// Adicionar nova viagem
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_viagem'])) {
-    $origem = $_POST['origem'];
-    $destino = $_POST['destino'];
-    $data_viagem = $_POST['data_viagem'];
-    $hora_partida = $_POST['hora_partida'];
-    $preco = $_POST['preco'];
-
-    $sql_add_viagem = "INSERT INTO viagens (origem, destino, data_viagem, hora_partida, preco) VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql_add_viagem);
-    $stmt->bind_param("ssssd", $origem, $destino, $data_viagem, $hora_partida, $preco);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Viagem adicionada com sucesso!');</script>";
-        echo "<script>window.location.href='paginaAdmin.php';</script>";
-    } else {
-        echo "<script>alert('Erro ao adicionar viagem: " . $conn->error . "');</script>";
-    }
-    $stmt->close();
-}
-
-// Fecha a conexão com a base de dados
-$conn->close();
-?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -150,7 +90,7 @@ $conn->close();
         <!-- Conteúdo principal -->
         <div class="main-content">
             <header class="header">
-                <h1>Bem-vindo, <?= htmlspecialchars($admin_data['nome']); ?></h1>
+                <h1>Bem-vindo, Nome do Administrador</h1>
             </header>
 
             <!-- Gestão de Usuários -->
@@ -166,14 +106,13 @@ $conn->close();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = $result_users->fetch_assoc()): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($row['id']); ?></td>
-                                <td><?= htmlspecialchars($row['nome']); ?></td>
-                                <td><?= htmlspecialchars($row['email']); ?></td>
-                                <td><?= $row['tipo_utilizador_id'] == 1 ? 'Cliente' : 'Funcionário'; ?></td>
-                            </tr>
-                        <?php endwhile; ?>
+                        <tr>
+                            <td>1</td>
+                            <td>Nome do Usuário</td>
+                            <td>email@exemplo.com</td>
+                            <td>Cliente</td>
+                        </tr>
+                        <!-- Adicione mais linhas conforme necessário -->
                     </tbody>
                 </table>
             </div>
@@ -193,16 +132,15 @@ $conn->close();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = $result_viagens->fetch_assoc()): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($row['id']); ?></td>
-                                <td><?= htmlspecialchars($row['origem']); ?></td>
-                                <td><?= htmlspecialchars($row['destino']); ?></td>
-                                <td><?= htmlspecialchars($row['data_viagem']); ?></td>
-                                <td><?= htmlspecialchars($row['hora_partida']); ?></td>
-                                <td>€<?= number_format($row['preco'], 2, ',', '.'); ?></td>
-                            </tr>
-                        <?php endwhile; ?>
+                        <tr>
+                            <td>1</td>
+                            <td>Origem Exemplo</td>
+                            <td>Destino Exemplo</td>
+                            <td>2023-01-01</td>
+                            <td>12:00</td>
+                            <td>€10,00</td>
+                        </tr>
+                        <!-- Adicione mais linhas conforme necessário -->
                     </tbody>
                 </table>
             </div>
@@ -220,14 +158,13 @@ $conn->close();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = $result_transacoes->fetch_assoc()): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($row['id']); ?></td>
-                                <td><?= htmlspecialchars($row['cliente']); ?></td>
-                                <td>€<?= number_format($row['valor'], 2, ',', '.'); ?></td>
-                                <td><?= htmlspecialchars($row['data_transacao']); ?></td>
-                            </tr>
-                        <?php endwhile; ?>
+                        <tr>
+                            <td>1</td>
+                            <td>Nome do Cliente</td>
+                            <td>€10,00</td>
+                            <td>2023-01-01</td>
+                        </tr>
+                        <!-- Adicione mais linhas conforme necessário -->
                     </tbody>
                 </table>
             </div>

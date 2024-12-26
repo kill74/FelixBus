@@ -22,7 +22,6 @@ $user_id = $_SESSION['user_id'];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $valor = (float) $_POST['valor'];
     $tipo_operacao = $_POST['tipo_operacao'];
-    echo "$valor $tipo_operacao $user_id<br>";
 
     if ($valor > 0) {
         // Obtém o saldo atual da carteira do utilizador
@@ -38,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } elseif ($tipo_operacao == "levantamento" && $valor <= $saldo_atual) {
                 $novo_saldo = $saldo_atual - $valor;
             } else {
-                $mensagem = "Error: Insufficient balance.";
+                $mensagem = "Erro: Saldo insuficiente.";
             }
 
             // Atualiza o saldo e regista a transação
@@ -61,37 +60,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carteira - FelixBus</title>
+    <link rel="stylesheet" href="styleIndex.css"> 
 </head>
 <body>
     <?php require 'PHP/navbar.php'; ?>
-    <h2>Gerir Carteira</h2>
-    <form method="POST" action="carteira.php">
-        <label>Valor:</label>
-        <input type="number" step="0.01" name="valor" required>
-        <button type="submit" name="tipo_operacao" value="carregamento">Carregar Saldo</button>
-        <button type="submit" name="tipo_operacao" value="levantamento">Levantar Saldo</button>
-    </form>
-    <p><?= $mensagem ?></p>
 
-    <h3>Histórico de Transações</h3>
-    <ul>
-        <?php
-        // Apresenta o histórico de transações do user
-        $query_historico = "SELECT valor, tipo, data_transacao 
-                            FROM transacoes WHERE utilizador_id = $user_id 
-                            ORDER BY data_transacao DESC";
-        $historico = $conn->query($query_historico);
+    <main class="container">
+        <h1>Gerir Carteira</h1>
 
-        if ($historico) {
-            while ($linha = $historico->fetch_assoc()) {
-                echo "<li>{$linha['tipo']} de €{$linha['valor']} em {$linha['data_transacao']}</li>";
-            }
-        } else {
-            echo "<li>Erro ao obter histórico de transações.</li>";
-        }
-        ?>
-    </ul>
+        <section class="form-section">
+            <form method="POST" action="carteira.php" class="carteira-form">
+                <label for="valor">Valor:</label>
+                <input type="number" id="valor" name="valor" step="0.01" placeholder="Insira o valor" required>
+                <div class="button-group">
+                    <button type="submit" name="tipo_operacao" value="carregamento" class="btn btn-carregar">Carregar Saldo</button>
+                    <button type="submit" name="tipo_operacao" value="levantamento" class="btn btn-levantar">Levantar Saldo</button>
+                </div>
+            </form>
+            <p class="mensagem"><?= htmlspecialchars($mensagem) ?></p>
+        </section>
+
+        <section class="historico-section">
+            <h2>Histórico de Transações</h2>
+            <ul class="historico-list">
+                <?php
+                // Apresenta o histórico de transações do user
+                $query_historico = "SELECT valor, tipo, data_transacao 
+                                    FROM transacoes WHERE utilizador_id = $user_id 
+                                    ORDER BY data_transacao DESC";
+                $historico = $conn->query($query_historico);
+
+                if ($historico) {
+                    while ($linha = $historico->fetch_assoc()) {
+                        echo "<li><span class='tipo'>{$linha['tipo']}</span> de <span class='valor'>€{$linha['valor']}</span> em <span class='data'>{$linha['data_transacao']}</span></li>";
+                    }
+                } else {
+                    echo "<li>Erro ao obter histórico de transações.</li>";
+                }
+                ?>
+            </ul>
+        </section>
+    </main>
     <?php require 'PHP/footer.php'; ?>
 </body>
 </html>
