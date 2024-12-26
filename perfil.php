@@ -1,7 +1,33 @@
 <?php
-session_start(); 
+// Inicia a sessão
+session_start();
+
+// Ativa a exibição de erros
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Inclui a ligação à base de dados
 require_once 'db_connection.php';
-require 'logged.php';
+
+// Verifica se o utilizador está autenticado
+if (!isset($_SESSION['user_id'])) {
+    die("Erro: Utilizador não autenticado.");
+}
+
+// Obtém o ID do utilizador da sessão
+$user_id = $_SESSION['user_id'];
+
+// Busca as informações do utilizador na base de dados
+$sql = "SELECT nome, tipo_utilizador_id, estado FROM utilizadores WHERE id = $user_id";
+$result = $conn->query($sql);
+
+// Verifica se encontrou o utilizador
+if ($result && $result->num_rows > 0) {
+    $user = $result->fetch_assoc(); // Obtém os dados do utilizador
+} else {
+    die("Erro: Utilizador não encontrado.");
+}
 ?>
 
 <!DOCTYPE html>
@@ -9,35 +35,28 @@ require 'logged.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FelixBus</title>
-    <link rel="stylesheet" href="style/stylePerfil.css">
+    <title>Perfil do Utilizador</title>
+    <link rel="stylesheet" href="stylePerfil.css">
 </head>
 <body>
-    <?php require 'PHP/navbar.php'  ?>
-    <main>
-        <!-- Secção do Perfil -->
-        <section id="perfil">
-            <br>
-            <br>
-            <br>
-            <h2>Perfil</h2>
-            <img width="150px" height="200px" src="img/perfil.jpg" alt="">
-            <br><br>
-            <p><strong>Nome: </strong> Trabalho PHP </p>
-            <p><strong>Email: </strong> EST@ipcb.pt</p> 
-            <p><strong>Data de Nascimento: </strong> 15/05/2005</p>
-            <p><strong>Telefone: </strong> +351 912 345 678</p>
-            <p><strong>Endereço: </strong> Rua Principal, 123, Castelo Branco</p><br>
-            <br>
-            <!-- Iram conseguir editar o perfil -->
-            <?php if($isLoggedIn && ($userRole === 'admin' || $userRole === 'funcionario' || $userRole === 'cliente')): ?>
-            <center>
-            <a href="editPerfil.php">
-                <button>Editar Perfil</button>
-            </a>
-        </center>
-            <?php endif; ?>
-    </main>
-    <?php require 'PHP/footer.php' ?>
+    <?php require 'navbar.php'  ?>
+    <div class="container">
+        <h1>Perfil do Utilizador</h1>
+        <div class="profile">
+            <!-- Foto de perfil -->
+            <img src="img/perfil.jpg" alt="Foto de Perfil" class="profile-pic">
+            <div class="profile-info">
+                <p><strong>Nome:</strong> <?= htmlspecialchars($user['nome']) ?></p>
+                <p><strong>Tipo de Utilizador:</strong> <?= htmlspecialchars($user['tipo_utilizador_id']) ?></p>
+                <p><strong>Estado:</strong> <?= htmlspecialchars($user['estado']) ?></p>
+            </div>
+        </div>
+        <div class="buttons">
+            <!-- Botões para editar perfil e voltar -->
+            <a href="editPerfil.php" class="button">Editar Perfil</a>
+            <a href="index.php" class="button">Voltar à Página Inicial</a>
+        </div>
+    </div>
+    <?php require 'footer.php' ?>
 </body>
 </html>

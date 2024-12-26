@@ -80,7 +80,7 @@ require 'db_connection.php';
 
 </head>
 <body>
-    <?php require 'PHP/navbar.php' ?>
+    <?php require 'navbar.php' ?>
     <br><br>
         <div>
             <br>
@@ -96,6 +96,6 @@ require 'db_connection.php';
             <p> - Carregamento de €20.00 em 01/11/2024</p> <br>
         </div>
         <br><br>
-        <?php require 'PHP/footer.php' ?>
+        <?php require 'footer.php' ?>
 </body>
 </html>

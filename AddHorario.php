@@ -100,7 +100,7 @@ if (isset($_GET['logout'])) {
     <header>
         <h1>FelixBus - Gestão de Horários</h1>
     </header>
-    <?php require 'PHP/navbar.php'; ?>
+    <?php require 'navbar.php'; ?>
     <div class="container">
         <?php if ($isAuthenticated): ?>
             <!-- Página restrita -->
@@ -140,5 +140,5 @@ if (isset($_GET['logout'])) {
         <?php endif; ?>
     </div>
 </body>
-<?php require 'PHP/footer.php';   ?>
+<?php require 'footer.php';   ?>
 </html>

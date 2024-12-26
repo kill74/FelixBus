@@ -17,7 +17,7 @@ $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : '';
   <link rel="stylesheet" href="style/stylePerfil.css" />
 </head>
 <body>
-  <?php require 'PHP/navbar.php'; ?>
+  <?php require 'navbar.php'; ?>
   <br><br><br>
   <table class="Tabela">
     <thead>
@@ -110,6 +110,6 @@ $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : '';
   
   <script src="script.js"></script>
   <br><br><br>
-  <?php require 'PHP/footer.php'; ?>
+  <?php require 'footer.php'; ?>
 </body>
 </html>

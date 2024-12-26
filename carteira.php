@@ -1,8 +1,9 @@
 <?php
-// Ativar a exibição de erros
+/* exibição de erros
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+*/
 
 // Iniciar a sessão
 session_start();
@@ -91,7 +92,7 @@ if ($resultado_saldo_atual->num_rows > 0) {
     <link rel="stylesheet" href="styleIndex.css">
 </head>
 <body>
-    <?php require 'PHP/navbar.php'; ?>
+    <?php require 'navbar.php'; ?>
 
     <style>
         .saldo-section {
@@ -172,6 +173,6 @@ if ($resultado_saldo_atual->num_rows > 0) {
         </section>
     </main>
 
-    <?php require 'PHP/footer.php'; ?>
+    <?php require 'footer.php'; ?>
 </body>
 </html>

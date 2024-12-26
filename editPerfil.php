@@ -1,19 +1,52 @@
 <?php
+// Inicia a sessão
 session_start();
+
+// Ativa a exibição de erros
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Inclui a ligação à base de dados
 require_once 'db_connection.php';
 
 // Verifica se o utilizador está autenticado
 if (!isset($_SESSION['user_id'])) {
-    // Redireciona para a página de login se não estiver logado
-    header("Location: Login.php");
-    exit();
+    die("Erro: Utilizador não autenticado.");
 }
 
-// Verifica se o utilizador tem uma das permissões necessárias
-if (!isset($_COOKIE['user_role']) || !in_array($_COOKIE['user_role'], ['funcionario', 'admin', 'cliente'])) {
-    // Redireciona para uma página de erro ou outra página apropriada
-    header("Location: no_permission.php");
-    exit();
+// Obtém o ID do utilizador da sessão
+$user_id = $_SESSION['user_id'];
+
+// Inicializa uma variável para mensagens
+$mensagem = "";
+
+// Se o formulário foi enviado
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Obtém os valores enviados pelo formulário
+    $nome = $_POST['nome'];
+    $estado = $_POST['estado'];
+
+    // Atualiza os dados na base de dados
+    $sql = "UPDATE utilizadores 
+            SET nome = '$nome', estado = '$estado'
+            WHERE id = $user_id";
+
+    if ($conn->query($sql) === TRUE) {
+        $mensagem = "Perfil atualizado com sucesso!";
+    } else {
+        $mensagem = "Erro ao atualizar o perfil: " . $conn->error;
+    }
+} else {
+    // Busca os dados atuais do utilizador para preencher o formulário
+    $sql = "SELECT nome, estado FROM utilizadores WHERE id = $user_id";
+    $result = $conn->query($sql);
+
+    if ($result && $result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+    } else {
+        die("Erro: Utilizador não encontrado.");
+    }
 }
 ?>
 
@@ -22,77 +55,28 @@ if (!isset($_COOKIE['user_role']) || !in_array($_COOKIE['user_role'], ['funciona
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FelixBus</title>
-<link rel="stylesheet" href="stylePerfil.css">
-<style>
-    .add{
-            text-align: center;
-            margin: auto;
-            border-radius: 1rem;
-            background-color: white;
-            width: 500px;
-            height: 500px;
-        }
-
-        .titulo{
-            text-align: center;
-            color: #2d3e50;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 0.4rem 1.2rem;
-            color: #fff;
-            background-color: #2d3e50;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .texto{
-            height: 30px;
-            width: 175px;
-            font-size: 15px;
-
-        }
-
-        .texto1{
-            height: 30px;
-            width: 182px;
-            font-size: 15px;
-        }
-
-        .fonte{
-            font-family: serif;
-            font-size: 23px;
-        }
-</style>
+    <title>Editar Perfil</title>
 </head>
 <body>
-    <?php require 'PHP/navbar.php'; ?>
-    <main>
-        <br><br><br>
-        <div class="add">
-            <label class="fonte" >Nome:</label><br>
-            <input class="texto" type="text" placeholder="Adicione o Nome"/>
-          <br><br>
-            <label class="fonte" >Email:</label><br>
-            <input class="texto" type="email" placeholder="Adicione o Email"/>  
-          <br><br>
-            <label class="fonte" >Data de Nascimento</label><br>
-            <input type="date"/>   
-          <br><br>
-            <label class="fonte" >Telefone:</label><br>
-            <input class="texto" type="text" placeholder="Adicione o Telefone"/>
-          <br><br>
-            <label class="fonte" >Endereço:</label><br>
-            <input class="texto" type="text" placeholder="Adicione o Endereço"/>  
-          <br><br>
-            <a href="GestaoPerfil.html" class="button">Alterar Perfil</a>
-            <br>
-        </div>
-    </main>
-    <?php require 'PHP/footer.php'; ?>
+    <h1>Editar Perfil</h1>
+
+    <!-- Mostra a mensagem de sucesso ou erro -->
+    <?php if ($mensagem): ?>
+        <p><?= htmlspecialchars($mensagem) ?></p>
+    <?php endif; ?>
+
+    <!-- Formulário para edição do perfil -->
+    <form method="POST">
+        <label>Nome:</label><br>
+        <input type="text" name="nome" value="<?= htmlspecialchars($user['nome']) ?>" required><br><br>
+
+        <label>Estado:</label><br>
+        <input type="text" name="estado" value="<?= htmlspecialchars($user['estado']) ?>" required><br><br>
+
+        <button type="submit">Guardar Alterações</button>
+    </form>
+
+    <!-- Botão para voltar ao perfil -->
+    <a href="perfil.php"><button>Voltar ao Perfil</button></a>
 </body>
 </html>

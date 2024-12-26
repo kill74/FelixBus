@@ -19,6 +19,9 @@ CREATE TABLE utilizadores (
   nome VARCHAR(150) NOT NULL,
   palavra_passe VARCHAR(255) NOT NULL,
   tipo_utilizador_id INT NOT NULL,
+  data_nascimento DATE NULL,
+  telefone VARCHAR(15) NULL,
+  endereco VARCHAR(255) NULL,
   estado ENUM('ativo', 'inativo') DEFAULT 'ativo',
   FOREIGN KEY (tipo_utilizador_id) REFERENCES tipos_utilizador(id)
 );

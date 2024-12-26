@@ -14,7 +14,7 @@ require_once 'bd_connection.php';
 <link rel="stylesheet" href="style/stylePerfil.css">
 </head>
 <body>
-   <?php require 'PHP/navbar.php' ?>
+   <?php require 'navbar.php' ?>
     <main>
         <!-- Secção do Perfil -->
         <section id="perfil">
@@ -33,6 +33,6 @@ require_once 'bd_connection.php';
             </div>
             <br>
     </main>
-   <?php require 'PHP/footer.php' ?>
+   <?php require 'footer.php' ?>
 </body>
 </html>

@@ -74,7 +74,7 @@ echo "User Role: " . ($userRole ?? 'não definido') . "<br>";
     </style>
 </head>
 <body>
-    <?php require 'PHP/navbar.php' ?>
+    <?php require 'navbar.php' ?>
     <main>
         <br><br>
         <div>
@@ -130,6 +130,6 @@ echo "User Role: " . ($userRole ?? 'não definido') . "<br>";
             </section>
         </main>
     </main>
-    <?php require 'PHP/footer.php' ?>
+    <?php require 'footer.php' ?>
 </body>
 </html>
