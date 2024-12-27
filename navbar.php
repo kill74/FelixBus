@@ -42,7 +42,7 @@ if ($isLoggedIn) {
                 <li><a href="AreaAdmin.php">Area Admin</a></li>
             <?php endif; ?>
             <?php if ($isLoggedIn): ?>
-                <li><a href="Login.php">Sair</a></li>
+                <li><a href="Logout.php">Sair</a></li> <!-- Alterado para Logout.php -->
             <?php else: ?>
                 <li><a href="Login.php">Login</a></li>
             <?php endif; ?>

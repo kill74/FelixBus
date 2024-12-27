@@ -1,9 +1,8 @@
 <?php
-/* exibição de erros
+// Exibição de erros
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-*/
 
 // Iniciar a sessão
 session_start();
@@ -28,6 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Obtém o saldo atual da carteira do utilizador
         $query_saldo = "SELECT saldo FROM carteira WHERE utilizador_id = ?";
         $stmt = $conn->prepare($query_saldo);
+        if (!$stmt) {
+            die("Erro ao preparar a consulta: " . $conn->error);
+        }
         $stmt->bind_param("i", $user_id); // Bind o user_id como inteiro
         $stmt->execute();
         $resultado = $stmt->get_result();
@@ -49,6 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Atualiza o saldo na carteira
                 $update_query = "UPDATE carteira SET saldo = ? WHERE utilizador_id = ?";
                 $stmt = $conn->prepare($update_query);
+                if (!$stmt) {
+                    die("Erro ao preparar a consulta: " . $conn->error);
+                }
                 $stmt->bind_param("di", $novo_saldo, $user_id); // Bind o novo saldo e user_id
                 $stmt->execute();
 
@@ -56,6 +61,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $insert_query = "INSERT INTO transacoes (utilizador_id, valor, tipo, data_transacao) 
                                  VALUES (?, ?, ?, NOW())";
                 $stmt = $conn->prepare($insert_query);
+                if (!$stmt) {
+                    die("Erro ao preparar a consulta: " . $conn->error);
+                }
                 $stmt->bind_param("ids", $user_id, $valor, $tipo_operacao); // Bind user_id, valor e tipo
                 $stmt->execute();
 
@@ -72,6 +80,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Recuperar o saldo atual da carteira do usuário
 $query_saldo_atual = "SELECT saldo FROM carteira WHERE utilizador_id = ?";
 $stmt = $conn->prepare($query_saldo_atual);
+if (!$stmt) {
+    die("Erro ao preparar a consulta: " . $conn->error);
+}
 $stmt->bind_param("i", $user_id); // Bind user_id como inteiro
 $stmt->execute();
 $resultado_saldo_atual = $stmt->get_result();
@@ -157,6 +168,9 @@ if ($resultado_saldo_atual->num_rows > 0) {
                                     FROM transacoes WHERE utilizador_id = ? 
                                     ORDER BY data_transacao DESC";
                 $stmt = $conn->prepare($query_historico);
+                if (!$stmt) {
+                    die("Erro ao preparar a consulta: " . $conn->error);
+                }
                 $stmt->bind_param("i", $user_id);
                 $stmt->execute();
                 $historico = $stmt->get_result();

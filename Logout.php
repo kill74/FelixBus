@@ -1,7 +1,8 @@
 <?php
 session_start();
-//ira destruir a sessão
+// Destrói a sessão
 session_destroy();
-//depois da sessao estiver destruida, redireciona para a pagina de login
+// Redireciona para a página de login
 header("Location: Login.php");
+exit(); // Certifique-se de que o script termina aqui
 ?>

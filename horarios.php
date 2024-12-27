@@ -1,21 +1,25 @@
 <?php
-session_start(); 
-require_once 'db_connection.php';
-require 'logged.php';
-
 session_start(); // Inicia a sessão
 require_once 'db_connection.php';
 
-// Verifica se o utilizador está logado e se o tipo de utilizador é 3 (administrador)
-if (!isset($_SESSION['user_id']) || $_SESSION['tipo_utilizador'] != 3 != 2 != 1) {
-    header("Location: Login.php"); // Redireciona para a página de login
-    exit(); // Termina a execução do script
+// Verificar se o utilizador está logado
+$isLoggedIn = isset($_SESSION['user_id']);
+$userRole = 'visitor'; // Valor padrão para visitantes
+
+if ($isLoggedIn) {
+    $tipoUtilizador = $_SESSION['tipo_utilizador'];
+    switch ($tipoUtilizador) {
+        case 1:
+            $userRole = 'cliente';
+            break;
+        case 2:
+            $userRole = 'funcionario';
+            break;
+        case 3:
+            $userRole = 'admin';
+            break;
+    }
 }
-
-
-// Verificar se o usuário está logado e seu papel
-$isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
-$userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : ''; 
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +51,9 @@ $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : '';
         <td>Lisboa</td>
         <td>23:25</td>
         <td>Direta</td>
-        <td><button class="Butao-Comprar">Comprar</button></td>
+        <td>
+          <button class="Butao-Comprar" onclick="verificarLogin()">Comprar</button>
+        </td>
       </tr>
       <tr class="Skibidi">
         <td>Lisboa</td>
@@ -55,7 +61,9 @@ $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : '';
         <td>Porto</td>
         <td>18:20</td>
         <td>Direta</td>
-        <td><button class="Butao-Comprar">Comprar</button></td>
+        <td>
+          <button class="Butao-Comprar" onclick="verificarLogin()">Comprar</button>
+        </td>
       </tr>
       <tr class="Skibidi">
         <td>Porto</td>
@@ -63,7 +71,9 @@ $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : '';
         <td>Covilhã</td>
         <td>14:54</td>
         <td>Regional</td>
-        <td><button class="Butao-Comprar">Comprar</button></td>
+        <td>
+          <button class="Butao-Comprar" onclick="verificarLogin()">Comprar</button>
+        </td>
       </tr>
       <tr class="Skibidi">
         <td>Braga</td>
@@ -71,7 +81,9 @@ $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : '';
         <td>Bragança</td>
         <td>14:12</td>
         <td>Direto</td>
-        <td><button class="Butao-Comprar">Comprar</button></td>
+        <td>
+          <button class="Butao-Comprar" onclick="verificarLogin()">Comprar</button>
+        </td>
       </tr>
       <tr class="Skibidi">
         <td>Coimbra</td>
@@ -79,7 +91,9 @@ $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : '';
         <td>Évora</td>
         <td>19:45</td>
         <td>Regional</td>
-        <td><button class="Butao-Comprar">Comprar</button></td>
+        <td>
+          <button class="Butao-Comprar" onclick="verificarLogin()">Comprar</button>
+        </td>
       </tr>
       <tr class="Skibidi">
         <td>Coimbra</td>
@@ -87,7 +101,9 @@ $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : '';
         <td>Castelo Branco</td>
         <td>17:36</td>
         <td>Direto</td>
-        <td><button class="Butao-Comprar">Comprar</button></td>
+        <td>
+          <button class="Butao-Comprar" onclick="verificarLogin()">Comprar</button>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -118,8 +134,23 @@ $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : '';
     </div>
   </div>
   
-  <script src="script.js"></script>
+  <script>
+    function verificarLogin() {
+      <?php if (!$isLoggedIn): ?>
+        // Se o usuário não estiver logado, redireciona para a página de login
+        window.location.href = 'Login.php';
+      <?php else: ?>
+        // Se o usuário estiver logado, abre o pop-up de compra
+        document.getElementById('popupOverlay').style.display = 'flex';
+      <?php endif; ?>
+    }
+
+    // Fechar o pop-up
+    document.getElementById('closePopup').addEventListener('click', function() {
+      document.getElementById('popupOverlay').style.display = 'none';
+    });
+  </script>
   <br><br><br>
   <?php require 'footer.php'; ?>
 </body>
-</html>
+</html> 
