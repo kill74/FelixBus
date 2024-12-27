@@ -3,6 +3,16 @@ session_start();
 require_once 'db_connection.php';
 require 'logged.php';
 
+session_start(); // Inicia a sessão
+require_once 'db_connection.php';
+
+// Verifica se o utilizador está logado e se o tipo de utilizador é 3 (administrador)
+if (!isset($_SESSION['user_id']) || $_SESSION['tipo_utilizador'] != 3 != 2 != 1) {
+    header("Location: Login.php"); // Redireciona para a página de login
+    exit(); // Termina a execução do script
+}
+
+
 // Verificar se o usuário está logado e seu papel
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
 $userRole = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : ''; 

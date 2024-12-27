@@ -1,82 +1,20 @@
+<?php
+session_start(); // Inicia a sessão
+require_once 'db_connection.php';
+
+// Verifica se o utilizador está logado e se o tipo de utilizador é 3 (administrador)
+if (!isset($_SESSION['user_id']) || $_SESSION['tipo_utilizador'] != 3) {
+    header("Location: Login.php"); // Redireciona para a página de login
+    exit(); // Termina a execução do script
+}
+?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Administrador</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            display: flex;
-        }
-        .container {
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-            height: 100vh;
-        }
-        .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px;
-        }
-        .sidebar .logo {
-            font-size: 1.5em;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .sidebar .nav-item {
-            margin: 10px 0;
-        }
-        .sidebar .nav-item a {
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            display: block;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .sidebar .nav-item a:hover {
-            background-color: #34495e;
-        }
-        .main-content {
-            flex-grow: 1;
-            padding: 20px;
-            background-color: #ecf0f1;
-        }
-        .header {
-            background-color: #3498db;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: white;
-        }
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        table th {
-            background-color: #3498db;
-            color: white;
-        }
-        .form-section input, .form-section button {
-            margin: 5px;
-            padding: 10px;
-            font-size: 1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="styleAreaAdmin.css">
 </head>
 <body>
     <div class="container">
@@ -95,7 +33,7 @@
         <!-- Conteúdo principal -->
         <div class="main-content">
             <header class="header">
-                <h1>Bem-vindo, Nome do Administrador</h1>
+                <h1>Bem-vindo, <?php echo $_SESSION['nome']; ?></h1> <!-- Exibe o nome do administrador -->
             </header>
 
             <!-- Gestão de Utilizadores -->
