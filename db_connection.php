@@ -23,6 +23,4 @@ if ($conn->connect_error) {
 
 // Definir a codificação de caracteres para evitar problemas com caracteres especiais
 $conn->set_charset("utf8mb4");
-
-$conn->close();
 ?>

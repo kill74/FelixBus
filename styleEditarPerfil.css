@@ -1,0 +1,84 @@
+/* Estilos gerais */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Estilos do formulário */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+input[type="text"] {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+/* Estilos das mensagens */
+.mensagem-sucesso {
+  color: #28a745;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.mensagem-erro {
+  color: #dc3545;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Estilos do botão "Voltar ao Perfil" */
+a button {
+  background-color: #007bff;
+  width: 100%;
+  margin-top: 10px;
+}
+
+a button:hover {
+  background-color: #0056b3;
+}

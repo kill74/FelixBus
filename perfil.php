@@ -1,10 +1,11 @@
 <?php
 // Inicia a sessão
 session_start();
+
 // Inclui a ligação à base de dados
 require_once 'db_connection.php';
 
-/* Ativa a exibição de erros
+/* exibição de erros
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -18,9 +19,17 @@ if (!isset($_SESSION['user_id'])) {
 // Obtém o ID do utilizador da sessão
 $user_id = $_SESSION['user_id'];
 
-// Busca as informações do utilizador na base de dados
-$sql = "SELECT nome, tipo_utilizador_id, estado FROM utilizadores WHERE id = $user_id";
-$result = $conn->query($sql);
+// Verifica se a conexão ainda está aberta
+if ($conn->connect_error) {
+    die("Erro de conexão: " . $conn->connect_error);
+}
+
+// Busca as informações do utilizador na base de dados usando prepared statements
+$sql = "SELECT nome, tipo_utilizador_id, estado FROM utilizadores WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
 // Verifica se encontrou o utilizador
 if ($result && $result->num_rows > 0) {
@@ -39,7 +48,7 @@ if ($result && $result->num_rows > 0) {
     <link rel="stylesheet" href="stylePerfil.css">
 </head>
 <body>
-    <?php require 'navbar.php'  ?>
+    <?php require 'navbar.php' ?>
     <div class="container">
         <h1>Perfil do Utilizador</h1>
         <div class="profile">
