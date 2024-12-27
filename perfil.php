@@ -1,14 +1,14 @@
 <?php
 // Inicia a sessão
 session_start();
+// Inclui a ligação à base de dados
+require_once 'db_connection.php';
 
-// Ativa a exibição de erros
+/* Ativa a exibição de erros
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
-// Inclui a ligação à base de dados
-require_once 'db_connection.php';
+*/
 
 // Verifica se o utilizador está autenticado
 if (!isset($_SESSION['user_id'])) {

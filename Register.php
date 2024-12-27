@@ -64,56 +64,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styleRegister.css">
     <title>Registar</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1e90ff, #00bfff);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #fff;
-        }
-        .form-container {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-        input, button {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-        }
-        button {
-            background: #1e90ff;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #104e8b;
-        }
-        .redirect-login a {
-            color: #1e90ff;
-            text-decoration: none;
-        }
-        .redirect-login a:hover {
-            text-decoration: underline;
-        }
-        .mensagem-erro {
-            color: #ff4444;
-            margin-bottom: 10px;
-        }
-        .mensagem-sucesso {
-            color: #00C851;
-            margin-bottom: 10px;
-        }
-    </style>
 </head>
 <body>
     <div class="form-container">
