@@ -5,6 +5,11 @@ session_start();
 // Inclui o ficheiro que contém a configuração da base de dados
 require_once 'db_connection.php';
 
+// exibição de erros
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Verifica se o formulário foi submetido
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtém os valores do formulário e remove espaços extras com "trim"

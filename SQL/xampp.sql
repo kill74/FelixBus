@@ -1,3 +1,4 @@
+-- Criação da base de dados
 CREATE DATABASE trabalho_php;
 USE trabalho_php;
 
@@ -7,6 +8,7 @@ CREATE TABLE tipos_utilizador (
   nome VARCHAR(50) UNIQUE NOT NULL
 );
 
+-- Inserir tipos de utilizador
 INSERT INTO tipos_utilizador (id, nome) VALUES
   (1, 'cliente'),
   (2, 'funcionario'),
@@ -39,6 +41,12 @@ CREATE TABLE rotas (
   destino VARCHAR(100) NOT NULL
 );
 
+-- Inserir algumas rotas
+INSERT INTO rotas (origem, destino) VALUES
+  ('Braga', 'Lisboa (Oriente)'),
+  ('Porto', 'Faro'),
+  ('Coimbra', 'Viseu');
+
 -- Tabela: viagens
 CREATE TABLE viagens (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -51,6 +59,13 @@ CREATE TABLE viagens (
   FOREIGN KEY (rota_id) REFERENCES rotas(id)
 );
 
+-- Inserir algumas viagens
+INSERT INTO viagens (rota_id, capacidade, data_viagem, hora_partida, hora_chegada, preco) VALUES
+  (1, 50, '2023-11-24', '05:00', '09:00', 13.99),
+  (1, 50, '2023-11-24', '07:25', '12:00', 24.99),
+  (1, 50, '2023-11-24', '08:40', '12:45', 19.99),
+  (1, 50, '2023-11-24', '10:15', '14:50', 24.99);
+
 -- Tabela: carteira
 CREATE TABLE carteira (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -58,6 +73,13 @@ CREATE TABLE carteira (
   saldo DECIMAL(10,2) DEFAULT 0.00, 
   FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+-- Inserir dados na tabela carteira
+INSERT INTO carteira (utilizador_id, saldo) 
+VALUES
+  (7, 200),
+  (8, 50),
+  (9, 100);
 
 -- Tabela: transacoes
 CREATE TABLE transacoes (
@@ -79,10 +101,3 @@ CREATE TABLE bilhetes (
   FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (viagem_id) REFERENCES viagens(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
--- Inserir dados na tabela carteira
-INSERT INTO carteira (utilizador_id, saldo) 
-VALUES
-  (7, 200),
-  (8, 50),
-  (9, 100);
