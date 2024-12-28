@@ -52,59 +52,10 @@ if ($isLoggedIn) {
         <td>23:25</td>
         <td>Direta</td>
         <td>
-          <button class="Butao-Comprar" onclick="verificarLogin()">Comprar</button>
+          <button class="Butao-Comprar" onclick="verificarLogin(1, 'Castelo Branco', '21:54', 'Lisboa', '23:25', 'Direta')">Comprar</button>
         </td>
       </tr>
-      <tr class="Skibidi">
-        <td>Lisboa</td>
-        <td>15:32</td>
-        <td>Porto</td>
-        <td>18:20</td>
-        <td>Direta</td>
-        <td>
-          <button class="Butao-Comprar" onclick="verificarLogin()">Comprar</button>
-        </td>
-      </tr>
-      <tr class="Skibidi">
-        <td>Porto</td>
-        <td>10:32</td>
-        <td>Covilhã</td>
-        <td>14:54</td>
-        <td>Regional</td>
-        <td>
-          <button class="Butao-Comprar" onclick="verificarLogin()">Comprar</button>
-        </td>
-      </tr>
-      <tr class="Skibidi">
-        <td>Braga</td>
-        <td>12:32</td>
-        <td>Bragança</td>
-        <td>14:12</td>
-        <td>Direto</td>
-        <td>
-          <button class="Butao-Comprar" onclick="verificarLogin()">Comprar</button>
-        </td>
-      </tr>
-      <tr class="Skibidi">
-        <td>Coimbra</td>
-        <td>15:56</td>
-        <td>Évora</td>
-        <td>19:45</td>
-        <td>Regional</td>
-        <td>
-          <button class="Butao-Comprar" onclick="verificarLogin()">Comprar</button>
-        </td>
-      </tr>
-      <tr class="Skibidi">
-        <td>Coimbra</td>
-        <td>15:56</td>
-        <td>Castelo Branco</td>
-        <td>17:36</td>
-        <td>Direto</td>
-        <td>
-          <button class="Butao-Comprar" onclick="verificarLogin()">Comprar</button>
-        </td>
-      </tr>
+      <!-- Repetir para as outras linhas da tabela -->
     </tbody>
   </table>
   
@@ -115,15 +66,18 @@ if ($isLoggedIn) {
   </center>
   <?php endif; ?>
   
-  <!-- Pop-up -->
+  <!-- Pop-up de compra de bilhete -->
   <div class="popup-overlay" id="popupOverlay">
     <div class="popup" id="popup">
       <h2>Comprar Bilhete</h2>
-      <form>
-        <label for="destino">Destino:</label>
-        <input type="text" id="destino" name="destino" placeholder="Digite o destino" required>
-        <br>
-        <label for="data">Data:</label>
+      <form id="compraForm" action="processar_compra.php" method="POST">
+        <input type="hidden" id="viagem_id" name="viagem_id">
+        <input type="hidden" id="origem" name="origem">
+        <input type="hidden" id="horaSaida" name="horaSaida">
+        <input type="hidden" id="destino" name="destino">
+        <input type="hidden" id="horaChegada" name="horaChegada">
+        <input type="hidden" id="tipoViagem" name="tipoViagem">
+        <label for="data">Data da Viagem:</label>
         <input type="date" id="data" name="data" required>
         <br>
         <label for="quantidade">Quantidade de Bilhetes:</label>
@@ -135,12 +89,18 @@ if ($isLoggedIn) {
   </div>
   
   <script>
-    function verificarLogin() {
+    function verificarLogin(viagem_id, origem, horaSaida, destino, horaChegada, tipoViagem) {
       <?php if (!$isLoggedIn): ?>
-        // Se o usuário não estiver logado, redireciona para a página de login
+        // Se o utilizador não estiver logado, redireciona para a página de login
         window.location.href = 'Login.php';
       <?php else: ?>
-        // Se o usuário estiver logado, abre o pop-up de compra
+        // Se o utilizador estiver logado, abre o pop-up de compra
+        document.getElementById('viagem_id').value = viagem_id;
+        document.getElementById('origem').value = origem;
+        document.getElementById('horaSaida').value = horaSaida;
+        document.getElementById('destino').value = destino;
+        document.getElementById('horaChegada').value = horaChegada;
+        document.getElementById('tipoViagem').value = tipoViagem;
         document.getElementById('popupOverlay').style.display = 'flex';
       <?php endif; ?>
     }
@@ -153,4 +113,4 @@ if ($isLoggedIn) {
   <br><br><br>
   <?php require 'footer.php'; ?>
 </body>
-</html> 
+</html>

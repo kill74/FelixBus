@@ -22,7 +22,7 @@ if ($isLoggedIn) {
 }
 ?>
 <head>
-<link rel="stylesheet" href="style/styleIndex.css">
+    <link rel="stylesheet" href="style/styleIndex.css">
 </head>
 <header>
     <h1>FelixBus</h1>
@@ -33,6 +33,7 @@ if ($isLoggedIn) {
             <?php if ($isLoggedIn): ?>
                 <li><a href="perfil.php">Perfil</a></li>
                 <li><a href="carteira.php">Carteira</a></li>
+                <li><a href="meus_bilhetes.php">Carrinho</a></li> <!-- Novo link para o carrinho -->
             <?php endif; ?>
             <li><a href="horarios.php">Horários</a></li>
             <?php if ($isLoggedIn && ($userRole === 'funcionario' || $userRole === 'admin')): ?>
