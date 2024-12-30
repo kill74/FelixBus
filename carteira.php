@@ -18,6 +18,9 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
+// ID da carteira da FelixBus (assumimos que é 1)
+$carteira_felixbus_id = 1;
+
 // Verificar se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $valor = (float) $_POST['valor'];
@@ -25,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($valor > 0) {
         // Obtém o saldo atual da carteira do utilizador
-        $query_saldo = "SELECT saldo FROM carteira WHERE utilizador_id = ?";
+        $query_saldo = "SELECT id, saldo FROM carteira WHERE utilizador_id = ?";
         $stmt = $conn->prepare($query_saldo);
         if (!$stmt) {
             die("Erro ao preparar a consulta: " . $conn->error);
@@ -35,36 +38,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $resultado = $stmt->get_result();
 
         if ($resultado->num_rows > 0) {
-            $saldo_atual = $resultado->fetch_assoc()['saldo'];
+            $carteira = $resultado->fetch_assoc();
+            $carteira_id = $carteira['id']; // ID da carteira do cliente
+            $saldo_atual = $carteira['saldo']; // Saldo atual do cliente
 
             // Processa a operação
             if ($tipo_operacao == "carregamento") {
                 $novo_saldo = $saldo_atual + $valor;
+                $carteira_origem = $carteira_felixbus_id; // A FelixBus "fornece" o saldo
+                $carteira_destino = $carteira_id; // O cliente recebe o saldo
             } elseif ($tipo_operacao == "levantamento" && $valor <= $saldo_atual) {
                 $novo_saldo = $saldo_atual - $valor;
+                $carteira_origem = $carteira_id; // O cliente retira o saldo
+                $carteira_destino = $carteira_felixbus_id; // A FelixBus recebe o saldo
             } else {
                 $mensagem = "Erro: Saldo insuficiente.";
             }
 
             // Atualiza o saldo e registra a transação
             if (isset($novo_saldo)) {
-                // Atualiza o saldo na carteira
-                $update_query = "UPDATE carteira SET saldo = ? WHERE utilizador_id = ?";
+                // Atualiza o saldo na carteira do cliente
+                $update_query = "UPDATE carteira SET saldo = ? WHERE id = ?";
                 $stmt = $conn->prepare($update_query);
                 if (!$stmt) {
                     die("Erro ao preparar a consulta: " . $conn->error);
                 }
-                $stmt->bind_param("di", $novo_saldo, $user_id); // Bind o novo saldo e user_id
+                $stmt->bind_param("di", $novo_saldo, $carteira_id); // Bind o novo saldo e ID da carteira
                 $stmt->execute();
 
                 // Registra a transação
-                $insert_query = "INSERT INTO transacoes (utilizador_id, valor, tipo, data_transacao) 
-                                 VALUES (?, ?, ?, NOW())";
+                $insert_query = "INSERT INTO transacoes (utilizador_id, carteira_origem, carteira_destino, valor, tipo, data_transacao) 
+                                 VALUES (?, ?, ?, ?, ?, NOW())";
                 $stmt = $conn->prepare($insert_query);
                 if (!$stmt) {
                     die("Erro ao preparar a consulta: " . $conn->error);
                 }
-                $stmt->bind_param("ids", $user_id, $valor, $tipo_operacao); // Bind user_id, valor e tipo
+                $stmt->bind_param("iiids", $user_id, $carteira_origem, $carteira_destino, $valor, $tipo_operacao); // Bind user_id, carteira_origem, carteira_destino, valor e tipo
                 $stmt->execute();
 
                 $mensagem = "Operação de $tipo_operacao realizada com sucesso!";

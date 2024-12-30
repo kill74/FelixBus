@@ -1,9 +1,9 @@
 -- Criação da base de dados
-CREATE DATABASE trabalho_php;
+CREATE DATABASE IF NOT EXISTS trabalho_php;
 USE trabalho_php;
 
 -- Tabela: tipos_utilizador
-CREATE TABLE tipos_utilizador (
+CREATE TABLE IF NOT EXISTS tipos_utilizador (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(50) UNIQUE NOT NULL
 );
@@ -16,7 +16,7 @@ INSERT INTO tipos_utilizador (id, nome) VALUES
   (4, 'visitante');
 
 -- Tabela: utilizadores
-CREATE TABLE utilizadores (
+CREATE TABLE IF NOT EXISTS utilizadores (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(150) NOT NULL,
   palavra_passe VARCHAR(255) NOT NULL,
@@ -30,12 +30,13 @@ CREATE TABLE utilizadores (
 
 -- Inserir alguns utilizadores
 INSERT INTO utilizadores (id, nome, palavra_passe, tipo_utilizador_id, estado) VALUES
+  (1, 'FelixBus', 'senha_segura', 3, 'ativo'), -- Carteira da FelixBus
   (7, 'cliente', '$2y$10$xhx10ddIFLutxtaUOQYYNuNRJyv5Nc7oWLhIhi3BHh8uQLV31XBna', 1, 'ativo'),
   (8, 'funcionario', '$2y$10$.XqeSXjPoKTyD0/XAkZz7edTx42MkHGiY4RzmkfYQ3kr2ZiP7WF4G', 2, 'ativo'),
   (9, 'admin', '$2y$10$ex7LzCmjOZdL.3x8UOBo.O2IyAflxxR8dHgXMqPZE/9Mxgdx8hFTq', 3, 'ativo');
 
 -- Tabela: rotas
-CREATE TABLE rotas (
+CREATE TABLE IF NOT EXISTS rotas (
   id INT AUTO_INCREMENT PRIMARY KEY,
   origem VARCHAR(100) NOT NULL,
   destino VARCHAR(100) NOT NULL,
@@ -51,7 +52,7 @@ INSERT INTO rotas (origem, destino, data, hora, capacidade) VALUES
   ('Coimbra', 'Viseu', '2023-11-26', '08:40', 50);
 
 -- Tabela: carteira
-CREATE TABLE carteira (
+CREATE TABLE IF NOT EXISTS carteira (
   id INT AUTO_INCREMENT PRIMARY KEY,
   utilizador_id INT NOT NULL,
   saldo DECIMAL(10,2) DEFAULT 0.00, 
@@ -61,13 +62,13 @@ CREATE TABLE carteira (
 -- Inserir dados na tabela carteira
 INSERT INTO carteira (utilizador_id, saldo) 
 VALUES
+  (1, 0.00), -- Carteira da FelixBus
   (7, 200),  -- Carteira do cliente
   (8, 50),   -- Carteira do funcionário
-  (9, 100),  -- Carteira do admin
-  (1, 0.00); -- Carteira da FelixBus (utilizador_id = 1)
+  (9, 100);  -- Carteira do admin
 
 -- Tabela: transacoes
-CREATE TABLE transacoes (
+CREATE TABLE IF NOT EXISTS transacoes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   utilizador_id INT NOT NULL,
   carteira_origem INT NOT NULL,
@@ -81,7 +82,7 @@ CREATE TABLE transacoes (
 );
 
 -- Tabela: bilhetes
-CREATE TABLE bilhetes (
+CREATE TABLE IF NOT EXISTS bilhetes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   utilizador_id INT NOT NULL,
   rota_id INT NOT NULL,

@@ -25,13 +25,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar_bilhete'])) {
     $rotaId = $_POST['rota_id'];
     $codigoValidacao = uniqid('BILHETE_', true); // Gera um código único
 
-    // Insere o bilhete no banco de dados
-    $query = "INSERT INTO bilhetes (utilizador_id, rota_id, codigo_validacao, estado) VALUES ($userId, $rotaId, '$codigoValidacao', 'comprado')";
-    $conn->query($query);
+    // Verifica o saldo do cliente
+    $query_saldo = "SELECT saldo FROM carteira WHERE utilizador_id = ?";
+    $stmt = $conn->prepare($query_saldo);
+    if (!$stmt) {
+        die("Erro ao preparar a consulta: " . $conn->error);
+    }
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $resultado_saldo = $stmt->get_result();
 
-    // Redireciona com parâmetro de sucesso
-    header("Location: horarios.php?compra=sucesso");
-    exit();
+    if ($resultado_saldo->num_rows > 0) {
+        $saldo = $resultado_saldo->fetch_assoc()['saldo'];
+
+        // Suponha que o preço do bilhete seja 10€ (ajuste conforme necessário)
+        $preco_bilhete = 10.00;
+
+        if ($saldo >= $preco_bilhete) {
+            // Insere o bilhete no banco de dados
+            $query = "INSERT INTO bilhetes (utilizador_id, rota_id, codigo_validacao, estado) VALUES ($userId, $rotaId, '$codigoValidacao', 'comprado')";
+            $conn->query($query);
+
+            // Atualiza o saldo do cliente
+            $novo_saldo = $saldo - $preco_bilhete;
+            $update_query = "UPDATE carteira SET saldo = ? WHERE utilizador_id = ?";
+            $stmt = $conn->prepare($update_query);
+            if (!$stmt) {
+                die("Erro ao preparar a consulta: " . $conn->error);
+            }
+            $stmt->bind_param("di", $novo_saldo, $userId);
+            $stmt->execute();
+
+            // Registra a transação
+            $insert_query = "INSERT INTO transacoes (utilizador_id, carteira_origem, carteira_destino, valor, tipo, data_transacao) 
+                             VALUES (?, ?, ?, ?, 'compra', NOW())";
+            $stmt = $conn->prepare($insert_query);
+            if (!$stmt) {
+                die("Erro ao preparar a consulta: " . $conn->error);
+            }
+            $carteira_felixbus_id = 1; // ID da carteira da FelixBus
+            $stmt->bind_param("iiid", $userId, $userId, $carteira_felixbus_id, $preco_bilhete);
+            $stmt->execute();
+
+            // Redireciona com parâmetro de sucesso
+            header("Location: horarios.php?compra=sucesso");
+            exit();
+        } else {
+            // Saldo insuficiente
+            header("Location: horarios.php?erro=saldo_insuficiente");
+            exit();
+        }
+    } else {
+        // Carteira não encontrada
+        header("Location: horarios.php?erro=carteira_nao_encontrada");
+        exit();
+    }
 }
 
 // Processa o formulário de adicionar rota (apenas admin)
@@ -116,12 +164,33 @@ if ($isLoggedIn && $userRole === 'cliente') {
         .button:hover {
             background-color: #ffd700;
         }
+        .mensagem {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <?php require 'navbar.php'; ?>
     <div class="container">
         <h1>Horários e Rotas</h1>
+
+        <!-- Mensagem de erro ou sucesso -->
+        <?php if (isset($_GET['erro'])): ?>
+            <div class="mensagem">
+                <?php
+                if ($_GET['erro'] === 'saldo_insuficiente') {
+                    echo "Erro: Saldo insuficiente para comprar o bilhete.";
+                } elseif ($_GET['erro'] === 'carteira_nao_encontrada') {
+                    echo "Erro: Carteira não encontrada.";
+                }
+                ?>
+            </div>
+        <?php endif; ?>
 
         <!-- Rotas Disponíveis -->
         <section>
