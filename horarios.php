@@ -1,79 +1,63 @@
 <?php
-session_start();
-require_once 'db_connection.php';
+session_start(); // Inicia a sessão
+require_once 'db_connection.php'; // Conecta ao banco de dados
 
-// Verifica se o utilizador está autenticado
+// Verifica se o usuário está logado
 $isLoggedIn = isset($_SESSION['user_id']);
-$userRole = 'visitor';
+$userRole = 'visitante'; // Define o papel do usuário como visitante por padrão
 
 if ($isLoggedIn) {
     $userId = $_SESSION['user_id'];
     $tipoUtilizador = $_SESSION['tipo_utilizador'];
 
-    switch ($tipoUtilizador) {
-        case 1:
-            $userRole = 'cliente';
-            break;
-        case 2:
-            $userRole = 'funcionario';
-            break;
-        case 3:
-            $userRole = 'admin';
-            break;
+    // Define o papel do usuário com base no tipo
+    if ($tipoUtilizador == 1) {
+        $userRole = 'cliente';
+    } elseif ($tipoUtilizador == 2) {
+        $userRole = 'funcionario';
+    } elseif ($tipoUtilizador == 3) {
+        $userRole = 'admin';
     }
 }
 
-// Função para buscar rotas disponíveis
-function getRotas($conn) {
-    $query = "SELECT * FROM rotas";
-    $result = $conn->query($query);
-    return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
+// Busca todas as rotas disponíveis
+$queryRotas = "SELECT * FROM rotas";
+$resultRotas = $conn->query($queryRotas);
+$rotas = $resultRotas ? $resultRotas->fetch_all(MYSQLI_ASSOC) : [];
+
+// Busca os bilhetes do usuário logado
+$bilhetes = [];
+if ($isLoggedIn && $userRole === 'cliente') {
+    $queryBilhetes = "SELECT b.id, r.origem, r.destino, r.data, r.hora, b.codigo_validacao, b.estado 
+                      FROM bilhetes b 
+                      JOIN rotas r ON b.rota_id = r.id 
+                      WHERE b.utilizador_id = $userId";
+    $resultBilhetes = $conn->query($queryBilhetes);
+    $bilhetes = $resultBilhetes ? $resultBilhetes->fetch_all(MYSQLI_ASSOC) : [];
 }
 
-// Função para buscar bilhetes do utilizador
-function getBilhetes($conn, $userId) {
-    $query = "SELECT b.id, r.origem, r.destino, r.data, r.hora, b.estado 
-              FROM bilhetes b 
-              JOIN rotas r ON b.rota_id = r.id 
-              WHERE b.utilizador_id = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
+// Processa o formulário de compra de bilhete
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar_bilhete'])) {
+    $rotaId = $_POST['rota_id'];
+    $codigoValidacao = uniqid('BILHETE_', true); // Gera um código único
+
+    // Insere o bilhete no banco de dados
+    $query = "INSERT INTO bilhetes (utilizador_id, rota_id, codigo_validacao, estado) VALUES ($userId, $rotaId, '$codigoValidacao', 'comprado')";
+    $conn->query($query);
 }
 
-// Função para adicionar uma nova rota (apenas admin)
-function addRota($conn, $origem, $destino, $data, $hora, $capacidade) {
-    $query = "INSERT INTO rotas (origem, destino, data, hora, capacidade) VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("ssssi", $origem, $destino, $data, $hora, $capacidade);
-    return $stmt->execute();
-}
+// Processa o formulário de adicionar rota (apenas admin)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_rota']) && $userRole === 'admin') {
+    $origem = $_POST['origem'];
+    $destino = $_POST['destino'];
+    $data = $_POST['data'];
+    $hora = $_POST['hora'];
+    $capacidade = $_POST['capacidade'];
 
-// Processar formulários
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['comprar_bilhete'])) {
-        // Comprar bilhete
-        $rotaId = $_POST['rota_id'];
-        $query = "INSERT INTO bilhetes (utilizador_id, rota_id, estado) VALUES (?, ?, 'pendente')";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("ii", $userId, $rotaId);
-        $stmt->execute();
-    } elseif (isset($_POST['adicionar_rota']) && $userRole === 'admin') {
-        // Adicionar rota (apenas admin)
-        $origem = $_POST['origem'];
-        $destino = $_POST['destino'];
-        $data = $_POST['data'];
-        $hora = $_POST['hora'];
-        $capacidade = $_POST['capacidade'];
-        addRota($conn, $origem, $destino, $data, $hora, $capacidade);
-    }
+    // Insere a nova rota no banco de dados
+    $query = "INSERT INTO rotas (origem, destino, data, hora, capacidade) VALUES ('$origem', '$destino', '$data', '$hora', $capacidade)";
+    $conn->query($query);
 }
-
-// Buscar rotas e bilhetes
-$rotas = getRotas($conn);
-$bilhetes = $isLoggedIn ? getBilhetes($conn, $userId) : [];
 ?>
 
 <!DOCTYPE html>
@@ -131,7 +115,7 @@ $bilhetes = $isLoggedIn ? getBilhetes($conn, $userId) : [];
     <div class="container">
         <h1>Horários e Rotas</h1>
 
-        <!-- Consultar Rotas -->
+        <!-- Rotas Disponíveis -->
         <section>
             <h2>Rotas Disponíveis</h2>
             <table>
@@ -165,7 +149,7 @@ $bilhetes = $isLoggedIn ? getBilhetes($conn, $userId) : [];
             </table>
         </section>
 
-        <!-- Gestão de Bilhetes (Cliente) -->
+        <!-- Meus Bilhetes (Cliente) -->
         <?php if ($isLoggedIn && $userRole === 'cliente'): ?>
             <section>
                 <h2>Meus Bilhetes</h2>
@@ -177,6 +161,7 @@ $bilhetes = $isLoggedIn ? getBilhetes($conn, $userId) : [];
                             <th>Destino</th>
                             <th>Data</th>
                             <th>Hora</th>
+                            <th>Código</th>
                             <th>Estado</th>
                         </tr>
                     </thead>
@@ -188,6 +173,7 @@ $bilhetes = $isLoggedIn ? getBilhetes($conn, $userId) : [];
                                 <td><?= htmlspecialchars($bilhete['destino']) ?></td>
                                 <td><?= htmlspecialchars($bilhete['data']) ?></td>
                                 <td><?= htmlspecialchars($bilhete['hora']) ?></td>
+                                <td><?= htmlspecialchars($bilhete['codigo_validacao']) ?></td>
                                 <td><?= htmlspecialchars($bilhete['estado']) ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -196,7 +182,7 @@ $bilhetes = $isLoggedIn ? getBilhetes($conn, $userId) : [];
             </section>
         <?php endif; ?>
 
-        <!-- Gestão de Rotas (Admin) -->
+        <!-- Adicionar Nova Rota (Admin) -->
         <?php if ($isLoggedIn && $userRole === 'admin'): ?>
             <section>
                 <h2>Adicionar Nova Rota</h2>
