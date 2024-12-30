@@ -38,33 +38,17 @@ INSERT INTO utilizadores (id, nome, palavra_passe, tipo_utilizador_id, estado) V
 CREATE TABLE rotas (
   id INT AUTO_INCREMENT PRIMARY KEY,
   origem VARCHAR(100) NOT NULL,
-  destino VARCHAR(100) NOT NULL
+  destino VARCHAR(100) NOT NULL,
+  data DATE NOT NULL,
+  hora TIME NOT NULL,
+  capacidade INT NOT NULL
 );
 
 -- Inserir algumas rotas
-INSERT INTO rotas (origem, destino) VALUES
-  ('Braga', 'Lisboa (Oriente)'),
-  ('Porto', 'Faro'),
-  ('Coimbra', 'Viseu');
-
--- Tabela: viagens
-CREATE TABLE viagens (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  rota_id INT NOT NULL,
-  capacidade INT NOT NULL,
-  data_viagem DATE NOT NULL,
-  hora_partida TIME NOT NULL,
-  hora_chegada TIME NOT NULL,
-  preco DECIMAL(10,2) NOT NULL,
-  FOREIGN KEY (rota_id) REFERENCES rotas(id)
-);
-
--- Inserir algumas viagens
-INSERT INTO viagens (rota_id, capacidade, data_viagem, hora_partida, hora_chegada, preco) VALUES
-  (1, 50, '2023-11-24', '05:00', '09:00', 13.99),
-  (1, 50, '2023-11-24', '07:25', '12:00', 24.99),
-  (1, 50, '2023-11-24', '08:40', '12:45', 19.99),
-  (1, 50, '2023-11-24', '10:15', '14:50', 24.99);
+INSERT INTO rotas (origem, destino, data, hora, capacidade) VALUES
+  ('Braga', 'Lisboa (Oriente)', '2023-11-24', '05:00', 50),
+  ('Porto', 'Faro', '2023-11-25', '07:25', 50),
+  ('Coimbra', 'Viseu', '2023-11-26', '08:40', 50);
 
 -- Tabela: carteira
 CREATE TABLE carteira (
@@ -85,19 +69,27 @@ VALUES
 CREATE TABLE transacoes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   utilizador_id INT NOT NULL,
+  rota_id INT NOT NULL,
   valor DECIMAL(10,2) NOT NULL,
   tipo ENUM('carregamento', 'compra', 'levantamento') NOT NULL,
   data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (rota_id) REFERENCES rotas(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Tabela: bilhetes
 CREATE TABLE bilhetes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   utilizador_id INT NOT NULL,
-  viagem_id INT NOT NULL,
+  rota_id INT NOT NULL,
   codigo_validacao VARCHAR(50) UNIQUE NOT NULL,
   estado ENUM('comprado', 'usado', 'cancelado') DEFAULT 'comprado',
   FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (viagem_id) REFERENCES viagens(id) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (rota_id) REFERENCES rotas(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+-- Inserir alguns bilhetes
+INSERT INTO bilhetes (utilizador_id, rota_id, codigo_validacao, estado) VALUES
+  (7, 1, 'ABC123', 'comprado'),
+  (8, 2, 'DEF456', 'comprado'),
+  (9, 3, 'GHI789', 'comprado');
