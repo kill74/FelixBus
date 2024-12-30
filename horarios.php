@@ -20,6 +20,37 @@ if ($isLoggedIn) {
     }
 }
 
+// Processa o formulário de compra de bilhete
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar_bilhete'])) {
+    $rotaId = $_POST['rota_id'];
+    $codigoValidacao = uniqid('BILHETE_', true); // Gera um código único
+
+    // Insere o bilhete no banco de dados
+    $query = "INSERT INTO bilhetes (utilizador_id, rota_id, codigo_validacao, estado) VALUES ($userId, $rotaId, '$codigoValidacao', 'comprado')";
+    $conn->query($query);
+
+    // Redireciona com parâmetro de sucesso
+    header("Location: horarios.php?compra=sucesso");
+    exit();
+}
+
+// Processa o formulário de adicionar rota (apenas admin)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_rota']) && $userRole === 'admin') {
+    $origem = $_POST['origem'];
+    $destino = $_POST['destino'];
+    $data = $_POST['data'];
+    $hora = $_POST['hora'];
+    $capacidade = $_POST['capacidade'];
+
+    // Insere a nova rota no banco de dados
+    $query = "INSERT INTO rotas (origem, destino, data, hora, capacidade) VALUES ('$origem', '$destino', '$data', '$hora', $capacidade)";
+    $conn->query($query);
+
+    // Redireciona para evitar reenvio do formulário ao recarregar
+    header("Location: horarios.php");
+    exit();
+}
+
 // Busca todas as rotas disponíveis
 $queryRotas = "SELECT * FROM rotas";
 $resultRotas = $conn->query($queryRotas);
@@ -34,29 +65,6 @@ if ($isLoggedIn && $userRole === 'cliente') {
                       WHERE b.utilizador_id = $userId";
     $resultBilhetes = $conn->query($queryBilhetes);
     $bilhetes = $resultBilhetes ? $resultBilhetes->fetch_all(MYSQLI_ASSOC) : [];
-}
-
-// Processa o formulário de compra de bilhete
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar_bilhete'])) {
-    $rotaId = $_POST['rota_id'];
-    $codigoValidacao = uniqid('BILHETE_', true); // Gera um código único
-
-    // Insere o bilhete no banco de dados
-    $query = "INSERT INTO bilhetes (utilizador_id, rota_id, codigo_validacao, estado) VALUES ($userId, $rotaId, '$codigoValidacao', 'comprado')";
-    $conn->query($query);
-}
-
-// Processa o formulário de adicionar rota (apenas admin)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_rota']) && $userRole === 'admin') {
-    $origem = $_POST['origem'];
-    $destino = $_POST['destino'];
-    $data = $_POST['data'];
-    $hora = $_POST['hora'];
-    $capacidade = $_POST['capacidade'];
-
-    // Insere a nova rota no banco de dados
-    $query = "INSERT INTO rotas (origem, destino, data, hora, capacidade) VALUES ('$origem', '$destino', '$data', '$hora', $capacidade)";
-    $conn->query($query);
 }
 ?>
 
@@ -198,5 +206,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar_rota']) && 
         <?php endif; ?>
     </div>
     <?php require 'footer.php'; ?>
+
+    <!-- Inclui o SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Inclui o arquivo JavaScript externo -->
+    <script src="script.js"></script>
 </body>
 </html>

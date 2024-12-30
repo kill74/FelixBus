@@ -61,20 +61,23 @@ CREATE TABLE carteira (
 -- Inserir dados na tabela carteira
 INSERT INTO carteira (utilizador_id, saldo) 
 VALUES
-  (7, 200),
-  (8, 50),
-  (9, 100);
+  (7, 200),  -- Carteira do cliente
+  (8, 50),   -- Carteira do funcionário
+  (9, 100),  -- Carteira do admin
+  (1, 0.00); -- Carteira da FelixBus (utilizador_id = 1)
 
 -- Tabela: transacoes
 CREATE TABLE transacoes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   utilizador_id INT NOT NULL,
-  rota_id INT NOT NULL,
+  carteira_origem INT NOT NULL,
+  carteira_destino INT NOT NULL,
   valor DECIMAL(10,2) NOT NULL,
-  tipo ENUM('carregamento', 'compra', 'levantamento') NOT NULL,
+  tipo ENUM('carregamento', 'levantamento', 'transferencia') NOT NULL,
   data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (rota_id) REFERENCES rotas(id) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (carteira_origem) REFERENCES carteira(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (carteira_destino) REFERENCES carteira(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Tabela: bilhetes

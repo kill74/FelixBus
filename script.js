@@ -24,6 +24,15 @@ popupOverlay.addEventListener("click", (event) => {
     popupOverlay.style.display = "none";
   }
 });
-
+// Verifica se o parâmetro "compra" está presente na URL
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('compra') === 'sucesso') {
+    Swal.fire({
+        icon: 'success',
+        title: 'Sucesso!',
+        text: 'Compra realizada com sucesso!',
+        confirmButtonText: 'OK'
+    });
+}
 
 
