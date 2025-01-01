@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Credenciais permitidas
+// Credenciais permitidas 
 $users = [
     'admin' => 'admin',
     'funcionario' => 'funcionario',
