@@ -95,6 +95,7 @@ $alertas = $result->fetch_all(MYSQLI_ASSOC);
 <body>
     <?php require 'navbar.php' ?>
     <main>
+        <center>
         <!-- Exibição de Alertas/Promoções -->
         <section class="alertas">
             <h2>Alertas/Promoções</h2>
@@ -109,7 +110,8 @@ $alertas = $result->fetch_all(MYSQLI_ASSOC);
                 <p>Não há alertas ou promoções no momento.</p>
             <?php endif; ?>
         </section>
-
+        </center>
+        <br>
         <div>
             <div class="slideshow-container">
                 <!-- Radio buttons for controlling the slides -->
