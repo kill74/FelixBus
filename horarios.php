@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar_bilhete'])) {
             $stmt->execute();
 
             // Registra a transação
-            $insert_query = "INSERT INTO transacoes (utilizador_id, carteira_origem, carteira_destino, valor, tipo, data_transacao) 
+            $insert_query = "INSERT INTO transacoes (utilizador_id, carteira_origem, carteira_destino, valor, tipo, data_transacao)
                              VALUES (?, ?, ?, ?, 'compra', NOW())";
             $stmt = $conn->prepare($insert_query);
             if (!$stmt) {
@@ -107,9 +107,9 @@ $rotas = $resultRotas ? $resultRotas->fetch_all(MYSQLI_ASSOC) : [];
 // Busca os bilhetes do usuário logado
 $bilhetes = [];
 if ($isLoggedIn && $userRole === 'cliente') {
-    $queryBilhetes = "SELECT b.id, r.origem, r.destino, r.data, r.hora, b.codigo_validacao, b.estado 
-                      FROM bilhetes b 
-                      JOIN rotas r ON b.rota_id = r.id 
+    $queryBilhetes = "SELECT b.id, r.origem, r.destino, r.data, r.hora, b.codigo_validacao, b.estado
+                      FROM bilhetes b
+                      JOIN rotas r ON b.rota_id = r.id
                       WHERE b.utilizador_id = $userId";
     $resultBilhetes = $conn->query($queryBilhetes);
     $bilhetes = $resultBilhetes ? $resultBilhetes->fetch_all(MYSQLI_ASSOC) : [];

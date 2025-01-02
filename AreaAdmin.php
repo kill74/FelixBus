@@ -1,13 +1,44 @@
 <?php
-session_start(); // Inicia a sessão
+session_start();
 require_once 'db_connection.php';
 
-// Verifica se o utilizador está logado e se o tipo de utilizador é 3 (administrador)
 if (!isset($_SESSION['user_id']) || $_SESSION['tipo_utilizador'] != 3) {
-    header("Location: Login.php"); // Redireciona para a página de login
-    exit(); // Termina a execução do script
+    header("Location: Login.php");
+    exit();
+}
+
+// Processar ações de gestão de alertas/promoções
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_alerta'])) {
+    $acao = $_POST['acao_alerta'];
+    $id = $_POST['id'] ?? null;
+
+    if ($acao === 'adicionar') {
+        $mensagem = $_POST['mensagem'];
+        $sql = "INSERT INTO alertas (mensagem) VALUES ('$mensagem')";
+        if ($conn->query($sql)) {
+            echo '<div class="alert alert-success">Alerta/Promoção adicionado com sucesso!</div>';
+        } else {
+            echo '<div class="alert alert-danger">Erro ao adicionar alerta/promoção.</div>';
+        }
+    } elseif ($acao === 'editar' && $id) {
+        $mensagem = $_POST['mensagem'];
+        $sql = "UPDATE alertas SET mensagem='$mensagem' WHERE id=$id";
+        if ($conn->query($sql)) {
+            echo '<div class="alert alert-success">Alerta/Promoção atualizado com sucesso!</div>';
+        } else {
+            echo '<div class="alert alert-danger">Erro ao atualizar alerta/promoção.</div>';
+        }
+    } elseif ($acao === 'excluir' && $id) {
+        $sql = "DELETE FROM alertas WHERE id=$id";
+        if ($conn->query($sql)) {
+            echo '<div class="alert alert-success">Alerta/Promoção excluído com sucesso!</div>';
+        } else {
+            echo '<div class="alert alert-danger">Erro ao excluir alerta/promoção.</div>';
+        }
+    }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -15,86 +46,75 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_utilizador'] != 3) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Administrador</title>
     <link rel="stylesheet" href="styleAreaAdmin.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
+<div class="container-fluid">
+    <div class="row">
         <!-- Barra lateral -->
-        <div class="sidebar">
-            <div class="logo">Painel Admin</div>
-            <nav>
-                <div class="nav-item"><a href="#">Gestão de Utilizadores</a></div>
-                <div class="nav-item"><a href="#">Gestão de Rotas</a></div>
-                <div class="nav-item"><a href="#">Gestão de Alertas/Promoções</a></div>
-                <div class="nav-item"><a href="index.php">Página Principal</a></div>
-                <div class="nav-item"><a href="Login.php">Sair</a></div>
-            </nav>
-        </div>
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link active" href="#gestao-alertas">Gestão de Alertas/Promoções</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.php">Página Principal</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Login.php">Sair</a></li>
+                </ul>
+            </div>
+        </nav>
 
         <!-- Conteúdo principal -->
-        <div class="main-content">
-            <header class="header">
-                <h1>Bem-vindo, <?php echo $_SESSION['nome']; ?></h1> <!-- Exibe o nome do administrador -->
-            </header>
-
-            <!-- Gestão de Utilizadores -->
-            <div class="table-section">
-                <h2>Gestão de Utilizadores</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>Tipo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Nome do Utilizador</td>
-                            <td>email@exemplo.com</td>
-                            <td>Cliente</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Gestão de Rotas -->
-            <div class="table-section">
-                <h2>Gestão de Rotas</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Origem</th>
-                            <th>Destino</th>
-                            <th>Data</th>
-                            <th>Hora</th>
-                            <th>Capacidade</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Origem Exemplo</td>
-                            <td>Destino Exemplo</td>
-                            <td>2023-01-01</td>
-                            <td>12:00</td>
-                            <td>50</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="pt-3 pb-2 mb-3 border-bottom">
+                <h1>Bem-vindo, <?php echo htmlspecialchars($_SESSION['nome']); ?></h1>
             </div>
 
             <!-- Gestão de Alertas/Promoções -->
-            <div class="form-section">
+            <section id="gestao-alertas">
                 <h2>Gestão de Alertas/Promoções</h2>
-                <form action="paginaAdmin.php" method="POST">
-                    <textarea name="alerta" placeholder="Digite o alerta ou promoção..." rows="4" required></textarea><br>
-                    <button type="submit" name="adicionar_alerta">Adicionar Alerta/Promoção</button>
+                <!-- Formulário para adicionar novo alerta/promoção -->
+                <form method="POST">
+                    <input type="hidden" name="acao_alerta" value="adicionar">
+                    <div class="mb-3">
+                        <label for="mensagem" class="form-label">Alerta/Promoção</label>
+                        <textarea class="form-control" id="mensagem" name="mensagem" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Adicionar Alerta/Promoção</button>
                 </form>
-            </div>
-        </div>
+
+                <!-- Lista de alertas/promoções existentes -->
+                <?php
+                $sql = "SELECT * FROM alertas ORDER BY data_criacao DESC";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    echo '<h3>Alertas/Promoções Existentes</h3>';
+                    echo '<table class="table table-striped table-hover">';
+                    echo '<thead><tr><th>ID</th><th>Mensagem</th><th>Data</th><th>Ações</th></tr></thead>';
+                    echo '<tbody>';
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<tr>';
+                        echo '<td>' . $row['id'] . '</td>';
+                        echo '<td>' . htmlspecialchars($row['mensagem']) . '</td>';
+                        echo '<td>' . $row['data_criacao'] . '</td>';
+                        echo '<td>';
+                        echo '<form method="POST" style="display:inline;">
+                                <input type="hidden" name="acao_alerta" value="excluir">
+                                <input type="hidden" name="id" value="' . $row['id'] . '">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Tem certeza que deseja excluir este alerta/promoção?\')">Excluir</button>
+                              </form>';
+                        echo '</td>';
+                        echo '</tr>';
+                    }
+                    echo '</tbody></table>';
+                } else {
+                    echo '<p>Nenhum alerta/promoção encontrado.</p>';
+                }
+                ?>
+            </section>
+        </main>
     </div>
+</div>
+
+<!-- Inclui o arquivo JavaScript externo -->
+<script src="script.js"></script>
 </body>
 </html>
