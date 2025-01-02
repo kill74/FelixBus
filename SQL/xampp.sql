@@ -55,12 +55,12 @@ INSERT INTO rotas (origem, destino, data, hora, capacidade) VALUES
 CREATE TABLE IF NOT EXISTS carteira (
   id INT AUTO_INCREMENT PRIMARY KEY,
   utilizador_id INT NOT NULL,
-  saldo DECIMAL(10,2) DEFAULT 0.00, 
+  saldo DECIMAL(10,2) DEFAULT 0.00,
   FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Inserir dados na tabela carteira
-INSERT INTO carteira (utilizador_id, saldo) 
+INSERT INTO carteira (utilizador_id, saldo)
 VALUES
   (1, 0.00), -- Carteira da FelixBus
   (7, 200),  -- Carteira do cliente
@@ -97,3 +97,10 @@ INSERT INTO bilhetes (utilizador_id, rota_id, codigo_validacao, estado) VALUES
   (7, 1, 'ABC123', 'comprado'),
   (8, 2, 'DEF456', 'comprado'),
   (9, 3, 'GHI789', 'comprado');
+
+-- Tabela: alertas
+CREATE TABLE IF NOT EXISTS alertas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  mensagem TEXT NOT NULL,
+  data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

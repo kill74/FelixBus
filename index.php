@@ -2,18 +2,14 @@
 session_start();
 require_once 'db_connection.php';
 
-// Debug - remova depois de testar
-/*
-echo "DEBUG:<br>";
-echo "User ID: " . ($_SESSION['user_id'] ?? 'não definido') . "<br>";
-echo "Tipo Utilizador: " . ($_SESSION['tipo_utilizador'] ?? 'não definido') . "<br>";
-echo "Nome: " . ($_SESSION['nome'] ?? 'não definido') . "<br>";
-echo "User Role: " . ($userRole ?? 'não definido') . "<br>";
-*/
-
+// Buscar alertas/promoções
+$sql = "SELECT * FROM alertas ORDER BY data_criacao DESC";
+$result = $conn->query($sql);
+$alertas = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,43 +23,52 @@ echo "User Role: " . ($userRole ?? 'não definido') . "<br>";
             color: #fff;
             font-size: 14px;
         }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
+
         body {
             color: #333;
             background-color: #f4f4f4;
             line-height: 1.6;
         }
+
         header {
             background-color: #2d3e50;
             color: #fff;
             padding: 1rem;
             text-align: center;
         }
+
         header h1 {
             font-size: 2em;
         }
+
         header nav ul {
             list-style: none;
             display: flex;
             justify-content: center;
             padding-top: 0.5rem;
         }
+
         header nav ul li {
             margin: 0 1rem;
         }
+
         header nav ul li a {
             color: #fff;
             text-decoration: none;
             font-weight: bold;
         }
+
         header nav ul li a:hover {
             color: #ffd700;
         }
+
         main {
             max-width: 800px;
             margin: 2rem auto;
@@ -72,12 +77,39 @@ echo "User Role: " . ($userRole ?? 'não definido') . "<br>";
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
+
+        .alertas {
+            margin-bottom: 20px;
+        }
+
+        .alerta {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
+
 <body>
     <?php require 'navbar.php' ?>
     <main>
-        <br><br>
+        <!-- Exibição de Alertas/Promoções -->
+        <section class="alertas">
+            <h2>Alertas/Promoções</h2>
+            <?php if (!empty($alertas)): ?>
+                <?php foreach ($alertas as $alerta): ?>
+                    <div class="alerta">
+                        <p><?php echo htmlspecialchars($alerta['mensagem']); ?></p>
+                        <small><?php echo $alerta['data_criacao']; ?></small>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Não há alertas ou promoções no momento.</p>
+            <?php endif; ?>
+        </section>
+
         <div>
             <div class="slideshow-container">
                 <!-- Radio buttons for controlling the slides -->
@@ -125,12 +157,13 @@ echo "User Role: " . ($userRole ?? 'não definido') . "<br>";
                 <section id="sobre">
                     <h2>Sobre Nós</h2>
                     <p>Somos uma empresa dedicada a oferecer transporte seguro e confortável para destinos em todo o país.
-                    Com nossa plataforma de fácil uso, você pode planejar suas viagens, gerenciar seu perfil,
-                    e manter-se atualizado com nossos horários e promoções.</p>
+                        Com nossa plataforma de fácil uso, você pode planejar suas viagens, gerenciar seu perfil,
+                        e manter-se atualizado com nossos horários e promoções.</p>
                 </section>
             </section>
         </main>
     </main>
     <?php require 'footer.php' ?>
 </body>
+
 </html>
