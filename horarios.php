@@ -13,50 +13,88 @@ $userRole = $isLoggedIn ? match ($_SESSION['tipo_utilizador']) {
 
 // Processa a compra de bilhete
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar_bilhete'])) {
-    $rotaId = $_POST['rota_id'];
+    $rotaId = (int)$_POST['rota_id'];
     $codigoValidacao = uniqid('BILHETE_', true);
 
-    $query_saldo = "SELECT saldo FROM carteira WHERE utilizador_id = ?";
-    $stmt = $conn->prepare($query_saldo) or die("Erro ao preparar a consulta: " . $conn->error);
-    $stmt->bind_param("i", $_SESSION['user_id']);
-    $stmt->execute();
-    $saldo = $stmt->get_result()->fetch_assoc()['saldo'] ?? 0;
+    // Inicia uma transação
+    $conn->begin_transaction();
 
-    $preco_bilhete = 10.00;
-
-    if ($saldo >= $preco_bilhete) {
-        $conn->query("INSERT INTO bilhetes (utilizador_id, rota_id, codigo_validacao, estado) VALUES ({$_SESSION['user_id']}, $rotaId, '$codigoValidacao', 'comprado')");
-
-        $novo_saldo = $saldo - $preco_bilhete;
-        $stmt = $conn->prepare("UPDATE carteira SET saldo = ? WHERE utilizador_id = ?") or die("Erro ao preparar a consulta: " . $conn->error);
-        $stmt->bind_param("di", $novo_saldo, $_SESSION['user_id']);
+    try {
+        // Obtém o saldo do cliente
+        $query_saldo = "SELECT saldo FROM carteira WHERE utilizador_id = ?";
+        $stmt = $conn->prepare($query_saldo);
+        $stmt->bind_param("i", $_SESSION['user_id']);
         $stmt->execute();
+        $saldo = $stmt->get_result()->fetch_assoc()['saldo'] ?? 0;
 
-        $stmt = $conn->prepare("INSERT INTO transacoes (utilizador_id, carteira_origem, carteira_destino, valor, tipo, data_transacao) VALUES (?, ?, ?, ?, 'compra', NOW())") or die("Erro ao preparar a consulta: " . $conn->error);
-        $stmt->bind_param("iiid", $_SESSION['user_id'], $_SESSION['user_id'], 1, $preco_bilhete);
+        // Obtém o preço do bilhete
+        $query_preco = "SELECT preco FROM rotas WHERE id = ?";
+        $stmt = $conn->prepare($query_preco);
+        $stmt->bind_param("i", $rotaId);
         $stmt->execute();
+        $preco_bilhete = $stmt->get_result()->fetch_assoc()['preco'] ?? 10.00;
 
-        header("Location: horarios.php?compra=sucesso");
-        exit();
-    } else {
-        header("Location: horarios.php?erro=" . ($saldo === null ? 'carteira_nao_encontrada' : 'saldo_insuficiente'));
+        if ($saldo >= $preco_bilhete) {
+            // Insere o bilhete
+            $stmt = $conn->prepare("INSERT INTO bilhetes (utilizador_id, rota_id, codigo_validacao, estado) VALUES (?, ?, ?, 'comprado')");
+            $stmt->bind_param("iis", $_SESSION['user_id'], $rotaId, $codigoValidacao);
+            $stmt->execute();
+
+            // Atualiza o saldo do cliente
+            $novo_saldo = $saldo - $preco_bilhete;
+            $stmt = $conn->prepare("UPDATE carteira SET saldo = ? WHERE utilizador_id = ?");
+            $stmt->bind_param("di", $novo_saldo, $_SESSION['user_id']);
+            $stmt->execute();
+
+            // Obtém o ID da carteira do usuário
+            $query_carteira_id = "SELECT id FROM carteira WHERE utilizador_id = ?";
+            $stmt = $conn->prepare($query_carteira_id);
+            $stmt->bind_param("i", $_SESSION['user_id']);
+            $stmt->execute();
+            $carteira_usuario_id = $stmt->get_result()->fetch_assoc()['id'] ?? null;
+
+            if (!$carteira_usuario_id) {
+                throw new Exception("Carteira do usuário não encontrada.");
+            }
+
+            // Registra a transação
+            $carteira_felixbus_id = 1; // ID da carteira da FelixBus
+            $stmt = $conn->prepare("INSERT INTO transacoes (utilizador_id, carteira_origem, carteira_destino, valor, tipo, data_transacao) VALUES (?, ?, ?, ?, 'compra', NOW())");
+            $stmt->bind_param("iiid", $_SESSION['user_id'], $carteira_usuario_id, $carteira_felixbus_id, $preco_bilhete);
+            $stmt->execute();
+
+            // Commit da transação
+            $conn->commit();
+
+            $_SESSION['mensagem'] = "Compra realizada com sucesso!";
+            header("Location: horarios.php");
+            exit();
+        } else {
+            $conn->rollback();
+            $_SESSION['erro'] = $saldo === null ? "Carteira não encontrada." : "Saldo insuficiente.";
+            header("Location: horarios.php");
+            exit();
+        }
+    } catch (Exception $e) {
+        $conn->rollback();
+        $_SESSION['erro'] = "Erro ao processar a compra: " . $e->getMessage();
+        header("Location: horarios.php");
         exit();
     }
 }
 
 // Busca rotas e bilhetes
-$rotas = $conn->query("SELECT * FROM rotas")->fetch_all(MYSQLI_ASSOC);
+$rotas = $conn->query("SELECT id, origem, destino, data, hora, preco FROM rotas")->fetch_all(MYSQLI_ASSOC);
 $bilhetes = $isLoggedIn && $userRole === 'cliente' ? $conn->query("SELECT b.id, r.origem, r.destino, r.data, r.hora, b.codigo_validacao, b.estado FROM bilhetes b JOIN rotas r ON b.rota_id = r.id WHERE b.utilizador_id = {$_SESSION['user_id']}")->fetch_all(MYSQLI_ASSOC) : [];
 ?>
 
 <!DOCTYPE html>
 <html lang="pt">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horários - FelixBus</title>
-    <link rel="stylesheet" href="style/styleIndex.css">
+    <link rel="stylesheet" href="styleIndex.css">
     <style>
         .container {
             max-width: 800px;
@@ -73,8 +111,7 @@ $bilhetes = $isLoggedIn && $userRole === 'cliente' ? $conn->query("SELECT b.id, 
             margin-bottom: 20px;
         }
 
-        th,
-        td {
+        th, td {
             padding: 10px;
             border: 1px solid #ddd;
             text-align: left;
@@ -105,18 +142,30 @@ $bilhetes = $isLoggedIn && $userRole === 'cliente' ? $conn->query("SELECT b.id, 
             margin-bottom: 20px;
             text-align: center;
         }
+
+        .mensagem.sucesso {
+            background-color: #d4edda;
+            color: #155724;
+        }
     </style>
 </head>
-
 <body>
     <?php require 'navbar.php'; ?>
     <div class="container">
         <h1>Horários e Rotas</h1>
 
-        <?php if (isset($_GET['erro'])): ?>
+        <?php if (isset($_SESSION['erro'])): ?>
             <div class="mensagem">
-                <?= $_GET['erro'] === 'saldo_insuficiente' ? "Erro: Saldo insuficiente para comprar o bilhete." : "Erro: Carteira não encontrada." ?>
+                <?= htmlspecialchars($_SESSION['erro']) ?>
             </div>
+            <?php unset($_SESSION['erro']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['mensagem'])): ?>
+            <div class="mensagem sucesso">
+                <?= htmlspecialchars($_SESSION['mensagem']) ?>
+            </div>
+            <?php unset($_SESSION['mensagem']); ?>
         <?php endif; ?>
 
         <section>
@@ -128,6 +177,7 @@ $bilhetes = $isLoggedIn && $userRole === 'cliente' ? $conn->query("SELECT b.id, 
                         <th>Destino</th>
                         <th>Data</th>
                         <th>Hora</th>
+                        <th>Preço</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -138,6 +188,7 @@ $bilhetes = $isLoggedIn && $userRole === 'cliente' ? $conn->query("SELECT b.id, 
                             <td><?= htmlspecialchars($rota['destino']) ?></td>
                             <td><?= htmlspecialchars($rota['data']) ?></td>
                             <td><?= htmlspecialchars($rota['hora']) ?></td>
+                            <td>€<?= number_format($rota['preco'], 2, ',', '.') ?></td>
                             <td>
                                 <?php if ($isLoggedIn && $userRole === 'cliente'): ?>
                                     <form method="POST" style="display:inline;">
@@ -189,5 +240,4 @@ $bilhetes = $isLoggedIn && $userRole === 'cliente' ? $conn->query("SELECT b.id, 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
 </body>
-
 </html>

@@ -42,14 +42,15 @@ CREATE TABLE IF NOT EXISTS rotas (
   destino VARCHAR(100) NOT NULL,
   data DATE NOT NULL,
   hora TIME NOT NULL,
-  capacidade INT NOT NULL
+  capacidade INT NOT NULL,
+  preco DECIMAL(10,2) NOT NULL DEFAULT 10.00 -- Adicionada a coluna preco
 );
 
 -- Inserir algumas rotas
-INSERT INTO rotas (origem, destino, data, hora, capacidade) VALUES
-  ('Braga', 'Lisboa (Oriente)', '2023-11-24', '05:00', 50),
-  ('Porto', 'Faro', '2023-11-25', '07:25', 50),
-  ('Coimbra', 'Viseu', '2023-11-26', '08:40', 50);
+INSERT INTO rotas (origem, destino, data, hora, capacidade, preco) VALUES
+  ('Braga', 'Lisboa (Oriente)', '2023-11-24', '05:00', 50, 10.00),
+  ('Porto', 'Faro', '2023-11-25', '07:25', 50, 15.00),
+  ('Coimbra', 'Viseu', '2023-11-26', '08:40', 50, 20.00);
 
 -- Tabela: carteira
 CREATE TABLE IF NOT EXISTS carteira (

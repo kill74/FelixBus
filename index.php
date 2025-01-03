@@ -14,7 +14,7 @@ $alertas = $result->fetch_all(MYSQLI_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FelixBus</title>
-    <link rel="stylesheet" href="style/styleIndex.css">
+    <link rel="stylesheet" href="styleIndex.css">
     <style>
         footer {
             text-align: center;
@@ -121,13 +121,13 @@ $alertas = $result->fetch_all(MYSQLI_ASSOC);
                 <!-- Slides -->
                 <div class="slides">
                     <div class="slide">
-                        <img src="img/img8 (2).jpg" alt="Image 1">
+                        <img src="img8 (2).jpg" alt="Image 1">
                     </div>
                     <div class="slide">
-                        <img src="img/img10 (1).jpeg" alt="Image 2">
+                        <img src="img10 (1).jpeg" alt="Image 2">
                     </div>
                     <div class="slide">
-                        <img src="img/img3.jpg" alt="Image 3">
+                        <img src="img3.jpg" alt="Image 3">
                     </div>
                 </div>
                 <!-- Navigation buttons -->
