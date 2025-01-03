@@ -53,7 +53,7 @@ if ($result && $result->num_rows > 0) {
         <h1>Perfil do Utilizador</h1>
         <div class="profile">
             <!-- Foto de perfil -->
-            <img src="img/perfil.jpg" alt="Foto de Perfil" class="profile-pic">
+            <img src="perfil.jpg" alt="Foto de Perfil" class="profile-pic">
             <div class="profile-info">
                 <p><strong>Nome:</strong> <?= htmlspecialchars($user['nome']) ?></p>
                 <p><strong>Tipo de Utilizador:</strong> <?= htmlspecialchars($user['tipo_utilizador_id']) ?></p>

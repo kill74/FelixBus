@@ -38,10 +38,19 @@ button:hover {
   text-decoration: underline;
 }
 .mensagem-erro {
-  color: #ff4444;
-  margin-bottom: 10px;
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
 }
+
 .mensagem-sucesso {
-  color: #00C851;
-  margin-bottom: 10px;
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
 }

@@ -1,5 +1,5 @@
 <head>
-    <link rel="stylesheet" href="style/styleIndex.css">
+    <link rel="stylesheet" href="styleIndex.css">
 </head>
 <footer>
     <section id="contacto">
@@ -11,17 +11,17 @@
         <ul class="social-links">
             <li>
                 <a href="https://facebook.com" target="_blank">
-                    <img src="img/FacebookLogo.png" alt="Imagem Facebook"> Facebook
+                    <img src="FacebookLogo.png" alt="Imagem Facebook"> Facebook
                 </a>
             </li>
             <li>
                 <a href="https://instagram.com" target="_blank">
-                    <img src="img/InstagramLogo.png" alt="Imagem Instagram"> Instagram
+                    <img src="InstagramLogo.png" alt="Imagem Instagram"> Instagram
                 </a>
             </li>
             <li>
                 <a href="https://twitter.com" target="_blank">
-                    <img src="img/TwitterLogo.png" alt="Imagem Twitter"> Twitter
+                    <img src="TwitterLogo.png" alt="Imagem Twitter"> Twitter
                 </a>
             </li>
         </ul>            
