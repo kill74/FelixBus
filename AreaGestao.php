@@ -1,5 +1,5 @@
 <?php
-// Exibição de erros (útil para desenvolvimento)
+// Exibir erros (útil durante o desenvolvimento)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -10,7 +10,7 @@ require_once 'db_connection.php';
 
 $mensagem = ""; // Variável para guardar mensagens de sucesso ou erro
 
-// Verificar se o utilizador está autenticado e é um funcionário ou admin
+// Verificar se o utilizador está autenticado e é um funcionário ou administrador
 if (!isset($_SESSION['user_id']) || ($_SESSION['tipo_utilizador'] != 2 && $_SESSION['tipo_utilizador'] != 3)) {
     die("Erro: Acesso não autorizado.");
 }
@@ -23,36 +23,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['atualizar_saldo'])) {
     // Verificar se o saldo é válido (não pode ser negativo)
     if ($novo_saldo >= 0) {
         // Buscar o ID da carteira associada ao utilizador
-        $query_carteira = "SELECT id FROM carteira WHERE utilizador_id = ?";
-        $stmt = $conn->prepare($query_carteira);
-        if (!$stmt) {
-            die("Erro ao preparar a consulta: " . $conn->error);
-        }
+        $query = "SELECT id FROM carteira WHERE utilizador_id = ?";
+        $stmt = $conn->prepare($query);
         $stmt->bind_param("i", $utilizador_id);
         $stmt->execute();
-        $resultado_carteira = $stmt->get_result();
+        $resultado = $stmt->get_result();
 
-        if ($resultado_carteira->num_rows > 0) {
-            $carteira = $resultado_carteira->fetch_assoc();
+        if ($resultado->num_rows > 0) {
+            $carteira = $resultado->fetch_assoc();
             $carteira_id = $carteira['id']; // ID da carteira
 
             // Atualizar o saldo na tabela carteira
             $query = "UPDATE carteira SET saldo = ? WHERE id = ?";
             $stmt = $conn->prepare($query);
-            if (!$stmt) {
-                die("Erro ao preparar a consulta: " . $conn->error);
-            }
             $stmt->bind_param("di", $novo_saldo, $carteira_id); // "di" = double (saldo), integer (ID)
             $stmt->execute();
 
             // Registar a transação na tabela transacoes
-            $insert_query = "INSERT INTO transacoes (utilizador_id, carteira_origem, carteira_destino, valor, tipo, data_transacao) 
-                             VALUES (?, ?, ?, ?, 'carregamento', NOW())";
-            $stmt = $conn->prepare($insert_query);
-            if (!$stmt) {
-                die("Erro ao preparar a consulta: " . $conn->error);
-            }
-            // Assumindo que a carteira de destino é a mesma que a de origem
+            $query = "INSERT INTO transacoes (utilizador_id, carteira_origem, carteira_destino, valor, tipo, data_transacao)
+                      VALUES (?, ?, ?, ?, 'carregamento', NOW())";
+            $stmt = $conn->prepare($query);
             $stmt->bind_param("iiid", $utilizador_id, $carteira_id, $carteira_id, $novo_saldo); // "iiid" = integer, integer, integer, double
             $stmt->execute();
 
@@ -73,9 +63,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar_bilhete'])) {
     // Atualizar o estado do bilhete na tabela bilhetes
     $query = "UPDATE bilhetes SET estado = ? WHERE id = ?";
     $stmt = $conn->prepare($query);
-    if (!$stmt) {
-        die("Erro ao preparar a consulta: " . $conn->error);
-    }
     $stmt->bind_param("si", $novo_estado, $bilhete_id); // "si" = string (estado), integer (ID)
     $stmt->execute();
 
@@ -83,24 +70,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar_bilhete'])) {
 }
 
 // Buscar todos os utilizadores (clientes) e seus saldos
-$query_utilizadores = "SELECT u.id, u.nome, c.saldo 
-                       FROM utilizadores u 
-                       LEFT JOIN carteira c ON u.id = c.utilizador_id 
-                       WHERE u.tipo_utilizador_id = 1"; // Apenas clientes
-$result_utilizadores = $conn->query($query_utilizadores);
-$utilizadores = $result_utilizadores ? $result_utilizadores->fetch_all(MYSQLI_ASSOC) : [];
+$query = "SELECT u.id, u.nome, c.saldo
+          FROM utilizadores u
+          LEFT JOIN carteira c ON u.id = c.utilizador_id
+          WHERE u.tipo_utilizador_id = 1"; // Apenas clientes
+$result = $conn->query($query);
+$utilizadores = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
 
 // Buscar todos os bilhetes com informações detalhadas
-$query_bilhetes = "SELECT b.id, u.nome AS cliente, r.origem, r.destino, r.data, r.hora, b.estado 
-                   FROM bilhetes b 
-                   JOIN utilizadores u ON b.utilizador_id = u.id 
-                   JOIN rotas r ON b.rota_id = r.id";
-$result_bilhetes = $conn->query($query_bilhetes);
-$bilhetes = $result_bilhetes ? $result_bilhetes->fetch_all(MYSQLI_ASSOC) : [];
+$query = "SELECT b.id, u.nome AS cliente, r.origem, r.destino, r.data, r.hora, b.estado
+          FROM bilhetes b
+          JOIN utilizadores u ON b.utilizador_id = u.id
+          JOIN rotas r ON b.rota_id = r.id";
+$result = $conn->query($query);
+$bilhetes = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
 ?>
 
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -116,20 +104,25 @@ $bilhetes = $result_bilhetes ? $result_bilhetes->fetch_all(MYSQLI_ASSOC) : [];
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-        th, td {
+
+        th,
+        td {
             padding: 10px;
             border: 1px solid #ddd;
             text-align: left;
         }
+
         th {
             background-color: #2d3e50;
             color: white;
         }
+
         .button {
             background-color: #2d3e50;
             color: white;
@@ -137,9 +130,11 @@ $bilhetes = $result_bilhetes ? $result_bilhetes->fetch_all(MYSQLI_ASSOC) : [];
             padding: 10px;
             cursor: pointer;
         }
+
         .button:hover {
             background-color: #ffd700;
         }
+
         .mensagem {
             background-color: #f8d7da;
             color: #721c24;
@@ -150,6 +145,7 @@ $bilhetes = $result_bilhetes ? $result_bilhetes->fetch_all(MYSQLI_ASSOC) : [];
         }
     </style>
 </head>
+
 <body>
     <?php require 'navbar.php'; ?> <!-- Inclui a barra de navegação -->
 
@@ -186,7 +182,7 @@ $bilhetes = $result_bilhetes ? $result_bilhetes->fetch_all(MYSQLI_ASSOC) : [];
                                     <input type="number" name="novo_saldo" step="0.01" placeholder="Novo Saldo" required>
                             </td>
                             <td>
-                                    <button type="submit" name="atualizar_saldo" class="button">Atualizar</button>
+                                <button type="submit" name="atualizar_saldo" class="button">Atualizar</button>
                                 </form>
                             </td>
                         </tr>
@@ -239,4 +235,5 @@ $bilhetes = $result_bilhetes ? $result_bilhetes->fetch_all(MYSQLI_ASSOC) : [];
 
     <?php require 'footer.php'; ?> <!-- Inclui o rodapé -->
 </body>
+
 </html>

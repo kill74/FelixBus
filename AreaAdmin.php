@@ -1,18 +1,23 @@
 <?php
+// Inicia a sessão para aceder às variáveis de sessão
 session_start();
+
+// Inclui o ficheiro de conexão à base de dados
 require_once 'db_connection.php';
 
+// Verifica se o utilizador está autenticado e se é um administrador (tipo_utilizador = 3)
 if (!isset($_SESSION['user_id']) || $_SESSION['tipo_utilizador'] != 3) {
-    header("Location: Login.php");
+    header("Location: Login.php"); // Redireciona para a página de login
     exit();
 }
 
-// Processar ações de gestão de horários
+// Processa ações relacionadas com a gestão de horários
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_horario'])) {
-    $acao = $_POST['acao_horario'];
-    $id = $_POST['id'] ?? null;
+    $acao = $_POST['acao_horario']; // Ação a ser realizada (adicionar, editar, excluir)
+    $id = $_POST['id'] ?? null; // ID do horário (se aplicável)
 
     if ($acao === 'adicionar') {
+        // Adiciona um novo horário
         $origem = $_POST['origem'];
         $destino = $_POST['destino'];
         $data = $_POST['data'];
@@ -25,20 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_horario'])) {
         } else {
             echo '<div class="alert alert-danger">Erro ao adicionar horário: ' . $conn->error . '</div>';
         }
-    } elseif ($acao === 'editar' && $id) {
-        $origem = $_POST['origem'];
-        $destino = $_POST['destino'];
-        $data = $_POST['data'];
-        $hora = $_POST['hora'];
-        $capacidade = $_POST['capacidade'];
-
-        $sql = "UPDATE rotas SET origem='$origem', destino='$destino', data='$data', hora='$hora', capacidade=$capacidade WHERE id=$id";
-        if ($conn->query($sql)) {
-            echo '<div class="alert alert-success">Horário atualizado com sucesso!</div>';
-        } else {
-            echo '<div class="alert alert-danger">Erro ao atualizar horário: ' . $conn->error . '</div>';
-        }
     } elseif ($acao === 'excluir' && $id) {
+        // Exclui um horário existente
         $sql = "DELETE FROM rotas WHERE id=$id";
         if ($conn->query($sql)) {
             echo '<div class="alert alert-success">Horário excluído com sucesso!</div>';
@@ -48,12 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_horario'])) {
     }
 }
 
-// Processar ações de gestão de alertas/promoções
+// Processa ações relacionadas com a gestão de alertas/promoções
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_alerta'])) {
-    $acao = $_POST['acao_alerta'];
-    $id = $_POST['id'] ?? null;
+    $acao = $_POST['acao_alerta']; // Ação a ser realizada (adicionar, excluir)
+    $id = $_POST['id'] ?? null; // ID do alerta/promoção (se aplicável)
 
     if ($acao === 'adicionar') {
+        // Adiciona um novo alerta/promoção
         $mensagem = $_POST['mensagem'];
         $sql = "INSERT INTO alertas (mensagem) VALUES ('$mensagem')";
         if ($conn->query($sql)) {
@@ -62,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_alerta'])) {
             echo '<div class="alert alert-danger">Erro ao adicionar alerta/promoção: ' . $conn->error . '</div>';
         }
     } elseif ($acao === 'excluir' && $id) {
+        // Exclui um alerta/promoção existente
         $sql = "DELETE FROM alertas WHERE id=$id";
         if ($conn->query($sql)) {
             echo '<div class="alert alert-success">Alerta/Promoção excluído com sucesso!</div>';
@@ -211,9 +206,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_alerta'])) {
             </main>
         </div>
     </div>
-
-    <!-- Inclui o arquivo JavaScript externo -->
-    <script src="script.js"></script>
 </body>
 
 </html>
