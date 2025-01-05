@@ -50,18 +50,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar_bilhete'])) {
 
         // 3. Verifica se o saldo é suficiente
         if ($saldo >= $preco_bilhete) {
-            // 4. Insere o bilhete na tabela de bilhetes
+            // 4. Reduz o saldo do cliente
+            $novo_saldo_cliente = $saldo - $preco_bilhete;
+            $stmt = $conn->prepare("UPDATE carteira SET saldo = ? WHERE utilizador_id = ?");
+            $stmt->bind_param("di", $novo_saldo_cliente, $_SESSION['user_id']);
+            $stmt->execute();
+
+            // 5. Obtém o saldo atual da carteira da FelixBus
+            $carteira_felixbus_id = 1; // ID da carteira da FelixBus
+            $query_felixbus_saldo = "SELECT saldo FROM carteira WHERE id = ?";
+            $stmt = $conn->prepare($query_felixbus_saldo);
+            $stmt->bind_param("i", $carteira_felixbus_id);
+            $stmt->execute();
+            $felixbus_saldo = $stmt->get_result()->fetch_assoc()['saldo'] ?? 0;
+
+            // 6. Atualiza o saldo da carteira da FelixBus
+            $novo_saldo_felixbus = $felixbus_saldo + $preco_bilhete;
+            $stmt = $conn->prepare("UPDATE carteira SET saldo = ? WHERE id = ?");
+            $stmt->bind_param("di", $novo_saldo_felixbus, $carteira_felixbus_id);
+            $stmt->execute();
+
+            // 7. Insere o bilhete na tabela de bilhetes
             $stmt = $conn->prepare("INSERT INTO bilhetes (utilizador_id, rota_id, codigo_validacao, estado) VALUES (?, ?, ?, 'comprado')");
             $stmt->bind_param("iis", $_SESSION['user_id'], $rotaId, $codigoValidacao); // Vincula os valores
             $stmt->execute(); // Executa a inserção
 
-            // 5. Atualiza o saldo do cliente
-            $novo_saldo = $saldo - $preco_bilhete; // Calcula o novo saldo
-            $stmt = $conn->prepare("UPDATE carteira SET saldo = ? WHERE utilizador_id = ?");
-            $stmt->bind_param("di", $novo_saldo, $_SESSION['user_id']); // Vincula os valores
-            $stmt->execute(); // Executa a atualização
-
-            // 6. Obtém o ID da carteira do usuário
+            // 8. Obtém o ID da carteira do usuário
             $query_carteira_id = "SELECT id FROM carteira WHERE utilizador_id = ?";
             $stmt = $conn->prepare($query_carteira_id);
             $stmt->bind_param("i", $_SESSION['user_id']); // Vincula o ID do usuário
@@ -72,13 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar_bilhete'])) {
                 throw new Exception("Carteira do usuário não encontrada."); // Lança uma exceção se a carteira não existir
             }
 
-            // 7. Registra a transação na tabela de transações
-            $carteira_felixbus_id = 1; // ID da carteira da FelixBus
+            // 9. Registra a transação na tabela de transações
             $stmt = $conn->prepare("INSERT INTO transacoes (utilizador_id, carteira_origem, carteira_destino, valor, tipo, data_transacao) VALUES (?, ?, ?, ?, 'compra', NOW())");
             $stmt->bind_param("iiid", $_SESSION['user_id'], $carteira_usuario_id, $carteira_felixbus_id, $preco_bilhete); // Vincula os valores
             $stmt->execute(); // Executa a inserção
 
-            // 8. Confirma a transação (commit)
+            // 10. Confirma a transação (commit)
             $conn->commit();
 
             // Mensagem de sucesso e redirecionamento
