@@ -14,17 +14,14 @@ error_reporting(E_ALL);
 // Verifica se o formulário foi submetido via POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtém e limpa os dados do formulário
-    $nome = trim($_POST["nome"]);
-    $senha = $_POST["senha"];
+    $nome = trim($_POST["nome"]); // Remove espaços em branco no início e no fim
+    $senha = $_POST["senha"]; // A senha não precisa de trim, pois pode conter espaços
 
     // Verifica se os campos estão preenchidos
     if (!empty($nome) && !empty($senha)) {
-        // Conecta-se à base de dados
-        $conn = new mysqli("localhost", "root", "", "trabalho_php");
-
-        // Prepara uma consulta SQL segura
+        // Prepara uma consulta SQL segura usando prepared statements
         $stmt = $conn->prepare("SELECT id, nome, palavra_passe, tipo_utilizador_id FROM utilizadores WHERE nome = ? AND estado = 'ativo'");
-        $stmt->bind_param("s", $nome); // Liga o parâmetro do nome
+        $stmt->bind_param("s", $nome); // Vincula o parâmetro do nome (s = string)
         $stmt->execute(); // Executa a consulta
         $result = $stmt->get_result(); // Obtém os resultados
 
@@ -68,9 +65,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $erro = "Utilizador não encontrado ou inativo."; // Usuário não existe ou está inativo
         }
 
-        // Fecha a consulta e a conexão
+        // Fecha a consulta
         $stmt->close();
-        $conn->close();
     } else {
         $erro = "Por favor, preencha todos os campos."; // Campos vazios
     }
