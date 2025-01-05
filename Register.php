@@ -2,12 +2,6 @@
 session_start();
 require_once 'db_connection.php'; // Certifique-se de que o caminho está correto
 
-/* exibição de erros
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-*/
-
 // Verifica se o formulário foi submetido
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verifica se os campos do formulário foram enviados
@@ -19,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Verificar se o nome de utilizador já existe
         $stmt = $conn->prepare("SELECT id FROM utilizadores WHERE nome = ?");
-        $stmt->bind_param("s", $nome);
+        $stmt->bind_param("s", $nome); // "s" indica que o parâmetro é uma string
         $stmt->execute();
         $stmt->store_result();
 
@@ -31,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Inserir novo utilizador na base de dados
             $stmt = $conn->prepare("INSERT INTO utilizadores (nome, palavra_passe, tipo_utilizador_id) VALUES (?, ?, ?)");
-            $stmt->bind_param("ssi", $nome, $palavra_passe_hash, $tipo_utilizador_id);
+            $stmt->bind_param("ssi", $nome, $palavra_passe_hash, $tipo_utilizador_id); // "ssi" indica dois strings e um inteiro
 
             // Executar a inserção do utilizador
             if ($stmt->execute()) {
@@ -39,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // Criar carteira para o novo utilizador
                 $stmt = $conn->prepare("INSERT INTO carteira (utilizador_id, saldo) VALUES (?, 0.00)");
-                $stmt->bind_param("i", $user_id);
+                $stmt->bind_param("i", $user_id); // "i" indica que o parâmetro é um inteiro
 
                 // Executar a criação da carteira
                 if ($stmt->execute()) {
@@ -56,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Redirecionar para evitar reenvio do formulário
-    header("Location: register.php");
+    header("Location: Login.php");
     exit();
 }
 ?>

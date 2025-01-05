@@ -1,92 +1,99 @@
 <?php
+// Inicia a sessão para armazenar dados do usuário
 session_start();
+
+// Conecta ao banco de dados
 require_once 'db_connection.php';
 
-/* exibição de erros
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-*/
+// Verifica se o usuário está logado e define o papel (cliente, funcionário, admin ou visitante)
+$isLoggedIn = isset($_SESSION['user_id']); // Verifica se o ID do usuário está na sessão
+$userRole = 'visitante'; // Define o papel padrão como 'visitante'
 
-// Verifica se o usuário está logado e define o papel
-$isLoggedIn = isset($_SESSION['user_id']);
-$userRole = $isLoggedIn ? match ($_SESSION['tipo_utilizador']) {
-    1 => 'cliente',
-    2 => 'funcionario',
-    3 => 'admin',
-    default => 'visitante'
-} : 'visitante';
-
-// Função para sanitizar entradas do utilizador
-function sanitizarEntrada($dados) {
-    return htmlspecialchars(stripslashes(trim($dados)));
+if ($isLoggedIn) {
+    // Usa o match para definir o papel com base no tipo de usuário
+    $userRole = match ($_SESSION['tipo_utilizador']) {
+        1 => 'cliente',   // Tipo 1: Cliente
+        2 => 'funcionario', // Tipo 2: Funcionário
+        3 => 'admin',     // Tipo 3: Administrador
+        default => 'visitante' // Caso não corresponda a nenhum tipo
+    };
 }
 
-// Processa a compra de bilhete
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar_bilhete'])) {
-    $rotaId = (int)$_POST['rota_id'];
-    $codigoValidacao = uniqid('BILHETE_', true);
+// Função para limpar e proteger dados de entrada do usuário
+function sanitizarEntrada($dados) {
+    return htmlspecialchars(stripslashes(trim($dados))); // Remove espaços, barras e converte caracteres especiais
+}
 
-    // Inicia uma transação
+// Processa a compra de bilhete quando o formulário é enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar_bilhete'])) {
+    // Obtém o ID da rota e gera um código de validação único
+    $rotaId = (int)$_POST['rota_id']; // Converte o ID da rota para inteiro
+    $codigoValidacao = uniqid('BILHETE_', true); // Gera um código único para o bilhete
+
+    // Inicia uma transação no banco de dados (para garantir que todas as operações sejam concluídas com sucesso)
     $conn->begin_transaction();
 
     try {
-        // Obtém o saldo do cliente
+        // 1. Obtém o saldo do cliente
         $query_saldo = "SELECT saldo FROM carteira WHERE utilizador_id = ?";
-        $stmt = $conn->prepare($query_saldo);
-        $stmt->bind_param("i", $_SESSION['user_id']);
-        $stmt->execute();
-        $saldo = $stmt->get_result()->fetch_assoc()['saldo'] ?? 0;
+        $stmt = $conn->prepare($query_saldo); // Prepara a consulta
+        $stmt->bind_param("i", $_SESSION['user_id']); // Vincula o ID do usuário à consulta
+        $stmt->execute(); // Executa a consulta
+        $saldo = $stmt->get_result()->fetch_assoc()['saldo'] ?? 0; // Obtém o saldo ou 0 se não existir
 
-        // Obtém o preço do bilhete
+        // 2. Obtém o preço do bilhete
         $query_preco = "SELECT preco FROM rotas WHERE id = ?";
-        $stmt = $conn->prepare($query_preco);
-        $stmt->bind_param("i", $rotaId);
-        $stmt->execute();
-        $preco_bilhete = $stmt->get_result()->fetch_assoc()['preco'] ?? 10.00;
+        $stmt = $conn->prepare($query_preco); // Prepara a consulta
+        $stmt->bind_param("i", $rotaId); // Vincula o ID da rota à consulta
+        $stmt->execute(); // Executa a consulta
+        $preco_bilhete = $stmt->get_result()->fetch_assoc()['preco'] ?? 10.00; // Obtém o preço ou 10.00 como padrão
 
+        // 3. Verifica se o saldo é suficiente
         if ($saldo >= $preco_bilhete) {
-            // Insere o bilhete
+            // 4. Insere o bilhete na tabela de bilhetes
             $stmt = $conn->prepare("INSERT INTO bilhetes (utilizador_id, rota_id, codigo_validacao, estado) VALUES (?, ?, ?, 'comprado')");
-            $stmt->bind_param("iis", $_SESSION['user_id'], $rotaId, $codigoValidacao);
-            $stmt->execute();
+            $stmt->bind_param("iis", $_SESSION['user_id'], $rotaId, $codigoValidacao); // Vincula os valores
+            $stmt->execute(); // Executa a inserção
 
-            // Atualiza o saldo do cliente
-            $novo_saldo = $saldo - $preco_bilhete;
+            // 5. Atualiza o saldo do cliente
+            $novo_saldo = $saldo - $preco_bilhete; // Calcula o novo saldo
             $stmt = $conn->prepare("UPDATE carteira SET saldo = ? WHERE utilizador_id = ?");
-            $stmt->bind_param("di", $novo_saldo, $_SESSION['user_id']);
-            $stmt->execute();
+            $stmt->bind_param("di", $novo_saldo, $_SESSION['user_id']); // Vincula os valores
+            $stmt->execute(); // Executa a atualização
 
-            // Obtém o ID da carteira do usuário
+            // 6. Obtém o ID da carteira do usuário
             $query_carteira_id = "SELECT id FROM carteira WHERE utilizador_id = ?";
             $stmt = $conn->prepare($query_carteira_id);
-            $stmt->bind_param("i", $_SESSION['user_id']);
-            $stmt->execute();
-            $carteira_usuario_id = $stmt->get_result()->fetch_assoc()['id'] ?? null;
+            $stmt->bind_param("i", $_SESSION['user_id']); // Vincula o ID do usuário
+            $stmt->execute(); // Executa a consulta
+            $carteira_usuario_id = $stmt->get_result()->fetch_assoc()['id'] ?? null; // Obtém o ID da carteira
 
             if (!$carteira_usuario_id) {
-                throw new Exception("Carteira do usuário não encontrada.");
+                throw new Exception("Carteira do usuário não encontrada."); // Lança uma exceção se a carteira não existir
             }
 
-            // Registra a transação
+            // 7. Registra a transação na tabela de transações
             $carteira_felixbus_id = 1; // ID da carteira da FelixBus
             $stmt = $conn->prepare("INSERT INTO transacoes (utilizador_id, carteira_origem, carteira_destino, valor, tipo, data_transacao) VALUES (?, ?, ?, ?, 'compra', NOW())");
-            $stmt->bind_param("iiid", $_SESSION['user_id'], $carteira_usuario_id, $carteira_felixbus_id, $preco_bilhete);
-            $stmt->execute();
+            $stmt->bind_param("iiid", $_SESSION['user_id'], $carteira_usuario_id, $carteira_felixbus_id, $preco_bilhete); // Vincula os valores
+            $stmt->execute(); // Executa a inserção
 
-            // Commit da transação
+            // 8. Confirma a transação (commit)
             $conn->commit();
 
+            // Mensagem de sucesso e redirecionamento
             $_SESSION['mensagem'] = "Compra realizada com sucesso!";
             header("Location: horarios.php");
             exit();
         } else {
+            // Caso o saldo seja insuficiente, cancela a transação (rollback)
             $conn->rollback();
             $_SESSION['erro'] = $saldo === null ? "Carteira não encontrada." : "Saldo insuficiente.";
             header("Location: horarios.php");
             exit();
         }
     } catch (Exception $e) {
+        // Em caso de erro, cancela a transação e exibe a mensagem de erro
         $conn->rollback();
         $_SESSION['erro'] = "Erro ao processar a compra: " . $e->getMessage();
         header("Location: horarios.php");
@@ -94,9 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar_bilhete'])) {
     }
 }
 
-// Busca rotas e bilhetes
+// Busca as rotas disponíveis
 $rotas = $conn->query("SELECT id, origem, destino, data, hora, preco FROM rotas")->fetch_all(MYSQLI_ASSOC);
-$bilhetes = $isLoggedIn && $userRole === 'cliente' ? $conn->query("SELECT b.id, r.origem, r.destino, r.data, r.hora, b.codigo_validacao, b.estado FROM bilhetes b JOIN rotas r ON b.rota_id = r.id WHERE b.utilizador_id = {$_SESSION['user_id']}")->fetch_all(MYSQLI_ASSOC) : [];
+
+// Busca os bilhetes do usuário, se ele estiver logado como cliente
+$bilhetes = [];
+if ($isLoggedIn && $userRole === 'cliente') {
+    $bilhetes = $conn->query("SELECT b.id, r.origem, r.destino, r.data, r.hora, b.codigo_validacao, b.estado FROM bilhetes b JOIN rotas r ON b.rota_id = r.id WHERE b.utilizador_id = {$_SESSION['user_id']}")->fetch_all(MYSQLI_ASSOC);
+}
 ?>
 
 <!DOCTYPE html>
