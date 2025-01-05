@@ -1,3 +1,5 @@
+//isto ja nao esta em uso
+
 //Pop up para comprar bilhete:
 
 // Seleciona os elementos do pop-up
