@@ -5,10 +5,11 @@ session_start();
 // Inclui o ficheiro de configuração da base de dados
 require_once 'db_connection.php';
 
-// Exibe erros para facilitar o debugging
+/* exibição de erros
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+*/
 
 // Verifica se o formulário foi submetido via POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

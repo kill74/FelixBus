@@ -2,6 +2,12 @@
 session_start();
 require_once 'db_connection.php';
 
+/* exibição de erros
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+*/
+
 if (!isset($_SESSION['user_id'])) {
     die("Erro: Necessita de estar autenticado para aceder a esta página.");
 }

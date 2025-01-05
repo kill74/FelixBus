@@ -2,11 +2,35 @@
 session_start();
 require_once 'db_connection.php';
 
+// Verifica se o utilizador está autenticado
 if (!isset($_SESSION['user_id'])) {
-    die("Erro: Usuário não autenticado.");
+    header("Location: Login.php"); // Redireciona para a página de login
+    exit();
 }
 
 $user_id = $_SESSION['user_id'];
+
+// Verifica o tipo de utilizador
+$stmt = $conn->prepare("SELECT tipo_utilizador_id FROM utilizadores WHERE id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    // Utilizador não encontrado
+    die("Erro: Utilizador não encontrado.");
+}
+
+$user = $result->fetch_assoc();
+$tipo_utilizador_id = $user['tipo_utilizador_id'];
+
+// Verifica se o tipo de utilizador é cliente, funcionário ou administrador
+if ($tipo_utilizador_id == 4) { // 4 = visitante
+    header("Location: Login.php"); // Redireciona visitantes para a página de login
+    exit();
+}
+
+// Restante do código da carteira
 $carteira_felixbus_id = 1; // ID da carteira da FelixBus
 $mensagem = "";
 $saldo_atual = 0.00;
