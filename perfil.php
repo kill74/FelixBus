@@ -17,17 +17,22 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Obtém o ID do utilizador da sessão
-$user_id = $_SESSION['user_id'];
+$user_id = (int)$_SESSION['user_id']; // Garante que o ID seja um inteiro
 
 // Verifica se a conexão ainda está aberta
 if ($conn->connect_error) {
     die("Erro de conexão: " . $conn->connect_error);
 }
 
+// Função para sanitizar entradas do utilizador
+function sanitizarEntrada($dados) {
+    return htmlspecialchars(stripslashes(trim($dados)));
+}
+
 // Busca as informações do utilizador na base de dados usando prepared statements
 $sql = "SELECT nome, tipo_utilizador_id, estado FROM utilizadores WHERE id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
+$stmt->bind_param("i", $user_id); // "i" indica que o parâmetro é um inteiro
 $stmt->execute();
 $result = $stmt->get_result();
 

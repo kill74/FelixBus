@@ -15,10 +15,15 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['tipo_utilizador'] != 2 && $_SESS
     die("Erro: Acesso não autorizado.");
 }
 
+// Função para sanitizar entradas do utilizador
+function sanitizarEntrada($dados) {
+    return htmlspecialchars(stripslashes(trim($dados)));
+}
+
 // Processar o formulário de atualização de saldo
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['atualizar_saldo'])) {
     $utilizador_id = (int) $_POST['utilizador_id']; // ID do utilizador
-    $novo_saldo = (float) $_POST['novo_saldo']; // Novo saldo inserido
+    $novo_saldo = filter_var($_POST['novo_saldo'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // Sanitiza o saldo
 
     // Verificar se o saldo é válido (não pode ser negativo)
     if ($novo_saldo >= 0) {
@@ -58,15 +63,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['atualizar_saldo'])) {
 // Processar o formulário de edição de bilhete
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar_bilhete'])) {
     $bilhete_id = (int) $_POST['bilhete_id']; // ID do bilhete
-    $novo_estado = $_POST['novo_estado']; // Novo estado selecionado
+    $novo_estado = sanitizarEntrada($_POST['novo_estado']); // Novo estado selecionado
 
-    // Atualizar o estado do bilhete na tabela bilhetes
-    $query = "UPDATE bilhetes SET estado = ? WHERE id = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("si", $novo_estado, $bilhete_id); // "si" = string (estado), integer (ID)
-    $stmt->execute();
+    // Verificar se o estado é válido
+    if (in_array($novo_estado, ['comprado', 'usado', 'cancelado'])) {
+        // Atualizar o estado do bilhete na tabela bilhetes
+        $query = "UPDATE bilhetes SET estado = ? WHERE id = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("si", $novo_estado, $bilhete_id); // "si" = string (estado), integer (ID)
+        $stmt->execute();
 
-    $mensagem = "Estado do bilhete atualizado com sucesso!";
+        $mensagem = "Estado do bilhete atualizado com sucesso!";
+    } else {
+        $mensagem = "Erro: Estado do bilhete inválido.";
+    }
 }
 
 // Buscar todos os utilizadores (clientes) e seus saldos

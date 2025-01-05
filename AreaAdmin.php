@@ -1,43 +1,51 @@
 <?php
-// Inicia a sessão para aceder às variáveis de sessão
+// Inicia a sessão
 session_start();
 
-// Inclui o ficheiro de conexão à base de dados
+// Inclui o arquivo de conexão à base de dados
 require_once 'db_connection.php';
 
-// Verifica se o utilizador está autenticado e se é um administrador (tipo_utilizador = 3)
+// Verifica se o usuário é um administrador
 if (!isset($_SESSION['user_id']) || $_SESSION['tipo_utilizador'] != 3) {
     header("Location: Login.php"); // Redireciona para a página de login
     exit();
 }
 
+// Função para executar consultas SQL de forma segura
+function executarConsulta($conn, $sql, $tipos, $valores) {
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die('Erro ao preparar a consulta: ' . $conn->error);
+    }
+    $stmt->bind_param($tipos, ...$valores); // Vincula os parâmetros
+    $stmt->execute(); // Executa a consulta
+    $stmt->close(); // Fecha o statement
+}
+
 // Processa ações relacionadas com a gestão de horários
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_horario'])) {
-    $acao = $_POST['acao_horario']; // Ação a ser realizada (adicionar, editar, excluir)
+    $acao = $_POST['acao_horario']; // Ação a ser realizada (adicionar, excluir)
     $id = $_POST['id'] ?? null; // ID do horário (se aplicável)
 
     if ($acao === 'adicionar') {
         // Adiciona um novo horário
-        $origem = $_POST['origem'];
-        $destino = $_POST['destino'];
-        $data = $_POST['data'];
-        $hora = $_POST['hora'];
-        $capacidade = $_POST['capacidade'];
+        $origem = htmlspecialchars($_POST['origem'] ?? '');
+        $destino = htmlspecialchars($_POST['destino'] ?? '');
+        $data = htmlspecialchars($_POST['data'] ?? '');
+        $hora = htmlspecialchars($_POST['hora'] ?? '');
+        $capacidade = intval($_POST['capacidade'] ?? 0);
 
-        $sql = "INSERT INTO rotas (origem, destino, data, hora, capacidade) VALUES ('$origem', '$destino', '$data', '$hora', $capacidade)";
-        if ($conn->query($sql)) {
-            echo '<div class="alert success">Horário adicionado com sucesso!</div>';
-        } else {
-            echo '<div class="alert error">Erro ao adicionar horário: ' . $conn->error . '</div>';
-        }
+        // Executa a consulta SQL
+        $sql = "INSERT INTO rotas (origem, destino, data, hora, capacidade) VALUES (?, ?, ?, ?, ?)";
+        executarConsulta($conn, $sql, 'ssssi', [$origem, $destino, $data, $hora, $capacidade]);
+
+        echo '<div class="alert success">Horário adicionado com sucesso!</div>';
     } elseif ($acao === 'excluir' && $id) {
         // Exclui um horário existente
-        $sql = "DELETE FROM rotas WHERE id=$id";
-        if ($conn->query($sql)) {
-            echo '<div class="alert success">Horário excluído com sucesso!</div>';
-        } else {
-            echo '<div class="alert error">Erro ao excluir horário: ' . $conn->error . '</div>';
-        }
+        $sql = "DELETE FROM rotas WHERE id = ?";
+        executarConsulta($conn, $sql, 'i', [$id]);
+
+        echo '<div class="alert success">Horário excluído com sucesso!</div>';
     }
 }
 
@@ -48,35 +56,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_alerta'])) {
 
     if ($acao === 'adicionar') {
         // Adiciona um novo alerta/promoção
-        $mensagem = $_POST['mensagem'];
-        $sql = "INSERT INTO alertas (mensagem) VALUES ('$mensagem')";
-        if ($conn->query($sql)) {
-            echo '<div class="alert success">Alerta/Promoção adicionado com sucesso!</div>';
-        } else {
-            echo '<div class="alert error">Erro ao adicionar alerta/promoção: ' . $conn->error . '</div>';
-        }
+        $mensagem = htmlspecialchars($_POST['mensagem'] ?? '');
+
+        // Executa a consulta SQL
+        $sql = "INSERT INTO alertas (mensagem) VALUES (?)";
+        executarConsulta($conn, $sql, 's', [$mensagem]);
+
+        echo '<div class="alert success">Alerta/Promoção adicionado com sucesso!</div>';
     } elseif ($acao === 'excluir' && $id) {
         // Exclui um alerta/promoção existente
-        $sql = "DELETE FROM alertas WHERE id=$id";
-        if ($conn->query($sql)) {
-            echo '<div class="alert success">Alerta/Promoção excluído com sucesso!</div>';
-        } else {
-            echo '<div class="alert error">Erro ao excluir alerta/promoção: ' . $conn->error . '</div>';
-        }
+        $sql = "DELETE FROM alertas WHERE id = ?";
+        executarConsulta($conn, $sql, 'i', [$id]);
+
+        echo '<div class="alert success">Alerta/Promoção excluído com sucesso!</div>';
     }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="pt">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Administrador</title>
     <link rel="stylesheet" href="areaadmin.css">
 </head>
-
 <body>
     <div class="container">
         <!-- Barra lateral -->
@@ -228,5 +232,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_alerta'])) {
         </main>
     </div>
 </body>
-
 </html>

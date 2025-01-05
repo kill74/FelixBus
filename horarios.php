@@ -17,6 +17,11 @@ $userRole = $isLoggedIn ? match ($_SESSION['tipo_utilizador']) {
     default => 'visitante'
 } : 'visitante';
 
+// Função para sanitizar entradas do utilizador
+function sanitizarEntrada($dados) {
+    return htmlspecialchars(stripslashes(trim($dados)));
+}
+
 // Processa a compra de bilhete
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comprar_bilhete'])) {
     $rotaId = (int)$_POST['rota_id'];

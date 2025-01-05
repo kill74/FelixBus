@@ -1,5 +1,8 @@
 <?php
+// Inicia a sessão para acessar dados do utilizador
 session_start();
+
+// Conecta ao banco de dados
 require_once 'db_connection.php';
 
 // Verifica se o utilizador está autenticado
@@ -8,126 +11,101 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id']; // ID do utilizador logado
 
-// Verifica o tipo de utilizador
-$stmt = $conn->prepare("SELECT tipo_utilizador_id FROM utilizadores WHERE id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
+// Inicializa as variáveis para evitar warnings
+$saldo_atual = 0.00; // Saldo inicial
+$mensagem = ""; // Mensagem inicial
 
-if ($result->num_rows === 0) {
-    // Utilizador não encontrado
-    die("Erro: Utilizador não encontrado.");
+// Função para sanitizar entradas do utilizador
+function sanitizarEntrada($dados) {
+    return htmlspecialchars(stripslashes(trim($dados)));
 }
 
-$user = $result->fetch_assoc();
-$tipo_utilizador_id = $user['tipo_utilizador_id'];
-
-// Verifica se o tipo de utilizador é cliente, funcionário ou administrador
-if ($tipo_utilizador_id == 4) { // 4 = visitante
-    header("Location: Login.php"); // Redireciona visitantes para a página de login
-    exit();
-}
-
-// Restante do código da carteira
-$carteira_felixbus_id = 1; // ID da carteira da FelixBus
-$mensagem = "";
-$saldo_atual = 0.00;
-
-// Processa o formulário
+// Verifica se o formulário de carregamento ou levantamento foi enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['valor'], $_POST['tipo_operacao'])) {
-    $valor = (float) $_POST['valor'];
-    $tipo_operacao = $_POST['tipo_operacao'];
+    // Sanitiza e valida os dados do formulário
+    $valor = filter_var($_POST['valor'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $tipo_operacao = sanitizarEntrada($_POST['tipo_operacao']);
 
-    if ($valor > 0) {
-        // Obtém o saldo atual
+    // Verifica se o valor é válido
+    if ($valor > 0 && ($tipo_operacao == "carregamento" || $tipo_operacao == "levantamento")) {
+        // Obtém a carteira do utilizador
         $stmt = $conn->prepare("SELECT id, saldo FROM carteira WHERE utilizador_id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $carteira = $stmt->get_result()->fetch_assoc();
 
         if ($carteira) {
-            $carteira_id = $carteira['id'];
-            $saldo_atual = $carteira['saldo'];
+            $carteira_id = $carteira['id']; // ID da carteira do utilizador
+            $saldo_atual = $carteira['saldo']; // Saldo atual do utilizador
 
-            // Verifica se é possível realizar a operação
+            // Verifica se é um levantamento e se há saldo suficiente
             if ($tipo_operacao == "levantamento" && $valor > $saldo_atual) {
                 $mensagem = "Erro: Saldo insuficiente.";
             } else {
                 // Calcula o novo saldo
                 $novo_saldo = ($tipo_operacao == "carregamento") ? $saldo_atual + $valor : $saldo_atual - $valor;
 
-                // Atualiza o saldo
+                // Atualiza o saldo na carteira do utilizador
                 $stmt = $conn->prepare("UPDATE carteira SET saldo = ? WHERE id = ?");
                 $stmt->bind_param("di", $novo_saldo, $carteira_id);
                 $stmt->execute();
 
-                // Registra a transação
-                $carteira_origem = ($tipo_operacao == "carregamento") ? $carteira_felixbus_id : $carteira_id;
-                $carteira_destino = ($tipo_operacao == "carregamento") ? $carteira_id : $carteira_felixbus_id;
+                // Define a carteira de origem e destino
+                $carteira_origem = ($tipo_operacao == "carregamento") ? 1 : $carteira_id; // 1 = Carteira da FelixBus
+                $carteira_destino = ($tipo_operacao == "carregamento") ? $carteira_id : 1;
 
+                // Registra a transação no histórico
                 $stmt = $conn->prepare("INSERT INTO transacoes (utilizador_id, carteira_origem, carteira_destino, valor, tipo, data_transacao) VALUES (?, ?, ?, ?, ?, NOW())");
                 $stmt->bind_param("iiids", $user_id, $carteira_origem, $carteira_destino, $valor, $tipo_operacao);
                 $stmt->execute();
 
-                $mensagem = "Operação de $tipo_operacao realizada com sucesso!";
+                // Mensagem de sucesso
+                $_SESSION['mensagem'] = "Operação de $tipo_operacao realizada com sucesso!";
+                header("Location: carteira.php"); // Redireciona para evitar reenvio do formulário
+                exit();
             }
         } else {
             $mensagem = "Erro: Carteira não encontrada.";
         }
     } else {
-        $mensagem = "Erro: Valor inválido.";
+        $mensagem = "Erro: Valor ou tipo de operação inválido.";
     }
 }
 
-// Obtém o saldo atual
+// Obtém o saldo atual do utilizador
 $stmt = $conn->prepare("SELECT saldo FROM carteira WHERE utilizador_id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$saldo_atual = $stmt->get_result()->fetch_assoc()['saldo'] ?? 0.00;
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $saldo_atual = $result->fetch_assoc()['saldo']; // Atualiza o saldo atual
+}
+
+// Verifica se há uma mensagem na sessão
+if (isset($_SESSION['mensagem'])) {
+    $mensagem = $_SESSION['mensagem'];
+    unset($_SESSION['mensagem']); // Remove a mensagem da sessão após exibi-la
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="pt">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carteira - FelixBus</title>
     <link rel="stylesheet" href="styleIndex.css">
     <style>
-        .saldo-section {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .saldo {
-            font-size: 24px;
-            font-weight: bold;
-            color: green;
-        }
-
-        .mensagem {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .historico-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .historico-list li {
-            margin-bottom: 10px;
-        }
+        .saldo-section { margin-bottom: 20px; text-align: center; }
+        .saldo { font-size: 24px; font-weight: bold; color: green; }
+        .mensagem { background-color: rgb(73, 180, 23); color: rgb(0, 0, 0); padding: 10px; border-radius: 5px; margin-bottom: 20px; text-align: center; }
+        .historico-list { list-style: none; padding: 0; }
+        .historico-list li { margin-bottom: 10px; }
     </style>
 </head>
-
 <body>
     <?php require 'navbar.php'; ?>
 
@@ -171,5 +149,4 @@ $saldo_atual = $stmt->get_result()->fetch_assoc()['saldo'] ?? 0.00;
 
     <?php require 'footer.php'; ?>
 </body>
-
 </html>

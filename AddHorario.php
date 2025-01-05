@@ -9,8 +9,9 @@ $users = [
 
 // Processa o formulário de login
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
+    // Sanitiza os dados de entrada
+    $username = htmlspecialchars($_POST['username'] ?? '');
+    $password = htmlspecialchars($_POST['password'] ?? '');
 
     // Verifica as credenciais
     if (isset($users[$username]) && $users[$username] === $password) {
@@ -140,5 +141,5 @@ if (isset($_GET['logout'])) {
         <?php endif; ?>
     </div>
 </body>
-<?php require 'footer.php';   ?>
+<?php require 'footer.php'; ?>
 </html>
